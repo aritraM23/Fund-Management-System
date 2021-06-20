@@ -1,157 +1,190 @@
-from kivy.app import App
-from kivy.metrics import dp
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
-from kivy.uix.textinput import TextInput
-from kivy.uix.floatlayout import FloatLayout
-from kivymd.uix.datatables import MDDataTable
+import csv
+from functools import partial
+import pandas as pd
+from tkinter import *
+from tkinter import ttk
+import tkinter.messagebox
+import os
 import pyrebase
 
-firebaseConfig = {}
+firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
+    'authDomain': "fundmang-42ad8.firebaseapp.com",
+    'projectId': "fundmang-42ad8",
+    'storageBucket': "fundmang-42ad8.appspot.com",
+    'messagingSenderId': "361815074904",
+    'databaseURL':'https://fundmang-42ad8-default-rtdb.firebaseio.com',
+    'appId': "1:361815074904:web:8504dfd52dbde0b186422d",
+    'measurementId': "G-MVMXL8CJNK"
+}
 
 
-class WindowManager(ScreenManager):
-    def __init__(self, **kwargs):
-        super(WindowManager, self).__init__(**kwargs)
- 
-class SecondWindow(Screen):
-    def __init__(self, **kwargs):
+firebase=pyrebase.initialize_app(firebaseConfig)
+db= firebase.database()
 
-        super(SecondWindow, self).__init__(**kwargs)
 
-        self.add_widget(Label(text='Money Management System', bold = True, font_name = 'Times', font_size = 40, size_hint = (.15, .05), pos_hint={'x': 0.25, 'y': .9}))
+class gui:
 
-        self.add_widget(Label(text='', bold = True ,font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.01, 'y': .70}))
-        self.Name = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .70})
-        self.add_widget(self.Name)
+    def __init__(self,root):
+        self.root = root
+        titlespace=" "
+        self.root.title(100*titlespace+"Money Management System")
+        self.root.geometry("850x750+330+0")
+        self.root.resizable(width=False,height=False)
 
-        self.add_widget(Label(text='Loan Amount', bold = True, font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.01, 'y': .60}))
-        self.Amount = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .60})
-        self.add_widget(self.Amount)
+        # tabControl = ttk.Notebook(root)
+        # tab1 = ttk.Frame(tabControl)
+        # tab2 = ttk.Frame(tabControl)
 
-        self.add_widget(Label(text='Interest Rate', bold = True, font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.01, 'y': .50}))
-        self.Amount = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .50})
-        self.add_widget(self.Amount)
+        # tabControl.add(tab1, text = 'ACCOUNTS')
+        # tabControl.add(tab2, text = 'LOANS')
+        # tabControl.pack(expand = 1, fill ="both")
 
-        self.add_widget(Label(text='Date',  bold = True,  font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.01, 'y': .40}))
-        self.Date = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .40})
-        self.add_widget(self.Date)
-
-        self.btn1 = Button(text = 'Accounts',bold = True, font_size = 22, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9,'center_y':0.10})
-        self.btn2 = Button(text= "Save", font_size=22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9,'center_y':0.90})
-        self.btn3 = Button(text= "Update", font_size= 22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9,'center_y':0.75})
-        self.btn4 = Button(text= "Delete", font_size= 22, bold = True,size_hint = (0.20,0.10), pos_hint = {'center_x':0.9, 'center_y':0.60})
-        self.btn5 = Button(text= "Display", font_size= 22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9, 'center_y':0.45})
-        self.btn6 = Button(text= "Search", font_size= 22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9, 'center_y':0.30})
-
-        self.add_widget(self.btn1)
-        self.add_widget(self.btn2)
-        self.add_widget(self.btn3)
-        self.add_widget(self.btn4)
-        self.add_widget(self.btn5)
-        self.add_widget(self.btn6)
-
-        self.btn1.bind(on_press = self.screen_transition1)
-
-    def screen_transition1(self, *args):
-        self.manager.current = 'Accounts'
-
-class FirstWindow(Screen,App):
-    def __init__(self, **kwargs):
-
-        super(FirstWindow, self).__init__(**kwargs)
         
-        self.add_widget(Label(text='Money Management System', bold = True, font_name = 'Times', font_size = 40, size_hint = (.15, .05), pos_hint={'x': 0.25, 'y': .9}))
+###################################################################################################################################
+        MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='gray')
+        MainFrame.grid()
 
-        self.add_widget(Label(text='Name', bold = True ,font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.0, 'y': .70}))
-        self.Name = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .70})
-        self.add_widget(self.Name)
-
-        self.add_widget(Label(text='Amount', bold = True, font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.0, 'y': .60}))
-        self.Amount = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .60})
-        self.add_widget(self.Amount)
-
-        self.add_widget(Label(text='Date',  bold = True,  font_size = 20 ,size_hint = (.15, .05), pos_hint={'x': 0.0, 'y': .50}))
-        self.Date = TextInput(multiline=False, size_hint=(.50, .05), pos_hint={'x': 0.20, 'y': .50})
-        self.add_widget(self.Date)
-
-        self.btn1 = Button(text = 'Loans',bold = True, font_size = 22, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9,'center_y':0.10})
-        self.btn2 = Button(text= "Save", font_size=22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9,'center_y':0.90})
-        self.btn3 = Button(text= "Update", font_size= 22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9,'center_y':0.75})
-        self.btn4 = Button(text= "Delete", font_size= 22, bold = True,size_hint = (0.20,0.10), pos_hint = {'center_x':0.9, 'center_y':0.60})
-        self.btn5 = Button(text= "Display", font_size= 22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9, 'center_y':0.45})
-        self.btn6 = Button(text= "Search", font_size= 22,bold = True, size_hint = (0.20,0.10), pos_hint = {'center_x':0.9, 'center_y':0.30})
-
-        self.add_widget(self.btn1)
-        self.add_widget(self.btn2)
-        self.add_widget(self.btn3)
-        self.add_widget(self.btn4)
-        self.add_widget(self.btn5)
-        self.add_widget(self.btn6)
-
-
-        self.btn1.bind(on_press = self.screen_transition)
-        self.btn2.bind(on_press = self.saveData)
-        self.btn3.bind(on_press = self.update)
-        self.btn6.bind(on_press = self.search)
-        self.btn4.bind(on_press = self.delete)
+        TitleFrame= Frame(MainFrame,bd=7,width=770,height=100,relief=RIDGE)
+        TitleFrame.grid(row=0,column=0)
+        TopFrame3= Frame(MainFrame,bd=5,width=770,height=500,relief=RIDGE)
+        TopFrame3.grid(row=1,column=0)
         
-    def screen_transition(self, *args):
-        self.manager.current = 'Loans'
+        LeftFrame = Frame(TopFrame3, bd=5, width=700, height=500, relief=RIDGE,padx=2, bg='gray')
+        LeftFrame.pack(side=LEFT)
+        LeftFrame1 = Frame(LeftFrame, bd=5, width=700, height=180, relief=RIDGE, padx=2,pady=9 )
+        LeftFrame1.pack(side=TOP)
 
-    def saveData(self, instance):
-        name = self.Name.text
-        amount = self.Amount.text
-        date = self.Date.text
+        RightFrame = Frame(TopFrame3, bd=5, width=50, height=40, relief=RIDGE,padx=2, bg='gray')
+        RightFrame.pack(side=RIGHT)
+        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=30, relief=RIDGE, padx=12,pady=4)
+        RightFrame1a.pack(side=TOP)
+
+        self.lbltitle=Label(TitleFrame, font=('Arial',33,'bold'), text="Money Management System",bd=7)
+        self.lbltitle.grid(row=0,column=0,padx=130)
         
-        datas = {'name': name, 'amount': amount, 'date': date}
-        db.child('mainData').push(datas)
+        Name = StringVar()
+        Amount = StringVar()
+        Date = StringVar()
+#===============================================================================================================================================================================================
+#Input Fields:
 
-    def update(self, instance):
-		firebase = pyrebase.initialize_app(firebaseConfig)
-		db = firebase.database()
-		totalData = db.child('mainData').get()
-		for data in totalData.each():
-			if data.val()['name'] == self.Name.text and data.val()['date'] == self.Name.date:
-				db.child('mainData').child(data.key()).update(
-					{'name': self.Name.text, 'amount': self.Amount.text, 'date': self.Date.text})
-		print('Done')
+        self.lblname = Label(LeftFrame1, font =('arial',12,'bold'), text = 'Name' , bd = 13 )
+        self.lblname.grid(row = 0, column=0, sticky = W,padx = 5)
 
-    def search(self, instance):
-		firebase = pyrebase.initialize_app(firebaseConfig)
-		db = firebase.database()
-		totalData = db.child('testDataBase').get()
-		with open('data.csv', 'a') as file:
-			write = csv.writer(file)
-			write.writerow(["Name", "Amount", "Date"])
-			file.close()
-		for data in totalData.each():
-			if (data.val()['date'] == self.date.text or data.val()['name'] == self.name.text or data.val()['amount'] == self.amount.text):
-				with open('data.csv', 'a') as files:
-					write = csv.writer(files)
-					write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
-					files.close()
-		os.system('data.csv')
+        self.entname = Entry(LeftFrame1, font =('arial',12,'bold'), bd = 13 , width = 44, justify='left', textvariable = Name)
+        self.entname.grid(row = 0, column=1, sticky = W,padx = 5)
+        
+        self.lblamount = Label(LeftFrame1, font =('arial',12,'bold'), text = 'Amount' , bd = 13 )
+        self.lblamount.grid(row = 1, column=0, sticky = W,padx = 5)
 
-    def delete(self,instance):
-		firebase = pyrebase.initialize_app(firebaseConfig)
-		db = firebase.database()
-		totalData = db.child('mainData').get()
-		for data in totalData.each():
-			if data.val()['name'] == self.name.text and data.val()['date'] == self.name.date:
-				db.child('mainData').child(data.key()).remove()
- 
+        self.entamount = Entry(LeftFrame1, font =('arial',12,'bold'), bd = 13 , width = 44, justify='left', textvariable = Amount)
+        self.entamount.grid(row = 1, column=1, sticky = W,padx = 5)
 
-class MoneyMS(App):
-    def build(self):
-        sm = WindowManager(transition = FadeTransition())
-        sm.add_widget(FirstWindow(name='Accounts'))
-        sm.add_widget(SecondWindow(name='Loans'))
-        return sm
+        self.lblDate = Label(LeftFrame1, font =('arial',12,'bold'), text = 'Date' , bd = 13 )
+        self.lblDate.grid(row = 2, column=0, sticky = W,padx = 5)
 
-if __name__=='__main__':
-    MoneyMS().run()
+        self.entDate = Entry(LeftFrame1, font =('arial',12,'bold'), bd = 13 , width = 44, justify='left', textvariable = Date)
+        self.entDate.grid(row = 2, column=1, sticky = W,padx = 5)
+
+
+#===============================================================================================================================================================================================
+# The functions: 
+    
+        def exit():
+            Exit = tkinter.messagebox.askyesno("Funds Man Sys", "Confirm if you want to exit?")
+            if Exit>0:
+                root.destroy()
+                return
+
+        def saveData():
+            #function to save
+            name = self.Name.text
+            amount = self.Amount.text
+            date = self.Date.text
+            
+            datas = {'name': name, 'amount': amount, 'date': date}
+            db.child('mainData').push(datas)
+
+        def update():
+            #function to update
+            totalData = db.child('mainData').get()
+            for data in totalData.each():
+                if data.val()['name'] == self.Name.text and data.val()['date'] == self.Date.text:
+                    db.child('mainData').child(data.key()).update(
+                        {'name': self.Name.text, 'amount': self.Amount.text, 'date': self.Date.text})        
+            tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
+
+        def search():
+            #function to search
+            totalData = db.child('mainData').get()
+            
+            with open('data.csv', 'w') as file:
+                write = csv.writer(file)
+                write.writerow(["Name", "Amount", "Date"])
+                file.close()
+            for data in totalData.each():
+                print(data.val())
+                if (data.val()['date'] == self.Date.text or data.val()['name'] == self.Name.text or data.val()['amount'] == self.Amount.text):
+                    with open('data.csv', 'a') as files:
+                        write = csv.writer(files)
+                        write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
+                        files.close()
+            os.system('data.csv')
+
+        def display(label):
+            result = db.child('mainData').get()
+            for data in result.each():
+                if(len(data.val()))!=0:
+                    self.display_data.delete(*self.display_data.get_children())
+                    for row in data.val():
+                        self.display_data.insert('', END, values = row)
+
+        def delete():
+            #function to delete 
+            totalData = db.child('mainData').get()
+            for data in totalData.each():
+                if data.val()['name'] == self.Name.text and data.val()['date'] == self.Date.text:
+                    db.child('mainData').child(data.key()).remove()
+    
+        def TrainInfo(ev):
+            viewInfo = self.display_data.focus()
+            learnData = self.display_data.item(viewInfo)
+            row = learnData['values']
+            Name.set(row[0])
+            Amount.set(row[1])
+            Date.set(row[2])
+
+#==============================================================================================================================================================================================
+        y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
+        self.display_data = ttk.Treeview(LeftFrame, height= 15, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
+        y_scroll.pack(side = RIGHT, fill= Y)
+
+        self.display_data.heading("Name", text= "NAME")
+        self.display_data.heading("Amount", text= "AMOUNT")
+        self.display_data.heading("Date", text= "DATE")
+
+        self.display_data['show'] = 'headings'
+
+        self.display_data.column("Name", width= 80)
+        self.display_data.column("Amount", width=80)
+        self.display_data.column("Date", width=80)
+
+        self.display_data.pack(fill=BOTH, expand =1)
+        self.display_data.bind("<ButtonRelease-1>",TrainInfo)
+        display(self.entDate)
+#==============================================================================================================================================================================================
+
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="EXIT", bd=4, padx=16,pady=1,width=4,height=2,command=exit).grid(row=6,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="UPDATE", bd=4, padx=16,pady=1,width=4,height=2,command=update).grid(row=2,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="SAVE", bd=4, padx=16,pady=1,width=4,height=2,command=saveData).grid(row=1,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="DELETE", bd=4, padx=16,pady=1,width=4,height=2,command=delete).grid(row=5,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="SEARCH", bd=4, padx=16,pady=1,width=4,height=2,command=search).grid(row=4,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="DISPLAY", bd=4, padx=16,pady=1,width=4,height=2,command=display(self.entamount)).grid(row=3,column=0,padx=1)
+
+
+#Main:
+
+if __name__ == '__main__':
+    root=tkinter.Tk()
+    application = gui(root)
+    root.mainloop()
