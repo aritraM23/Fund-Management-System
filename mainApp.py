@@ -117,7 +117,6 @@ class gui:
         def search():
             #function to search
             totalData = db.child('mainData').get()
-            
             with open('data.csv', 'w') as file:
                 write = csv.writer(file)
                 write.writerow(["Name", "Amount", "Date"])
@@ -130,6 +129,10 @@ class gui:
                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
                         files.close()
             os.system('data.csv')
+
+            #tkinter.messagebox.showinfo("Search Error","Data not found!")
+
+
 
         def display():
             result = db.child('mainData').get()
@@ -154,6 +157,10 @@ class gui:
             Amount.set(row[1])
             Date.set(row[2])
 
+        def reset():
+            self.entname.delete(0, END)
+            self.entamount.delete(0, END)
+            self.entDate.delete(0, END)
 #==============================================================================================================================================================================================
         y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
         self.display_data = ttk.Treeview(LeftFrame, height= 15, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
@@ -174,12 +181,13 @@ class gui:
         display()
 #==============================================================================================================================================================================================
 
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=4, padx=18,pady=1,width=7,height=3,command=exit).grid(row=6,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=4, padx=18,pady=1,width=7,height=3,command=exit).grid(row=7,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="UPDATE", bd=4, padx=18,pady=1,width=7,height=3,command=update).grid(row=2,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SAVE", bd=4, padx=18,pady=1,width=7,height=3,command=saveData).grid(row=1,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="DELETE", bd=4, padx=18,pady=1,width=7,height=3,command=delete).grid(row=5,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=4, padx=18,pady=1,width=7,height=3,command=search).grid(row=4,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=4, padx=18,pady=1,width=7,height=3,command=display).grid(row=3,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=4, padx=18,pady=1,width=7,height=3,command=reset).grid(row=6,column=0,padx=1)
 
 
 #Main:
