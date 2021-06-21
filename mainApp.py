@@ -128,17 +128,19 @@ class gui:
                         write = csv.writer(files)
                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
                         files.close()
-            os.system('data.csv')
+                        os.system('data.csv')
 
-            #tkinter.messagebox.showinfo("Search Error","Data not found!")
+                else:
+                    tkinter.messagebox.showinfo("Search Error","Data not found!")
 
+            
 
 
         def display():
             result = db.child('mainData').get()
             for data in result.each():
                 if len(data.val())!=0:
-                    #self.display_data.delete(*self.display_data.get_children())
+                    self.display_data.delete(*self.display_data.get_children())
                     for row in data.val():
                         self.display_data.insert('', END, values = row)
 
