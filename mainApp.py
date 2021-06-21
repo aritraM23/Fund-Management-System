@@ -41,7 +41,7 @@ class gui:
 
         
 ###################################################################################################################################
-        MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='gray')
+        MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='skyblue1')
         MainFrame.grid()
 
         TitleFrame= Frame(MainFrame,bd=7,width=770,height=100,relief=RIDGE)
@@ -49,14 +49,14 @@ class gui:
         TopFrame3= Frame(MainFrame,bd=5,width=770,height=500,relief=RIDGE)
         TopFrame3.grid(row=1,column=0)
         
-        LeftFrame = Frame(TopFrame3, bd=5, width=700, height=500, relief=RIDGE,padx=2, bg='gray')
+        LeftFrame = Frame(TopFrame3, bd=5, width=700, height=500, relief=RIDGE,padx=2, bg='skyblue1')
         LeftFrame.pack(side=LEFT)
         LeftFrame1 = Frame(LeftFrame, bd=5, width=700, height=180, relief=RIDGE, padx=2,pady=9 )
         LeftFrame1.pack(side=TOP)
 
-        RightFrame = Frame(TopFrame3, bd=5, width=50, height=40, relief=RIDGE,padx=2, bg='gray')
+        RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE,padx=2, bg='skyblue1')
         RightFrame.pack(side=RIGHT)
-        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=30, relief=RIDGE, padx=12,pady=4)
+        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=90, relief=RIDGE, padx=12,pady=4)
         RightFrame1a.pack(side=TOP)
 
         self.lbltitle=Label(TitleFrame, font=('Arial',33,'bold'), text="Money Management System",bd=7)
@@ -98,9 +98,9 @@ class gui:
 
         def saveData():
             #function to save
-            name = self.Name.text
-            amount = self.Amount.text
-            date = self.Date.text
+            name = Name.get()
+            amount = Amount.get()
+            date = Date.get()
             
             datas = {'name': name, 'amount': amount, 'date': date}
             db.child('mainData').push(datas)
@@ -109,9 +109,9 @@ class gui:
             #function to update
             totalData = db.child('mainData').get()
             for data in totalData.each():
-                if data.val()['name'] == self.Name.text and data.val()['date'] == self.Date.text:
+                if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
                     db.child('mainData').child(data.key()).update(
-                        {'name': self.Name.text, 'amount': self.Amount.text, 'date': self.Date.text})        
+                        {'name': Name.get(), 'amount': Amount.get(), 'date': Date.get()})        
             tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
 
         def search():
@@ -124,18 +124,18 @@ class gui:
                 file.close()
             for data in totalData.each():
                 print(data.val())
-                if (data.val()['date'] == self.Date.text or data.val()['name'] == self.Name.text or data.val()['amount'] == self.Amount.text):
+                if (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount'] == Amount.get()):
                     with open('data.csv', 'a') as files:
                         write = csv.writer(files)
                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
                         files.close()
             os.system('data.csv')
 
-        def display(label):
+        def display():
             result = db.child('mainData').get()
             for data in result.each():
-                if(len(data.val()))!=0:
-                    self.display_data.delete(*self.display_data.get_children())
+                if len(data.val())!=0:
+                    #self.display_data.delete(*self.display_data.get_children())
                     for row in data.val():
                         self.display_data.insert('', END, values = row)
 
@@ -143,7 +143,7 @@ class gui:
             #function to delete 
             totalData = db.child('mainData').get()
             for data in totalData.each():
-                if data.val()['name'] == self.Name.text and data.val()['date'] == self.Date.text:
+                if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
                     db.child('mainData').child(data.key()).remove()
     
         def TrainInfo(ev):
@@ -171,15 +171,15 @@ class gui:
 
         self.display_data.pack(fill=BOTH, expand =1)
         self.display_data.bind("<ButtonRelease-1>",TrainInfo)
-        display(self.entDate)
+        display()
 #==============================================================================================================================================================================================
 
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="EXIT", bd=4, padx=16,pady=1,width=4,height=2,command=exit).grid(row=6,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="UPDATE", bd=4, padx=16,pady=1,width=4,height=2,command=update).grid(row=2,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="SAVE", bd=4, padx=16,pady=1,width=4,height=2,command=saveData).grid(row=1,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="DELETE", bd=4, padx=16,pady=1,width=4,height=2,command=delete).grid(row=5,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="SEARCH", bd=4, padx=16,pady=1,width=4,height=2,command=search).grid(row=4,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="DISPLAY", bd=4, padx=16,pady=1,width=4,height=2,command=display(self.entamount)).grid(row=3,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=4, padx=18,pady=1,width=7,height=3,command=exit).grid(row=6,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="UPDATE", bd=4, padx=18,pady=1,width=7,height=3,command=update).grid(row=2,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SAVE", bd=4, padx=18,pady=1,width=7,height=3,command=saveData).grid(row=1,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="DELETE", bd=4, padx=18,pady=1,width=7,height=3,command=delete).grid(row=5,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=4, padx=18,pady=1,width=7,height=3,command=search).grid(row=4,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=4, padx=18,pady=1,width=7,height=3,command=display).grid(row=3,column=0,padx=1)
 
 
 #Main:
