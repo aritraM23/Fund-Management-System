@@ -126,6 +126,7 @@ class gui:
             tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
 
         def search():
+            self.sum = 0
             #function to search
             totalData = db.child('mainData').get()
             with open('data.csv', 'w') as file:
@@ -133,16 +134,21 @@ class gui:
                 write.writerow(["Name", "Amount", "Date"])
                 file.close()
             for data in totalData.each():
-                print(data.val())
-                if (data.val()['date'] == Date.get() and data.val()['name'] == Name.get() and data.val()['amount'] == Amount.get()):
+                #print(data.val())
+                if (data.val()['date'] == Date.get() and data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
                     with open('data.csv', 'a') as files:
                         write = csv.writer(files)
                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
                         files.close()
                         os.system('data.csv')
+                        self.sum += 1
+            
+            if self.sum==0:
+                alertMssg()
 
-                else:
-                    tkinter.messagebox.showinfo("Search Error","Data not found!")
+
+        def alertMssg():
+            tkinter.messagebox.showerror("Search Error","Data not found!")
 
         def display():
             result = db.child('mainData').get()
