@@ -5,6 +5,9 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.messagebox
 import os
+from time import strftime
+from datetime import datetime
+import time
 import pyrebase
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
@@ -17,7 +20,6 @@ firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
     'measurementId': "G-MVMXL8CJNK"
 }
 
-
 firebase=pyrebase.initialize_app(firebaseConfig)
 db= firebase.database()
 
@@ -28,8 +30,8 @@ class gui:
         self.root = root
         titlespace=" "
         self.root.title(100*titlespace+"Money Management System")
-        self.root.geometry("850x750+330+0")
-        self.root.resizable(width=False,height=False)
+        self.root.geometry("820x750+330+0")
+        self.root.maxsize(860,750)
 
         # tabControl = ttk.Notebook(root)
         # tab1 = ttk.Frame(tabControl)
@@ -39,28 +41,34 @@ class gui:
         # tabControl.add(tab2, text = 'LOANS')
         # tabControl.pack(expand = 1, fill ="both")
 
-        
+
+        #clock function for live clock   
+        def times():
+            current_time=time.strftime("%H:%M:%S")
+            self.clock.config(text=current_time)
+            self.clock.after(200,times)
+
 ###################################################################################################################################
-        MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='skyblue1')
+        MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='midnight blue')
         MainFrame.grid()
 
-        TitleFrame= Frame(MainFrame,bd=7,width=770,height=100,relief=RIDGE)
+        TitleFrame= Frame(MainFrame,bd=7,width=770,height=100, bg='midnight blue')
         TitleFrame.grid(row=0,column=0)
-        TopFrame3= Frame(MainFrame,bd=5,width=770,height=500,relief=RIDGE)
+        TopFrame3= Frame(MainFrame,bd=5,width=770,height=500, bg = 'gold')
         TopFrame3.grid(row=1,column=0)
         
-        LeftFrame = Frame(TopFrame3, bd=5, width=700, height=500, relief=RIDGE,padx=2, bg='skyblue1')
-        LeftFrame.pack(side=LEFT)
-        LeftFrame1 = Frame(LeftFrame, bd=5, width=700, height=180, relief=RIDGE, padx=2,pady=9 )
-        LeftFrame1.pack(side=TOP)
+        LeftFrame = Frame(TopFrame3, bd=5, width=770, height=500, padx=2,pady=0, bg='midnight blue')
+        LeftFrame.pack(side=LEFT, expand = True, fill = 'both')
+        LeftFrame1 = Frame(LeftFrame, bd=5, width=770, height=180, padx=2,pady=0, bg = 'gold' )
+        LeftFrame1.pack(side=TOP, expand = True, fill = 'both')
 
-        RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE,padx=2, bg='skyblue1')
-        RightFrame.pack(side=RIGHT)
-        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=90, relief=RIDGE, padx=12,pady=4)
-        RightFrame1a.pack(side=TOP)
+        RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE,padx=2, bg='midnight blue')
+        RightFrame.pack(side=RIGHT,expand = True, fill = 'both')
+        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=90, padx=12,pady=4, bg = 'midnight blue' )
+        RightFrame1a.pack(side=TOP, expand = True, fill = 'both')
 
-        self.lbltitle=Label(TitleFrame, font=('Arial',33,'bold'), text="Money Management System",bd=7)
-        self.lbltitle.grid(row=0,column=0,padx=130)
+        self.lbltitle=Label(TitleFrame, font=('Arial',33,'bold'), fg= 'gold', text="Money Management System",bd=7, bg = 'midnight blue')
+        self.lbltitle.grid(row=0,column=1,padx=70)
         
         Name = StringVar()
         Amount = StringVar()
@@ -68,25 +76,28 @@ class gui:
 #===============================================================================================================================================================================================
 #Input Fields:
 
-        self.lblname = Label(LeftFrame1, font =('arial',12,'bold'), text = 'Name' , bd = 13 )
-        self.lblname.grid(row = 0, column=0, sticky = W,padx = 5)
+        self.lblname = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Name' , bd = 13 , bg = 'gold')
+        self.lblname.grid(row = 1, column=0, sticky = W,padx = 5)
 
-        self.entname = Entry(LeftFrame1, font =('arial',12,'bold'), bd = 13 , width = 44, justify='left', textvariable = Name)
-        self.entname.grid(row = 0, column=1, sticky = W,padx = 5)
+        self.entname = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 50, justify='left', textvariable = Name)
+        self.entname.grid(row = 1, column=1, sticky = W,padx = 5)
         
-        self.lblamount = Label(LeftFrame1, font =('arial',12,'bold'), text = 'Amount' , bd = 13 )
-        self.lblamount.grid(row = 1, column=0, sticky = W,padx = 5)
+        self.lblamount = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Amount' , bd = 13 , bg = 'gold' )
+        self.lblamount.grid(row = 2, column=0, sticky = W,padx = 5)
 
-        self.entamount = Entry(LeftFrame1, font =('arial',12,'bold'), bd = 13 , width = 44, justify='left', textvariable = Amount)
-        self.entamount.grid(row = 1, column=1, sticky = W,padx = 5)
+        self.entamount = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 50, justify='left', textvariable = Amount)
+        self.entamount.grid(row = 2, column=1, sticky = W,padx = 5)
 
-        self.lblDate = Label(LeftFrame1, font =('arial',12,'bold'), text = 'Date' , bd = 13 )
-        self.lblDate.grid(row = 2, column=0, sticky = W,padx = 5)
+        self.lblDate = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Date' , bd = 13 , bg = 'gold')
+        self.lblDate.grid(row = 3, column=0, sticky = W,padx = 5)
 
-        self.entDate = Entry(LeftFrame1, font =('arial',12,'bold'), bd = 13 , width = 44, justify='left', textvariable = Date)
-        self.entDate.grid(row = 2, column=1, sticky = W,padx = 5)
+        self.entDate = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 50, justify='left', textvariable = Date)
+        self.entDate.grid(row = 3, column=1, sticky = W,padx = 5)
 
-
+        #label for clock display
+        self.clock=Label(TitleFrame,font=("times",15,"bold"),bg="midnight blue",fg='gold')
+        self.clock.grid(row=0,column=0,padx=0, pady = 0)
+        times()
 #===============================================================================================================================================================================================
 # The functions: 
     
@@ -133,9 +144,6 @@ class gui:
                 else:
                     tkinter.messagebox.showinfo("Search Error","Data not found!")
 
-            
-
-
         def display():
             result = db.child('mainData').get()
             for data in result.each():
@@ -165,7 +173,7 @@ class gui:
             self.entDate.delete(0, END)
 #==============================================================================================================================================================================================
         y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
-        self.display_data = ttk.Treeview(LeftFrame, height= 15, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
+        self.display_data = ttk.Treeview(LeftFrame, height= 18, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
         y_scroll.pack(side = RIGHT, fill= Y)
 
         self.display_data.heading("Name", text= "NAME")
@@ -183,13 +191,13 @@ class gui:
         display()
 #==============================================================================================================================================================================================
 
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=4, padx=18,pady=1,width=7,height=3,command=exit).grid(row=7,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="UPDATE", bd=4, padx=18,pady=1,width=7,height=3,command=update).grid(row=2,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SAVE", bd=4, padx=18,pady=1,width=7,height=3,command=saveData).grid(row=1,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="DELETE", bd=4, padx=18,pady=1,width=7,height=3,command=delete).grid(row=5,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=4, padx=18,pady=1,width=7,height=3,command=search).grid(row=4,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=4, padx=18,pady=1,width=7,height=3,command=display).grid(row=3,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=4, padx=18,pady=1,width=7,height=3,command=reset).grid(row=6,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=7, padx=18,pady=1,width=7,height=3,bg = 'gold',command=exit).grid(row=7,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="UPDATE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=update).grid(row=2,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SAVE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=saveData).grid(row=1,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="DELETE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=delete).grid(row=5,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=search).grid(row=4,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=display).grid(row=3,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=reset).grid(row=6,column=0,padx=1)
 
 
 #Main:
