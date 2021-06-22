@@ -134,7 +134,7 @@ class gui:
                 file.close()
             for data in totalData.each():
                 print(data.val())
-                if (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount'] == Amount.get()):
+                if (data.val()['date'] == Date.get() and data.val()['name'] == Name.get() and data.val()['amount'] == Amount.get()):
                     with open('data.csv', 'a') as files:
                         write = csv.writer(files)
                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
