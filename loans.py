@@ -74,19 +74,19 @@ class loan:
         self.lblamount = Label(RightFrame1a, font =('arial',13,'bold'), text = 'Amount' , bd = 13 , bg= 'midnight blue', fg = 'gold')
         self.lblamount.grid(row = 0, column=0, sticky = W,padx = 4)
 
-        self.entamount = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 30, justify='left', textvariable = AmountL)
+        self.entamount = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 20, justify='left', textvariable = AmountL)
         self.entamount.grid(row = 0, column=1, sticky = W,padx = 4)
         
         self.lblroi = Label(RightFrame1a, font =('arial',13,'bold'), text = 'Rate of\nInterest' , bd = 13 ,bg= 'midnight blue', fg = 'gold' )
         self.lblroi.grid(row = 1, column=0, sticky = W,padx = 4)
 
-        self.entroi = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 30, justify='left', textvariable = Interest)
+        self.entroi = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 20, justify='left', textvariable = Interest)
         self.entroi.grid(row = 1, column=1, sticky = W,padx = 4)
 
         self.lblmonth = Label(RightFrame1a, font =('arial',13,'bold'), text = 'Months' , bd = 13 ,bg= 'midnight blue', fg = 'gold')
         self.lblmonth.grid(row = 2, column=0, sticky = W,padx = 4)
 
-        self.entmonth = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 30, justify='left', textvariable = Months)
+        self.entmonth = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 20, justify='left', textvariable = Months)
         self.entmonth.grid(row = 2, column=1, sticky = W,padx = 4)
 
 ##################################################################################################################################################################################
@@ -99,10 +99,17 @@ class loan:
             datas = {'Amount': amount, 'ROI': roi, 'Months' : months}
             db.child('loanDemo').push(datas)
 
+        def calculate():
+            pass
+
+        def display():
+            pass
+
 ###################################################################################################################################################################################
 
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 11, 'bold'), text="ADD", bd=5, padx=15,pady=1,width=7,height=1, bg = 'gold',fg = 'midnight blue', command=addDataL).grid(row=4,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 11, 'bold'), text="ADD", bd=5, padx=15,pady=1,width=7,height=1, bg = 'gold',fg = 'midnight blue', command=calculate).grid(row=4,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="ADD", bd=6, padx=10,pady=1,width=7,height=1, bg = 'gold',fg = 'midnight blue', command=addDataL).grid(row=0,column=2,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="CALCULATE", bd=6, padx=10,pady=1,width=7,height=1, bg = 'gold',fg = 'midnight blue', command=calculate).grid(row=1,column=2,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 10, 'bold'), text="DISPLAY", bd=6, padx=10,pady=1,width=7,height=1, bg = 'gold',fg = 'midnight blue', command=display).grid(row=2,column=2,padx=1)
 
 ###################################################################################################################################################################################
 
