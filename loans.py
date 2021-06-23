@@ -8,6 +8,7 @@ import os
 from time import strftime
 from datetime import datetime
 import time
+from pyasn1.type.univ import Null
 import pyrebase
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
@@ -30,8 +31,8 @@ class loan:
         self.root = root
         titlespace=" "
         self.root.title(100*titlespace+"Money Management System")
-        self.root.geometry("820x750+330+0")
-        self.root.maxsize(860,750)
+        self.root.geometry("900x750+330+0")
+        self.root.maxsize(900,750)
 
         #clock function for live clock   
         def times():
@@ -91,13 +92,40 @@ class loan:
 
 ##################################################################################################################################################################################
         
+        Name = StringVar()
+        Phone = StringVar()
+        ShopName = StringVar()
+
+        self.lblname = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Name' , bd = 13 , bg = 'gold', fg = 'midnight blue')
+        self.lblname.grid(row = 0, column=0, sticky = W,padx = 4)
+
+        self.entname = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = Name)
+        self.entname.grid(row = 0, column=1, sticky = W,padx = 4)
+
+        self.lblphone = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Phone' , bd = 13 , bg = 'gold', fg = 'midnight blue')
+        self.lblphone.grid(row = 1, column=0, sticky = W,padx = 4)
+
+        self.entphone = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = Phone)
+        self.entphone.grid(row = 1, column=1, sticky = W,padx = 4)
+
+        self.lblsn = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Shop Name' , bd = 13 , bg = 'gold', fg = 'midnight blue')
+        self.lblsn.grid(row = 2, column=0, sticky = W,padx = 4)
+
+        self.entsn = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = ShopName)
+        self.entsn.grid(row = 2, column=1, sticky = W,padx = 4)
+
+##################################################################################################################################################################################
+
         def addDataL():
             amount = AmountL.get()
             roi = Interest.get()
             months = Months.get()
+            if(amount != '' and roi != '' and months != ''):
+                datas = {'Amount': amount, 'ROI': roi, 'Months' : months}
+                db.child('loanDemo').push(datas)
 
-            datas = {'Amount': amount, 'ROI': roi, 'Months' : months}
-            db.child('loanDemo').push(datas)
+            else:
+                tkinter.messagebox.showerror('Data insufficient!', ' Fill all entries to save!')
 
         def calculate():
             pass
