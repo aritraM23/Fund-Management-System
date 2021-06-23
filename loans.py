@@ -95,6 +95,8 @@ class loan:
         Name = StringVar()
         Phone = StringVar()
         ShopName = StringVar()
+        Address = StringVar()
+        TotalDep = StringVar()
 
         self.lblname = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Name' , bd = 13 , bg = 'gold', fg = 'midnight blue')
         self.lblname.grid(row = 0, column=0, sticky = W,padx = 4)
@@ -113,6 +115,18 @@ class loan:
 
         self.entsn = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = ShopName)
         self.entsn.grid(row = 2, column=1, sticky = W,padx = 4)
+
+        self.lbladd = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Address' , bd = 13 , bg = 'gold', fg = 'midnight blue')
+        self.lbladd.grid(row = 3, column=0, sticky = W,padx = 4)
+
+        self.entadd = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = Address)
+        self.entadd.grid(row = 3, column=1, sticky = W,padx = 4)
+
+        self.lbldep = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Total\nDeposit' , bd = 13 , bg = 'gold', fg = 'midnight blue')
+        self.lbldep.grid(row = 4, column=0, sticky = W,padx = 4)
+
+        self.entdep = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = TotalDep)
+        self.entdep.grid(row = 4, column=1, sticky = W,padx = 4)
 
 ##################################################################################################################################################################################
 
