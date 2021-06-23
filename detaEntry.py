@@ -112,35 +112,52 @@ class gui:
             name = Name.get()
             amount = Amount.get()
             date = Date.get()
-            
-            datas = {'name': name, 'amount': amount, 'date': date}
-            db.child('mainData').push(datas)
-
+            if (Name.get()!='' and Date.get()!='' and Amount.get()!=''):
+                datas = {'name': name, 'amount': amount, 'date': date}
+                db.child('mainData').push(datas)
+            else:
+                tkinter.messagebox.showerror('Error','Insert Data In All Fields')
         def update():
-            #function to update
+           
             totalData = db.child('mainData').get()
             for data in totalData.each():
                 if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
-                    db.child('mainData').child(data.key()).update(
-                        {'name': Name.get(), 'amount': Amount.get(), 'date': Date.get()})        
+                    db.child('mainData').child(data.key()).update({'name': Name.get(), 'amount': Amount.get(),
+                                                                   'date': Date.get()})
             tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
 
         def search():
             self.sum = 0
-            #function to search
+            self.callAll = 'all'
             totalData = db.child('mainData').get()
             with open('data.csv', 'w') as file:
                 write = csv.writer(file)
                 write.writerow(["Name", "Amount", "Date"])
                 file.close()
             for data in totalData.each():
-                #print(data.val())
-                if (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
+                if ('all'==Name.get().lower()):
+                    with open('FullFile.csv', 'w') as file:
+                        write = csv.writer(file)
+                        write.writerow(["Name", "Amount", "Date"])
+                        file.close()
+                    totalData = db.child('mainData').get()
+                    for data in totalData.each():
+                        with open('FullFile.csv', 'a') as files:
+                            print('Inside this')
+                            write = csv.writer(files)
+                            write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
+                            files.close()
+                    os.system('FullFile.csv')
+                    return 0
+                elif (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
                     with open('data.csv', 'a') as files:
                         write = csv.writer(files)
                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
                         files.close()
                         self.sum += 1
+                
+                    
+                
             if self.sum>0:
                 os.system('data.csv')
             
@@ -152,12 +169,8 @@ class gui:
             tkinter.messagebox.showerror("Search Error","Data not found!")
 
         def display():
-            result = db.child('mainData').get()
-            for data in result.each():
-                if len(data.val())!=0:
-                    self.display_data.delete(*self.display_data.get_children())
-                    for row in data.val():
-                        self.display_data.insert('', END, values = row)
+           
+            pass
 
         def delete():
             #function to delete 
