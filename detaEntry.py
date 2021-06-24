@@ -91,7 +91,7 @@ class gui:
         self.lblDate = Label(LeftFrame1, font =('arial',13,'bold'), text = 'Date' , bd = 13 , bg = 'gold')
         self.lblDate.grid(row = 3, column=0, sticky = W,padx = 5)
 
-        self.entDate = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 50, justify='left', textvariable = Date)
+        self.entDate = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 50,  justify='left', textvariable = Date)
         self.entDate.grid(row = 3, column=1, sticky = W,padx = 5)
 
         #label for clock display
@@ -112,8 +112,13 @@ class gui:
             name = Name.get()
             amount = Amount.get()
             date = Date.get()
+            if(date.find('.')>-1):
+                d, m, y = date.split('.')
+                mdate = d + '/' + m + '/' + y
+            else:
+                mdate = date
             if (Name.get()!='' and Date.get()!='' and Amount.get()!=''):
-                datas = {'name': name, 'amount': amount, 'date': date}
+                datas = {'name': name, 'amount': amount, 'date': mdate}
                 db.child('mainData').push(datas)
             else:
                 tkinter.messagebox.showerror('Error','Insert Data In All Fields')
@@ -191,6 +196,21 @@ class gui:
             self.entname.delete(0, END)
             self.entamount.delete(0, END)
             self.entDate.delete(0, END)
+
+        def export():
+            with open('FullFile.csv', 'w') as file:
+                write = csv.writer(file)
+                write.writerow(["Name", "Amount", "Date"])
+                file.close()
+            totalData = db.child('mainData').get()
+            for data in totalData.each():
+                with open('FullFile.csv', 'a') as files:
+                    print('Inside this')
+                    write = csv.writer(files)
+                    write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
+                    files.close()
+            os.system('FullFile.csv')
+            return 0
 #==============================================================================================================================================================================================
         y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
         self.display_data = ttk.Treeview(LeftFrame, height= 18, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
@@ -218,7 +238,7 @@ class gui:
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=search).grid(row=4,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=display).grid(row=3,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=reset).grid(row=6,column=0,padx=1)
-
+        self.btnAddNew=Button(LeftFrame1,font=('arial', 7 , 'bold'), text="EXPORT ALL", bd=3, padx=18,pady=1,width=5,height=1, bg = 'midnight blue', fg = 'gold', command=export).grid(row=4,column=0,padx=1)
 
 #Main:
 
