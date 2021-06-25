@@ -48,6 +48,45 @@ class gui:
             self.clock.config(text=current_time)
             self.clock.after(200,times)
 
+        self.btnState = False
+        
+        def switch():
+            global btnState
+            if self.btnState is True:
+                for x in range(300):
+                    self.navRoot.place(x = -x, y = 0)
+                    TitleFrame.update()
+
+                self.btnState = False
+
+            else:
+
+                for x in range(-300,0):
+                    self.navRoot.place(x = x, y = 0)
+                    TitleFrame.update()
+
+                self.btnState = True
+                
+        def export():
+            with open('FullFile.csv', 'w') as file:
+                write = csv.writer(file)
+                write.writerow(["Name", "Amount", "Date"])
+                file.close()
+            totalData = db.child('mainData').get()
+            for data in totalData.each():
+                with open('FullFile.csv', 'a') as files:
+                    print('Inside this')
+                    write = csv.writer(files)
+                    write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
+                    files.close()
+            os.system('FullFile.csv')
+            return 0
+
+        def ind_import():
+            pass
+
+        def about():
+            pass
 ###################################################################################################################################
         MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='midnight blue')
         MainFrame.grid()
@@ -96,8 +135,36 @@ class gui:
 
         #label for clock display
         self.clock=Label(TitleFrame,font=("times",15,"bold"),bg="midnight blue",fg='gold')
-        self.clock.grid(row=0,column=0,padx=0, pady = 0)
+        self.clock.grid(row=0,column=2,padx=0, pady = 0)
         times()
+#===============================================================================================================================================================================================
+
+    #nav bar
+        navIcon = PhotoImage(file = "navbar.png")
+        closeIcon = PhotoImage(file = "exit.png")
+
+        self.nvbarbtn = Button(TitleFrame, text = 'M', font=('arial', 6, 'bold'),  width=4,height=3,  activebackground= 'white', bd = 0, padx = 1, command= switch ).grid(row= 0, column= 0, padx = 0, pady = 0 )
+        self.navRoot = Frame(root, bg = 'gold', height= 500, width = 200)
+        self.navRoot.place(x = -300, y = 0)
+
+        Label(self.navRoot, text = "Menu", font = 'arial 10 bold', bg = 'midnight blue', fg = 'gold', height = 3, width= 200, padx = 0).place(x= 0 , y=0)
+
+        self.y = 80
+
+        self.options = ["Export All", "Import Individual", "About" ]
+        self.methods = [ export , ind_import, about ]
+        
+        self.navExp = Button(self.navRoot, text="Export All", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = export ).place(x=25, y=self.y)
+        self.y += 40
+
+        self.navExp = Button(self.navRoot, text="Import Individual", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = ind_import ).place(x=25, y=self.y)
+        self.y += 40
+
+        self.navExp = Button(self.navRoot, text="About", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = about ).place(x=25, y=self.y)
+
+        self.closeBtn = Button(self.navRoot, text = 'EXIT', font=('arial', 6, 'bold'),  width=4,height=3,  activebackground= 'white', bd = 0, padx = 1, command= switch )
+        self.closeBtn.place(x= 150, y = 10)
+        
 #===============================================================================================================================================================================================
 # The functions: 
     
@@ -197,20 +264,7 @@ class gui:
             self.entamount.delete(0, END)
             self.entDate.delete(0, END)
 
-        def export():
-            with open('FullFile.csv', 'w') as file:
-                write = csv.writer(file)
-                write.writerow(["Name", "Amount", "Date"])
-                file.close()
-            totalData = db.child('mainData').get()
-            for data in totalData.each():
-                with open('FullFile.csv', 'a') as files:
-                    print('Inside this')
-                    write = csv.writer(files)
-                    write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
-                    files.close()
-            os.system('FullFile.csv')
-            return 0
+        
 #==============================================================================================================================================================================================
         y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
         self.display_data = ttk.Treeview(LeftFrame, height= 18, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
@@ -238,7 +292,7 @@ class gui:
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=search).grid(row=4,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=display).grid(row=3,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=reset).grid(row=6,column=0,padx=1)
-        self.btnAddNew=Button(LeftFrame1,font=('arial', 7 , 'bold'), text="EXPORT ALL", bd=3, padx=18,pady=1,width=5,height=1, bg = 'midnight blue', fg = 'gold', command=export).grid(row=4,column=0,padx=1)
+        #self.btnAddNew=Button(LeftFrame1,font=('arial', 7 , 'bold'), text="EXPORT ALL", bd=3, padx=18,pady=1,width=5,height=1, bg = 'midnight blue', fg = 'gold', command=export).grid(row=4,column=0,padx=1)
 
 #Main:
 
