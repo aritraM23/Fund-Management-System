@@ -9,7 +9,7 @@ from time import strftime
 from datetime import datetime
 import time
 import pyrebase
-import indiv
+# import indiv
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
     'authDomain': "fundmang-42ad8.firebaseapp.com",
@@ -31,8 +31,8 @@ class gui:
         self.root = root
         titlespace=" "
         self.root.title(100*titlespace+"Money Management System")
-        self.root.geometry("820x750+330+0")
-        self.root.maxsize(860,750)
+        self.root.geometry("883x750+330+0")
+        self.root.maxsize(883,750)
 
         # tabControl = ttk.Notebook(root)
         # tab1 = ttk.Frame(tabControl)
@@ -50,6 +50,9 @@ class gui:
             self.clock.after(200,times)
 
         self.btnState = False
+
+        def s_byname():
+            pass
         
         def switch():
             global btnState
@@ -84,15 +87,39 @@ class gui:
             return 0
 
         def ind_import():
-            # self.ind = Toplevel(root)
-            # self.ind.geometry("500x400+330+0")
-            # self.root.title(100*titlespace+"Money Management System")
-            # self.root.geometry("420x350+330+0")
+            self.ind = Toplevel(root)
+            self.ind.geometry("563x250+330+0")
+            self.ind.title(50*titlespace+"Money Management System")
+            #self.ind.maxsize("570x250")
+            #self.ind.resizable(False)
+            
+            mainFrame= Frame(self.ind,bd=10,width=500,height=200,relief=RIDGE,bg='midnight blue')
+            mainFrame.grid()
+
+            # self.labelMain = Label(self.ind, bd=7, width=500, height=400, bg='midnight blue')
+            # self.labelMain.grid(row = 0, column = 0)
+            topFrame = Frame(mainFrame,bd=10,width=500,height=100,relief=RIDGE,bg='midnight blue' )
+            topFrame.grid(row = 1, column = 0)
+
+            indtitleFrame = Frame(mainFrame,bd=10,width=500,height=70, bg='midnight blue')
+            indtitleFrame.grid(row = 0, column= 0)
+
+            self.indtitle=Label(indtitleFrame, font=('Arial',18,'bold'), fg= 'gold', text="Import Individual Data by Name:",bd=7, bg = 'midnight blue')
+            self.indtitle.grid(row=0,column=1,padx=70)
+
+            
+            self.indEntry = Entry(topFrame, font =('arial',13,'bold'), bd = 13 , width = 50,justify='left',  textvariable = Name)
+            self.indEntry.grid(row = 0, column=0, padx = 5)
+
+            Label(topFrame, font=('Arial',18,'bold'), text=" ",bd=3, bg = 'midnight blue').grid(row=1,column=0,padx=70)
+
+            Button(topFrame,font=('arial', 13, 'bold'), text="IMPORT", bd=5, padx=10,pady=1,width=5,height=2,bg = 'gold',command=s_byname).grid(row=2,column=0,padx=1)
+
             # self.root.maxsize(460,350)
             # self.root.destroy()
             # import indiv
             # self.root.destroy()
-            # import indiv
+            # indiv.gui(tkinter.Tk())
 
         def about():
             pass
@@ -322,7 +349,7 @@ class gui:
 
 #Main:
 
-if __name__ == '__main__':
-    root=tkinter.Tk()
-    application = gui(root)
-    root.mainloop()
+# if __name__ == '__main__':
+root=tkinter.Tk()
+application = gui(root)
+root.mainloop()
