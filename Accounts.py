@@ -9,6 +9,7 @@ from time import strftime
 from datetime import datetime
 import time
 import pyrebase
+import indiv
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
     'authDomain': "fundmang-42ad8.firebaseapp.com",
@@ -83,7 +84,15 @@ class gui:
             return 0
 
         def ind_import():
-            pass
+            # self.ind = Toplevel(root)
+            # self.ind.geometry("500x400+330+0")
+            # self.root.title(100*titlespace+"Money Management System")
+            # self.root.geometry("420x350+330+0")
+            # self.root.maxsize(460,350)
+            # self.root.destroy()
+            # import indiv
+            # self.root.destroy()
+            # import indiv
 
         def about():
             pass
@@ -157,10 +166,10 @@ class gui:
         self.navExp = Button(self.navRoot, text="Export All", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = export ).place(x=25, y=self.y)
         self.y += 40
 
-        self.navExp = Button(self.navRoot, text="Import Individual", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = ind_import ).place(x=25, y=self.y)
+        self.navInd = Button(self.navRoot, text="Import Individual", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = ind_import ).place(x=25, y=self.y)
         self.y += 40
 
-        self.navExp = Button(self.navRoot, text="About", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = about ).place(x=25, y=self.y)
+        self.navAbt = Button(self.navRoot, text="About", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = about ).place(x=25, y=self.y)
 
         self.closeBtn = Button(self.navRoot, text = 'EXIT', font=('arial', 6, 'bold'),  width=4,height=3,  activebackground= 'white', bd = 0, padx = 1, command= switch )
         self.closeBtn.place(x= 150, y = 10)
@@ -179,23 +188,22 @@ class gui:
             name = Name.get()
             amount = Amount.get()
             date = Date.get()
-            if(date.find('.')>-1):
-                d, m, y = date.split('.')
-                mdate = d + '/' + m + '/' + y
-            else:
-                mdate = date
             if (Name.get()!='' and Date.get()!='' and Amount.get()!=''):
-                datas = {'name': name, 'amount': amount, 'date': mdate}
+                datas = {'name': name, 'amount': amount, 'date': date}
                 db.child('mainData').push(datas)
+                db.child('registerUserExp').child(name).push(datas)
+
             else:
                 tkinter.messagebox.showerror('Error','Insert Data In All Fields')
+        
         def update():
-           
             totalData = db.child('mainData').get()
             for data in totalData.each():
                 if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
                     db.child('mainData').child(data.key()).update({'name': Name.get(), 'amount': Amount.get(),
                                                                    'date': Date.get()})
+                    db.child('registerUserExp').child(Name.get()).child(data.key()).update({'name': Name.get(),
+                                                                    'amount': Amount.get(), 'date': Date.get()})
             tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
 
         def search():
@@ -245,11 +253,28 @@ class gui:
             pass
 
         def delete():
-            #function to delete 
+            #function to delete
+            self.deleteData=0
             totalData = db.child('mainData').get()
+            
             for data in totalData.each():
+                
                 if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
                     db.child('mainData').child(data.key()).remove()
+                    db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
+                    tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
+                    self.deleteData+=1
+                if Name.get()=='' :
+                    tkinter.messagebox.showerror('Error', 'Enter Name')
+                    self.deleteData+=1
+                    break
+                if Date.get()=='':
+                    tkinter.messagebox.showerror('Error', 'Enter Date')
+                    self.deleteData += 1
+                    break
+                    
+            if (self.deleteData==0):
+                tkinter.messagebox.showerror('Error', 'No Data Found')
     
         def TrainInfo(ev):
             viewInfo = self.display_data.focus()
@@ -292,7 +317,8 @@ class gui:
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=search).grid(row=4,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=display).grid(row=3,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=reset).grid(row=6,column=0,padx=1)
-        #self.btnAddNew=Button(LeftFrame1,font=('arial', 7 , 'bold'), text="EXPORT ALL", bd=3, padx=18,pady=1,width=5,height=1, bg = 'midnight blue', fg = 'gold', command=export).grid(row=4,column=0,padx=1)
+
+#================================================================================================================================================================================================
 
 #Main:
 
