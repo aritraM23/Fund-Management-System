@@ -71,6 +71,7 @@ class loan:
         Months = StringVar()
         AmountL = StringVar()
         Interest = StringVar()
+        Date = StringVar()
 
         self.lblamount = Label(RightFrame1a, font =('arial',13,'bold'), text = 'Amount' , bd = 13 , bg= 'midnight blue', fg = 'gold')
         self.lblamount.grid(row = 0, column=0, sticky = W,padx = 4)
@@ -89,6 +90,13 @@ class loan:
 
         self.entmonth = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 20, justify='left', textvariable = Months)
         self.entmonth.grid(row = 2, column=1, sticky = W,padx = 4)
+
+        self.lblmonth = Label(RightFrame1a, font =('arial',13,'bold'), text = 'Date of Loan' , bd = 13 ,bg= 'midnight blue', fg = 'gold')
+        self.lblmonth.grid(row = 3, column=0, sticky = W,padx = 4)
+
+        self.entmonth = Entry(RightFrame1a, font =('arial',13,'bold'), bd = 10 , width = 20, justify='left', textvariable = Date)
+        self.entmonth.grid(row = 3, column=1, sticky = W,padx = 4)
+
 
 ##################################################################################################################################################################################
         
@@ -128,21 +136,75 @@ class loan:
         self.entdep = Entry(LeftFrame1, font =('arial',13,'bold'), bd = 13 , width = 26, justify='left', textvariable = TotalDep)
         self.entdep.grid(row = 4, column=1, sticky = W,padx = 4)
 
+        self.clock=Label(TitleFrame,font=("times",15,"bold"),bg="midnight blue",fg='gold')
+        self.clock.grid(row=0,column=0,padx=0, pady = 0)
+        times()
+
 ##################################################################################################################################################################################
 
         def addDataL():
+            name = Name.get()
             amount = AmountL.get()
             roi = Interest.get()
             months = Months.get()
-            if(amount != '' and roi != '' and months != ''):
-                datas = {'Amount': amount, 'ROI': roi, 'Months' : months}
+            date = Date.get()
+            if(name != '' and amount != '' and roi != '' and months != ''):
+                datas = {'Name' : name,'Amount': amount, 'ROI': roi, 'Months' : months, 'Date' : date}
                 db.child('loanDemo').push(datas)
 
             else:
                 tkinter.messagebox.showerror('Data insufficient!', ' Fill all entries to save!')
 
         def calculate():
-            pass
+
+            Lname = Name.get()
+            Ldate = Date.get()[:2]
+            tD = db.child('registerUserExp').get()
+            lD = db.child('loanDemo').get()
+            print(Ldate)
+
+            if Lname!='' and Ldate=='':
+                
+                count = 0
+                totalD = 0
+
+                for data in tD.each():
+                    if(Lname == data.key()):
+                        # print(data.key())
+                        # break
+                        try:
+                            td1 = db.child('registerUserExp').child(Lname).get()
+                            for nm in td1.each():
+                                if nm.val()['name']==Lname:
+                                    count += 1
+                                    totalD += int(nm.val()['amount'])
+                                    
+                            print(totalD)
+                            print(count)
+                            
+                        except:
+                            tkinter.messagebox.showerror('Error!', 'Search query not found!')
+
+            elif Lname!='' and Ldate!='':
+                try:    
+                    for data in tD.each():
+                        if(Lname == data.key()):
+                            td1 = db.child('registerUserExp').child(Lname).get()
+                            try:
+                                for ln in td1.each():
+                                    if ln.val()['name']==Name.get() and int(ln.val()['date'][:2])>=int(Ldate):
+                                        print(ln.val()['date'][:2])
+
+                            except:
+                                print(ln.val()['date'][:2] + "except")
+                                continue
+
+                            #todo : month problem in date sorting
+                except:
+                    print("jate bojha jaye")
+
+                            
+            # pass
 
         def display():
             pass
