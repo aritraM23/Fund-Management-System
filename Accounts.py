@@ -237,34 +237,40 @@ class gui:
             self.sum = 0
             self.callAll = 'all'
             totalData = db.child('mainData').get()
+            loanDB = db.child('loanDemo').get()
             with open('data.csv', 'w') as file:
                 write = csv.writer(file)
-                write.writerow(["Name", "Amount", "Date"])
+                write.writerow(["Name", "Amount", "Date", "Loan"])
                 file.close()
             for data in totalData.each():
-                if ('all'==Name.get().lower()):
-                    with open('FullFile.csv', 'w') as file:
-                        write = csv.writer(file)
-                        write.writerow(["Name", "Amount", "Date"])
-                        file.close()
-                    totalData = db.child('mainData').get()
-                    for data in totalData.each():
-                        with open('FullFile.csv', 'a') as files:
-                            print('Inside this')
+                for ld in loanDB.each():
+                    if ('all'==Name.get().lower()):
+                        with open('FullFile.csv', 'w') as file:
+                            write = csv.writer(file)
+                            write.writerow(["Name", "Amount", "Date", "Loan"])
+                            file.close()
+                        totalData = db.child('mainData').get()
+                        loanDB = db.child('loanDemo').get()
+                        for data in totalData.each():
+                            for ld in loanDB.each():
+                                with open('FullFile.csv', 'a') as files:
+                                    write = csv.writer(files)
+                                    if ld.val()['Name']==data.val()['name']:
+                                        write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'], ld.val()['Amount']])
+                                        files.close()
+                                    else:
+                                        write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
+                                        files.close()
+                        os.system('FullFile.csv')
+                        return 0
+                    elif (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
+                        with open('data.csv', 'a') as files:
                             write = csv.writer(files)
                             write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
                             files.close()
-                    os.system('FullFile.csv')
-                    return 0
-                elif (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
-                    with open('data.csv', 'a') as files:
-                        write = csv.writer(files)
-                        write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
-                        files.close()
-                        self.sum += 1
-                
+                            self.sum += 1
                     
-                
+                         
             if self.sum>0:
                 os.system('data.csv')
             
@@ -276,7 +282,6 @@ class gui:
             tkinter.messagebox.showerror("Search Error","Data not found!")
 
         def display():
-           
             pass
 
         def delete():
@@ -315,9 +320,9 @@ class gui:
             self.entname.delete(0, END)
             self.entamount.delete(0, END)
             self.entDate.delete(0, END)
-
         
 #==============================================================================================================================================================================================
+
         y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
         self.display_data = ttk.Treeview(LeftFrame, height= 18, columns= ('Name', 'Amount', 'Date'), yscrollcommand= y_scroll.set)
         y_scroll.pack(side = RIGHT, fill= Y)
@@ -335,6 +340,7 @@ class gui:
         self.display_data.pack(fill=BOTH, expand =1)
         self.display_data.bind("<ButtonRelease-1>",TrainInfo)
         display()
+
 #==============================================================================================================================================================================================
 
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=7, padx=18,pady=1,width=7,height=3,bg = 'gold',command=exit).grid(row=7,column=0,padx=1)
@@ -349,7 +355,7 @@ class gui:
 
 #Main:
 
-# if __name__ == '__main__':
-root=tkinter.Tk()
-application = gui(root)
-root.mainloop()
+if __name__ == '__main__':
+    root=tkinter.Tk()
+    application = gui(root)
+    root.mainloop()
