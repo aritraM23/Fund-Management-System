@@ -176,10 +176,10 @@ class gui:
 #===============================================================================================================================================================================================
 
     #nav bar
-        navIcon = PhotoImage(file = "navbar.png")
-        closeIcon = PhotoImage(file = "exit.png")
+        self.navIcon = PhotoImage(file = "navbar.png")
+        self.closeIcon = PhotoImage(file = "exit.png")
 
-        self.nvbarbtn = Button(TitleFrame, text = 'M', font=('arial', 6, 'bold'),  width=4,height=3,  activebackground= 'white', bd = 0, padx = 1, command= switch ).grid(row= 0, column= 0, padx = 0, pady = 0 )
+        self.nvbarbtn = Button(TitleFrame, image = self.navIcon,  width=24,height=24, bd = 0, padx = 1, command= switch ).grid(row= 0, column= 0, padx = 0, pady = 0 )
         self.navRoot = Frame(root, bg = 'gold', height= 500, width = 200)
         self.navRoot.place(x = -300, y = 0)
 
@@ -198,8 +198,8 @@ class gui:
 
         self.navAbt = Button(self.navRoot, text="About", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = about ).place(x=25, y=self.y)
 
-        self.closeBtn = Button(self.navRoot, text = 'EXIT', font=('arial', 6, 'bold'),  width=4,height=3,  activebackground= 'white', bd = 0, padx = 1, command= switch )
-        self.closeBtn.place(x= 150, y = 10)
+        self.closeBtn = Button(self.navRoot, image = self.closeIcon,  width=22,height=22, relief= RIDGE, bd = 0, padx = 1, command= switch )
+        self.closeBtn.place(x= 150, y = 20)
         
 #===============================================================================================================================================================================================
 # The functions: 
@@ -355,7 +355,7 @@ class gui:
 
 #Main:
 
-if __name__ == '__main__':
-    root=tkinter.Tk()
-    application = gui(root)
-    root.mainloop()
+# if __name__ == '__main__':
+root=tkinter.Tk()
+application = gui(root)
+root.mainloop()
