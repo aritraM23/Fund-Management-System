@@ -43,6 +43,14 @@ def page1():
         b1.destroy()
         b2.destroy()
 
+        def Accounts():
+            root.destroy()
+            import mainApp
+            master = tkinter.Tk()
+            application = mainApp.gui(master)
+            master.mainloop()
+
+
         def time():
             string = strftime('%H:%M:%S %p')
             lbl.config(text="Time:- " + string)
@@ -68,7 +76,7 @@ def page1():
         Bal_entry = Entry(root, borderwidth=4, relief=SUNKEN, textvariable=bal_var, width=25, bg='gold')
         Bal_entry.place(x=240, y=160)
 
-        b10 = Button(root, bg='gold', fg='black', text="DATA ENTRY", borderwidth=5, font="Helvetica 10 bold")
+        b10 = Button(root, bg='gold', fg='black', text="DATA ENTRY", borderwidth=5, font="Helvetica 10 bold", command= Accounts)
         b10.place(x=170, y=200)
         b20 = Button(root, bg='gold', fg='black', text="LOAN", borderwidth=5, font="Helvetica 10 bold", command=None)
         b20.place(x=295, y=200)
