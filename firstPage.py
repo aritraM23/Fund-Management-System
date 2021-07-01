@@ -50,6 +50,12 @@ def page1():
             application = mainApp.gui(master)
             master.mainloop()
 
+        def Loans():
+            #root.destroy()
+            import loans
+            slave = tkinter.Tk()
+            app = loans.gui(slave)
+            slave.mainloop()
 
         def time():
             string = strftime('%H:%M:%S %p')
@@ -78,7 +84,7 @@ def page1():
 
         b10 = Button(root, bg='gold', fg='black', text="DATA ENTRY", borderwidth=5, font="Helvetica 10 bold", command= Accounts)
         b10.place(x=170, y=200)
-        b20 = Button(root, bg='gold', fg='black', text="LOAN", borderwidth=5, font="Helvetica 10 bold", command=None)
+        b20 = Button(root, bg='gold', fg='black', text="LOAN", borderwidth=5, font="Helvetica 10 bold", command=Loans)
         b20.place(x=295, y=200)
 
     def page2():
