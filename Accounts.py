@@ -43,7 +43,9 @@ class gui:
         # tabControl.pack(expand = 1, fill ="both")
 
 
-        #clock function for live clock   
+        #clock function for live clock 
+        QName = StringVar()  
+        self.sumDep = 0
         def times():
             current_time=time.strftime("%H:%M:%S")
             self.clock.config(text=current_time)
@@ -51,14 +53,6 @@ class gui:
 
         self.btnState = False
 
-        def s_byname():
-            totalData = db.child('mainData').get()
-            for data in totalData.each():
-                if(data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
-                    with open('data.csv', 'a') as files:
-                        write = csv.writer(files)
-                        write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
-                        files.close()
         
         def switch():
             global btnState
@@ -93,18 +87,31 @@ class gui:
             return 0
 
         def ind_import():
+
+            def s_byname():
+                name = QName.get()
+                self.sumDep = 0
+                totalData = db.child('registerUserExp').child(name).get()
+                
+                for data in totalData.each():
+                    self.sumDep+=int(data.val()['amount'])
+                print(self.sumDep)
+                # self.deposit.config(text = str(self.sumDep))
+                #return sumDep
+
+            
             self.ind = Toplevel(root)
-            self.ind.geometry("563x250+330+0")
+            self.ind.geometry("578x340+330+0")
             self.ind.title(50*titlespace+"Money Management System")
             #self.ind.maxsize("570x250")
             #self.ind.resizable(False)
             
-            mainFrame= Frame(self.ind,bd=10,width=500,height=200,relief=RIDGE,bg='midnight blue')
+            mainFrame= Frame(self.ind,bd=10,width=500,height=370,relief=RIDGE,bg='midnight blue')
             mainFrame.grid()
 
             # self.labelMain = Label(self.ind, bd=7, width=500, height=400, bg='midnight blue')
             # self.labelMain.grid(row = 0, column = 0)
-            topFrame = Frame(mainFrame,bd=10,width=500,height=100,relief=RIDGE,bg='midnight blue' )
+            topFrame = Frame(mainFrame,bd=10,width=500,height=370,relief=RIDGE,bg='midnight blue' )
             topFrame.grid(row = 1, column = 0)
 
             indtitleFrame = Frame(mainFrame,bd=10,width=500,height=70, bg='midnight blue')
@@ -114,13 +121,18 @@ class gui:
             self.indtitle.grid(row=0,column=1,padx=70)
 
             
-            self.indEntry = Entry(topFrame, font =('arial',13,'bold'), bd = 13 , width = 50,justify='left',  textvariable = Name)
+            self.indEntry = Entry(topFrame, font =('arial',13,'bold'), bd = 13 , width = 50,justify='left',  textvariable = QName)
             self.indEntry.grid(row = 0, column=0, padx = 5)
 
             Label(topFrame, font=('Arial',18,'bold'), text=" ",bd=3, bg = 'midnight blue').grid(row=1,column=0,padx=70)
 
             Button(topFrame,font=('arial', 13, 'bold'), text="IMPORT", bd=5, padx=10,pady=1,width=5,height=2,bg = 'gold',command=s_byname).grid(row=2,column=0,padx=1)
 
+            self.output = Label(topFrame, font =('arial',13,'bold'), bd = 13 , width = 50,justify='left',bg= 'midnight blue', fg = 'gold',  text = "Total Output:")
+            self.output.grid(row = 3, column=0, padx = 5)
+            
+            self.deposit = Label(topFrame, font =('arial',13,'bold'), bd = 13 , width = 50,justify='left', bg = 'midnight blue', fg = 'gold', text = str(self.sumDep))
+            self.deposit.grid(row = 4, column=0, padx = 5)
             # self.root.maxsize(460,350)
             # self.root.destroy()
             # import indiv
