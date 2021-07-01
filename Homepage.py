@@ -1,11 +1,22 @@
 from time import strftime
 from tkinter import *
+from tkinter import ttk
 from datetime import datetime
+import tkinter
 
-def Loan():
+def Accounts():
     hp.destroy()
-    import LoanPage
+    import Accounts
+    master = tkinter.Tk()
+    application = Accounts.gui(master)
+    master.mainloop()
 
+def Loans():
+    hp.destroy()
+    import LoanPage_GUI
+    slave = tkinter.Tk()
+    app = LoanPage_GUI.LoanPage(slave)
+    slave.mainloop()
 
 def time():
     string = strftime('%H:%M:%S %p')
@@ -38,9 +49,9 @@ lbl3.place(x=47,y=160)
 Bal_entry = Entry(hp,borderwidth=4,relief=SUNKEN,textvariable=bal_var,width=25,bg='gold')
 Bal_entry.place(x=170,y=160)
 
-b1 = Button(hp,bg='gold',fg='black',text="DATA ENTRY",borderwidth=5,font="Helvetica 10 bold")
+b1 = Button(hp,bg='gold',fg='black',text="DATA ENTRY",borderwidth=5,font="Helvetica 10 bold", command = Accounts)
 b1.place(x=170,y=200)
-b2 = Button(hp,bg='gold',fg='black',text="LOAN",borderwidth=5,font="Helvetica 10 bold",command=Loan)
+b2 = Button(hp,bg='gold',fg='black',text="LOAN",borderwidth=5,font="Helvetica 10 bold",command=Loans)
 b2.place(x=278,y=200)
 
 
