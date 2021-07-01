@@ -52,7 +52,13 @@ class gui:
         self.btnState = False
 
         def s_byname():
-            pass
+            totalData = db.child('mainData').get()
+            for data in totalData.each():
+                if(data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
+                    with open('data.csv', 'a') as files:
+                        write = csv.writer(files)
+                        write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
+                        files.close()
         
         def switch():
             global btnState
@@ -123,6 +129,7 @@ class gui:
 
         def about():
             pass
+             
 ###################################################################################################################################
         MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='midnight blue')
         MainFrame.grid()
@@ -215,6 +222,15 @@ class gui:
             name = Name.get()
             amount = Amount.get()
             date = Date.get()
+            if(date.find("-")>-1 ):
+                tday, tm, ty = date.split("-")
+                mdate = tday+"/"+tm+"/"+ty
+                date = mdate
+            elif date.find(".")>-1:
+                tday, tm, ty = date.split(".")
+                mdate = tday+"/"+tm+"/"+ty
+                date = mdate
+
             if (Name.get()!='' and Date.get()!='' and Amount.get()!=''):
                 datas = {'name': name, 'amount': amount, 'date': date}
                 db.child('mainData').push(datas)
@@ -226,11 +242,21 @@ class gui:
         def update():
             totalData = db.child('mainData').get()
             for data in totalData.each():
-                if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
+                date = Date.get()
+                if(date.find("-")>-1 ):
+                    tday, tm, ty = date.split("-")
+                    mdate = tday+"/"+tm+"/"+ty
+                    date = mdate
+                elif date.find(".")>-1:
+                    tday, tm, ty = date.split(".")
+                    mdate = tday+"/"+tm+"/"+ty
+                    date = mdate
+
+                if data.val()['name'] == Name.get() and data.val()['date'] == date:
                     db.child('mainData').child(data.key()).update({'name': Name.get(), 'amount': Amount.get(),
-                                                                   'date': Date.get()})
+                                                                   'date': date})
                     db.child('registerUserExp').child(Name.get()).child(data.key()).update({'name': Name.get(),
-                                                                    'amount': Amount.get(), 'date': Date.get()})
+                                                                    'amount': Amount.get(), 'date': date})
             tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
 
         def search():
@@ -238,6 +264,18 @@ class gui:
             self.callAll = 'all'
             totalData = db.child('mainData').get()
             loanDB = db.child('loanDemo').get()
+
+            date = Date.get()
+            if(date.find("-")>-1 ):
+                tday, tm, ty = date.split("-")
+                mdate = tday+"/"+tm+"/"+ty
+                date = mdate
+            elif date.find(".")>-1:
+                tday, tm, ty = date.split(".")
+                mdate = tday+"/"+tm+"/"+ty
+                date = mdate
+
+
             with open('data.csv', 'w') as file:
                 write = csv.writer(file)
                 write.writerow(["Name", "Amount", "Date", "Loan"])
@@ -263,11 +301,15 @@ class gui:
                                         files.close()
                         os.system('FullFile.csv')
                         return 0
-                    elif (data.val()['date'] == Date.get() or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
+                    elif (data.val()['date'] == date or data.val()['name'] == Name.get() or data.val()['amount']==Amount.get()):
                         with open('data.csv', 'a') as files:
                             write = csv.writer(files)
-                            write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
-                            files.close()
+                            if ld.val()['Name']==data.val()['name']:
+                                write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'], ld.val()['Amount']])
+                                files.close()
+                            else:
+                                write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
+                                files.close()
                             self.sum += 1
                     
                          
