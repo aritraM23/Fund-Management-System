@@ -95,8 +95,8 @@ class gui:
                 
                 for data in totalData.each():
                     self.sumDep+=int(data.val()['amount'])
-                print(self.sumDep)
-                # self.deposit.config(text = str(self.sumDep))
+                
+                self.deposit.config(text = str(self.sumDep))
                 #return sumDep
 
             
