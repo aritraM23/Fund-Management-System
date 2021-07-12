@@ -1,58 +1,49 @@
+from tkinter import*
 from time import strftime
-from tkinter import *
-from tkinter import ttk
-from datetime import datetime
-import tkinter
+import datetime as dt
 
-def Accounts():
-    hp.destroy()
-    import Accounts
-    master = tkinter.Tk()
-    application = Accounts.gui(master)
-    master.mainloop()
+root = Tk()
+root.geometry("550x450+600+90")
+root.config(bg="midnight blue")
+root.title("HomePage")
+root.maxsize(550,450)
+root.minsize(550,450)
 
-def Loans():
-    hp.destroy()
-    import LoanPage_GUI
-    slave = tkinter.Tk()
-    app = LoanPage_GUI.LoanPage(slave)
-    slave.mainloop()
-
-def time():
+def Time():
     string = strftime('%H:%M:%S %p')
-    lbl.config(text = "Time:- "+string)
-    lbl.after(1000, time)
-
-hp = Tk()
-hp.geometry("450x400")
-hp.maxsize(450,400)
-hp.configure(bg='midnight blue')
-hp.title("HOMEPAGE/IVS")
-
-bal_var = StringVar()
-
-f1 = Frame(hp, bg='gold', borderwidth=8, relief=SUNKEN)
-f1.pack(side=TOP, fill="x")
-# Shop's Name
-l1 = Label(f1, text=f"", bg='midnight blue', fg='gold', font="Helvetica 10 bold", padx=10)
-l1.pack(fill="x")
-
-lbl = Label(hp,bg='midnight blue',fg='gold',font="Helvetica 13 bold")
-lbl.place(x=290,y=40)
-time()
-
-lbl4 = Label(hp, text=f"Date:- {datetime.now():%a, %b %d %Y}", fg="gold", bg="midnight blue", font=("helvetica 13 bold"))
-lbl4.place(x=4,y=42)
-lbl3 = Label(hp,text="Total Balance:-",fg='gold',bg='midnight blue',font="Helvetica 12 bold")
-lbl3.place(x=47,y=160)
-
-Bal_entry = Entry(hp,borderwidth=4,relief=SUNKEN,textvariable=bal_var,width=25,bg='gold')
-Bal_entry.place(x=170,y=160)
-
-b1 = Button(hp,bg='gold',fg='black',text="DATA ENTRY",borderwidth=5,font="Helvetica 10 bold", command = Accounts)
-b1.place(x=170,y=200)
-b2 = Button(hp,bg='gold',fg='black',text="LOAN",borderwidth=5,font="Helvetica 10 bold",command=Loans)
-b2.place(x=278,y=200)
+    Time_Label.config(text=string)
+    Time_Label.after(1000, Time)
 
 
-hp.mainloop()
+Time_Label = Label(root, fg="black", bg="gold",
+                   font="Devanagari 15 bold", borderwidth=4, relief=SUNKEN)
+Time_Label.place(x=426, y=2)
+Time()
+
+def srch():
+    balance=Label(root,fg='gold',bg='midnight blue',font="Devanagari 15 bold",text="Balance:-")
+    balance.place(x=100,y=175)
+    Loan=Label(root,fg='gold',bg='midnight blue',font="Devanagari 15 bold",text="Loan:-")
+    Loan.place(x=320,y=175)
+
+date = Label(root, text=f"{dt.datetime.now():%a, %b/%d/%Y}", bg="gold", fg="black", font=(
+    "helvetica 15 bold"), borderwidth=4, relief=SUNKEN)
+date.place(x=1, y=2)
+
+name=StringVar()
+name.set("Enter Customer Name Here")
+customer_name=Entry(root,justify=CENTER,borderwidth=4,textvariable=name,font="Helvetica 12 bold",width=30)
+customer_name.place(x=140,y=80)
+
+Check=Button(root,text="Search",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=RAISED,command=srch)
+Check.place(x=353,y=125)
+
+accounts=Button(root,text="Accounts",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
+accounts.place(x=180,y=240)
+loan=Button(root,text="Loan",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
+loan.place(x=320,y=240)
+
+Treasury=Label(root,bg='gold',fg='black',font="Helvetica 13 bold",text="Treasury:-")
+Treasury.place(x=70,y=350)
+
+root.mainloop()
