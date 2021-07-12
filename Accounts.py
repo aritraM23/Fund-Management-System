@@ -10,6 +10,7 @@ from datetime import datetime
 import time
 import pyrebase
 # import indiv
+from PIL.ImageTk import PhotoImage
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
     'authDomain': "fundmang-42ad8.firebaseapp.com",
