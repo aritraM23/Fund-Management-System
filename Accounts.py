@@ -1,3 +1,5 @@
+#todo bug bix in update function of firebase subdatabase
+
 import csv
 from functools import partial
 import pandas as pd
@@ -9,6 +11,8 @@ from time import strftime
 from datetime import datetime
 import time
 import pyrebase
+import mysql.connector
+
 # import indiv
 from PIL.ImageTk import PhotoImage
 
@@ -248,6 +252,15 @@ class gui:
                 datas = {'name': name, 'amount': amount, 'date': date}
                 db.child('mainData').push(datas)
                 db.child('registerUserExp').child(name).push(datas)
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                mycursor = myDataBase.cursor()
+                dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
+                datas = [(name,amount,date)]
+
+                mycursor.executemany(dataCollection, datas)
+                myDataBase.commit()
+                myDataBase.close()
+                display()
 
             else:
                 tkinter.messagebox.showerror('Error','Insert Data In All Fields')
@@ -270,8 +283,19 @@ class gui:
                                                                    'date': date})
                     db.child('registerUserExp').child(Name.get()).child(data.key()).update({'name': Name.get(),
                                                                     'amount': Amount.get(), 'date': date})
-            tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
+                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                    mycursor = myDataBase.cursor()
 
+                    mycursor.execute(
+                        'update dataEntry set amount=%s where name=%s and date = %s', (
+                            Amount.get(),
+                            Name.get(),
+                            Date.get()
+                        ))
+                    myDataBase.commit()
+                    myDataBase.close()
+            tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
+            display()
         def search():
             self.sum = 0
             self.callAll = 'all'
@@ -337,7 +361,16 @@ class gui:
             tkinter.messagebox.showerror("Search Error","Data not found!")
 
         def display():
-            pass
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+            mycursor = myDataBase.cursor()
+            mycursor.execute("select * from dataEntry")
+            result = mycursor.fetchall()
+            if len(result) != 0:
+                self.display_data.delete(*self.display_data.get_children())
+                for row in result:
+                    self.display_data.insert('', END, values=row)
+            myDataBase.commit()
+            myDataBase.close()
 
         def delete():
             #function to delete
@@ -349,6 +382,14 @@ class gui:
                 if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
                     db.child('mainData').child(data.key()).remove()
                     db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
+                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                    mycursor = myDataBase.cursor()
+                    mycursor.execute("delete from dataEntry where name=%s", (
+                        Name.get(),
+                    ))
+                    myDataBase.commit()
+                    display()
+                    myDataBase.close()
                     tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
                     self.deleteData+=1
                 if Name.get()=='' :
