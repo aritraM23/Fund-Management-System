@@ -38,9 +38,12 @@ customer_name.place(x=140,y=80)
 Check=Button(root,text="Search",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=RAISED,command=srch)
 Check.place(x=353,y=125)
 
-accounts=Button(root,text="Accounts",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
+accIcon = PhotoImage(master= root,file = "acc.png")
+loanIcon = PhotoImage(master= root,file = "loan.png")
+
+accounts=Button(root,image = accIcon,bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
 accounts.place(x=180,y=240)
-loan=Button(root,text="Loan",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
+loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
 loan.place(x=320,y=240)
 
 Treasury=Label(root,bg='gold',fg='black',font="Helvetica 13 bold",text="Treasury:-")
