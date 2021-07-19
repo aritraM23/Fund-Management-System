@@ -1,4 +1,3 @@
-#todo bug bix in update function of firebase subdatabase
 
 import csv
 from functools import partial
@@ -266,34 +265,36 @@ class gui:
                 tkinter.messagebox.showerror('Error','Insert Data In All Fields')
         
         def update():
-            totalData = db.child('mainData').get()
-            for data in totalData.each():
-                date = Date.get()
-                if(date.find("-")>-1 ):
-                    tday, tm, ty = date.split("-")
-                    mdate = tday+"/"+tm+"/"+ty
-                    date = mdate
-                elif date.find(".")>-1:
-                    tday, tm, ty = date.split(".")
-                    mdate = tday+"/"+tm+"/"+ty
-                    date = mdate
-
-                if data.val()['name'] == Name.get() and data.val()['date'] == date:
-                    db.child('mainData').child(data.key()).update({'name': Name.get(), 'amount': Amount.get(),
-                                                                   'date': date})
-                    db.child('registerUserExp').child(Name.get()).child(data.key()).update({'name': Name.get(),
-                                                                    'amount': Amount.get(), 'date': date})
-                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
-                    mycursor = myDataBase.cursor()
-
-                    mycursor.execute(
-                        'update dataEntry set amount=%s where name=%s and date = %s', (
-                            Amount.get(),
-                            Name.get(),
-                            Date.get()
-                        ))
-                    myDataBase.commit()
-                    myDataBase.close()
+            totalMainData = db.child('mainData').get()
+            totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
+            for data in totalMainData.each():
+                for indi in totalIndividualData.each():
+                        date = Date.get()
+                        if(date.find("-")>-1 ):
+                            tday, tm, ty = date.split("-")
+                            mdate = tday+"/"+tm+"/"+ty
+                            date = mdate
+                        elif date.find(".")>-1:
+                            tday, tm, ty = date.split(".")
+                            mdate = tday+"/"+tm+"/"+ty
+                            date = mdate
+        
+                        if data.val()['name'] == Name.get() and data.val()['date'] == date:
+                            db.child('mainData').child(data.key()).update({'name': Name.get(), 'amount': Amount.get(),
+                                                                           'date': date})
+                            db.child('registerUserExp').child(Name.get()).child(indi.key()).update({'name': Name.get(),
+                                                                            'amount': Amount.get(), 'date': date})
+                            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                            mycursor = myDataBase.cursor()
+        
+                            mycursor.execute(
+                                'update dataEntry set amount=%s where name=%s and date = %s', (
+                                    Amount.get(),
+                                    Name.get(),
+                                    Date.get()
+                                ))
+                            myDataBase.commit()
+                            myDataBase.close()
             tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
             display()
         def search():
