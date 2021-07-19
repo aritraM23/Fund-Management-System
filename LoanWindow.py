@@ -7,6 +7,17 @@ root.minsize(550, 450)
 root.configure(bg='midnight blue')
 root.title("Loan Window")
 
+
+def depo():
+    root.destroy()
+    import LoanExisting
+
+
+def Loan():
+    root.destroy()
+    import RegisterCustomer
+
+
 def bal():
     bal_lab=Label(root,bg='midnight blue', fg='gold',
                    font="Helvetica 12 bold", text="Balance:-")
@@ -15,10 +26,10 @@ def bal():
                        font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=None)
     download.place(x=240,y=235)
     newLoan=Button(root,text="New Loan", bg='gold', fg='black',
-                       font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=None)
+                       font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=Loan)
     newLoan.place(x=120,y=295)
     deposit=Button(root,text="Deposit on Existing Loan", bg='gold', fg='black',
-                       font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=None)
+                       font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=depo)
     deposit.place(x=247,y=295)
 
 top_frame=Frame(root, bg='gold', borderwidth=10,
