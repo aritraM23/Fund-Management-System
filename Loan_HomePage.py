@@ -42,65 +42,64 @@ def export():
         file.close()
     totalData = db.child('loanDemo').get()
     for data in totalData.each():
-        if data.val()['Name']==name_entry.get():
+        
+        if data.val()['Name']==name_entry.get() or data.val()['Phone'] == int(mob_entry.get()):
             with open('LoanFile.csv', 'a') as files:
                 # print('Inside this')
+                print(mob_entry.get())
                 write = csv.writer(files)
                 write.writerow([data.val()['Name'], data.val()['Amount'], data.val()['ROI'], data.val()['ppaid'], data.val()['pleft'], data.val()['ipaid'], data.val()['ileft'], data.val()['Date']])
                 files.close()
     os.system('LoanFile.csv')
-    return 0
-
 
 def bal():
     balance = 0
-    totalData = db.child('loanDemo').get()
-    for data in totalData.each():
-        if data.val()['Name']==name_entry.get():
-            balData = db.child('registerUserExp').child(name_entry.get()).get()
-            for var in balData.each():
-                balance += int(var.val()['amount']) 
-
-        else:
-            balance = 0
+    loanData = db.child('loanDemo').get()
+    
+    for loan in loanData.each():
         
-    bal_lab=Label(root,bg='midnight blue', fg='gold',
-                   font="Helvetica 12 bold", text="Balance:-" + str(balance))
-    bal_lab.place(x=80,y=238)
-    download=Button(root,text="Download Balance Sheet", bg='gold', fg='black',
+        if loan.val()['Name']==name_entry.get() and loan.val()['Phone']==(mob_entry.get()):
+            print(f'{name_entry.get()} entered if')
+            balData = db.child('mainData').get()
+            for var in balData.each():
+                if var.val()['name']==name_entry.get():
+                    balance += int(var.val()['amount'])
+                else:
+                    balance += 0
+            break
+        
+    bal_lab= Label(root,bg='midnight blue', fg='gold',
+                   font="Helvetica 12 bold", text="Balance:- " + str(balance))
+    bal_lab.place(x=80,y=239)
+    download= Button(root,text="Download Balance Sheet", bg='gold', fg='black',
                        font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=export)
     download.place(x=240,y=235)
-    newLoan=Button(root,text="New Loan", bg='gold', fg='black',
+    newLoan= Button(root,text="New Loan", bg='gold', fg='black',
                        font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=None)
     newLoan.place(x=120,y=295)
-    deposit=Button(root,text="Deposit on Existing Loan", bg='gold', fg='black',
+    deposit= Button(root,text="Deposit on Existing Loan", bg='gold', fg='black',
                        font="Helvetica 11 bold",borderwidth=2, relief=SUNKEN, command=None)
     deposit.place(x=247,y=295)
 
-top_frame=Frame(root, bg='gold', borderwidth=10,
-           relief=RAISED, width=500, height=55)
+top_frame= Frame(root, bg='gold', borderwidth=10,relief=RAISED,width=500,height=55)
 top_frame.pack(side=TOP, fill=X)
 
-heading=Label(top_frame,bg='gold',fg='black',font="Arial 12 bold",text="---Loan Window---")
+heading= Label(top_frame,bg='gold',fg='black',font="Arial 12 bold",text="---Loan Window---")
 heading.pack()
 
-name_lab=Label(root, bg='midnight blue', fg='gold',
-                   font="Helvetica 12 bold", text="Name:-")
+name_lab= Label(root, bg='midnight blue', fg='gold',font="Helvetica 12 bold", text="Name:-")
 name_lab.place(x=120,y=100)
 
-name = Entry(root, width=27, textvariable=name_entry,
-             borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
+name = Entry(root, width=27, textvariable=name_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
 name.place(x=200,y=98)
 
-mob_lab=Label(root, bg='midnight blue', fg='gold',
-                   font="Helvetica 12 bold", text="Mobile No.:-")
+mob_lab= Label(root, bg='midnight blue', fg='gold',font="Helvetica 12 bold", text="Mobile No.:-")
 mob_lab.place(x=90,y=140)
 
-mob = Entry(root, width=27, textvariable=mob_entry,
-             borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
+mob = Entry(root, width=27, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
 mob.place(x=200,y=138)
 
-Check=Button(root,text="Check",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=RAISED,command=bal)
+Check= Button(root,text="Check",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=RAISED,command=bal)
 Check.place(x=245,y=185)
 
 root.mainloop()
