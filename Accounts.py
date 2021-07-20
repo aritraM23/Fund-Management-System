@@ -252,7 +252,7 @@ class gui:
                     datas = {'name': name, 'amount': amount, 'date': date}
                     db.child('mainData').push(datas)
                     db.child('registerUserExp').child(name).push(datas)
-                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
                     mycursor = myDataBase.cursor()
                     dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
                     datas = [(name,amount,date)]
@@ -262,13 +262,13 @@ class gui:
                     myDataBase.close()
                     display()
                     reset()
-                    sync()
+                    
                 else:
                     reset()
                     tkinter.messagebox.showerror('Error', 'Insert Data In All Fields')
 
             except:
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
                 mycursor = myDataBase.cursor()
                 dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
                 datas = [(name, amount, date)]
@@ -278,7 +278,6 @@ class gui:
                 myDataBase.close()
                 display()
                 reset()
-                sync()
                 
                 
         def update():
@@ -302,7 +301,7 @@ class gui:
                                                                                'date': date})
                                 db.child('registerUserExp').child(Name.get()).child(indi.key()).update({'name': Name.get(),
                                                                                 'amount': Amount.get(), 'date': date})
-                                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
                                 mycursor = myDataBase.cursor()
             
                                 mycursor.execute(
@@ -317,7 +316,7 @@ class gui:
                 display()
                 reset()
             except :
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
                 mycursor = myDataBase.cursor()
     
                 mycursor.execute(
@@ -397,7 +396,7 @@ class gui:
             tkinter.messagebox.showerror("Search Error","Data not found!")
 
         def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
             mycursor = myDataBase.cursor()
             mycursor.execute("select * from dataEntry")
             result = mycursor.fetchall()
@@ -411,59 +410,69 @@ class gui:
         def delete():
             #function to delete
             try:
-                self.deleteData=0
-                totalData = db.child('mainData').get()
-                
+                self.deleteData = 0
+                totalData = db.child('registerUserExp').child(Name.get()).get()
+                totalUser = db.child('mainData').get()
                 for data in totalData.each():
-                    
+                    print(Name.get())
                     if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
-                        db.child('mainData').child(data.key()).remove()
+                        print('Delete' + Name.get())
+                        for user in totalUser.each():
+                            if user.val()['name'] == Name.get() and user.val()['date'] == Date.get():
+                                db.child('mainData').child(user.key()).remove()
+                            else:
+                                tkinter.messagebox.showerror('Error', 'No Data in DataBase')
                         db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
-                        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                                                             database='ivs')
                         mycursor = myDataBase.cursor()
-                        mycursor.execute("delete from dataEntry where name=%s", (
+                        mycursor.execute("delete from dataEntry where name=%s and date=%s", (
                             Name.get(),
+                            Date.get()
                         ))
                         myDataBase.commit()
                         display()
                         myDataBase.close()
                         tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
-                        self.deleteData+=1
-                    if Name.get()=='' :
-                        tkinter.messagebox.showerror('Error', 'Enter Name')
-                        self.deleteData+=1
+                        self.deleteData += 1
+                        reset()
+                        display()
                         break
-                    if Date.get()=='':
+                    if Name.get() == '':
+                        tkinter.messagebox.showerror('Error', 'Enter Name')
+                        self.deleteData += 1
+                        reset()
+                        display()
+                        break
+                    if Date.get() == '':
                         tkinter.messagebox.showerror('Error', 'Enter Date')
                         self.deleteData += 1
+                        reset()
+                        display()
                         break
-                    reset()
-                    display()
-                if (self.deleteData==0):
-                    reset()
-                    display()
-                    tkinter.messagebox.showerror('Error', 'No Data Found')
-            except :
-                self.deleteData = 0
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
-                mycursor = myDataBase.cursor()
-                mycursor.execute("delete from dataEntry where name=%s", (
-                    Name.get(),
-                ))
-                myDataBase.commit()
-                display()
-                myDataBase.close()
-                tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
-                self.deleteData += 1
-              
-                reset()
-                display()
     
                 if (self.deleteData == 0):
                     reset()
                     display()
                     tkinter.messagebox.showerror('Error', 'No Data Found')
-                
+            except:
+                self.deleteData = 0
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                                                     database='ivs')
+                mycursor = myDataBase.cursor()
+                mycursor.execute("delete from dataEntry where name=%s and date=%s", (
+                    Name.get(),
+                    Date.get()
+                ))
+                myDataBase.commit()
+                display()
+                myDataBase.close()
+                tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
+            
+                if (self.deleteData == 0):
+                    reset()
+                    display()
+                    #tkinter.messagebox.showerror('Error', 'No Data Found')
     
         def TrainInfo(ev):
             viewInfo = self.display_data.focus()
@@ -478,33 +487,35 @@ class gui:
             self.entamount.delete(0, END)
             self.entDate.delete(0, END)
         
-        def sync():
-            databaseChoice = input('Which one you need')
-            if (databaseChoice == 'f'):
-                totalData = db.child('mainData').get()
-                for data in totalData.each():
-                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
-                    mycursor = myDataBase.cursor()
-                    dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
-                    datas = [(data.val()['name'], data.val()['amount'], data.val()['date'])]
-                    mycursor.executemany(dataCollection, datas)
-                    myDataBase.commit()
-                    myDataBase.close()
-                tkinter.messagebox.showinfo('Success','Data Synced')
-            
-            else:
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+        def sync_on():
+            #databaseChoice = input('Which one you need')
+            totalData = db.child('mainData').get()
+            for data in totalData.each():
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
                 mycursor = myDataBase.cursor()
-                query ='Select * from dataEntry'
-                mycursor.execute(query)
-                totalEntries = mycursor.fetchall()
-                print(totalEntries)
-                for rows in totalEntries:
-                    datas = {'name': rows[0], 'amount': rows[1], 'date': rows[2]}
-                    db.child('mainData').push(datas)
-                    db.child('registerUserExp').child(rows[0]).push(datas)
-                tkinter.messagebox.showinfo('Success','Done')
+                dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
+                datas = [(data.val()['name'], data.val()['amount'], data.val()['date'])]
+                mycursor.executemany(dataCollection, datas)
+                myDataBase.commit()
+                myDataBase.close()
+            tkinter.messagebox.showinfo('Success','Data Synced')
 
+            #if (databaseChoice == 'f'):
+        def sync_off():
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
+            mycursor = myDataBase.cursor()
+            query ='Select * from dataEntry'
+            mycursor.execute(query)
+            totalEntries = mycursor.fetchall()
+            print(totalEntries)
+            for rows in totalEntries:
+                datas = {'name': rows[0], 'amount': rows[1], 'date': rows[2]}
+                db.child('mainData').push(datas)
+                db.child('registerUserExp').child(rows[0]).push(datas)
+            tkinter.messagebox.showinfo('Success','Done')
+    
+            
+            
         #==============================================================================================================================================================================================
 
         y_scroll = Scrollbar(LeftFrame, orient= VERTICAL)
@@ -527,13 +538,13 @@ class gui:
 
 #==============================================================================================================================================================================================
 
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="EXIT", bd=7, padx=18,pady=1,width=7,height=3,bg = 'gold',command=exit).grid(row=7,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SYNC OFFLINE", bd=7, padx=18,pady=1,width=7,height=3,bg = 'gold',command=sync_off).grid(row=7,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="UPDATE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=update).grid(row=2,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SAVE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=saveData).grid(row=1,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="DELETE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=delete).grid(row=5,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=search).grid(row=4,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=display).grid(row=3,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="RESET", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=reset).grid(row=6,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="SYNC ONLINE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=sync_on).grid(row=6,column=0,padx=1)
 
 #================================================================================================================================================================================================
 
