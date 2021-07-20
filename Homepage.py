@@ -25,7 +25,6 @@ firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
 firebase=pyrebase.initialize_app(firebaseConfig)
 db= firebase.database()
 
-
 root = Tk()
 root.geometry("550x450+600+90")
 root.config(bg="midnight blue")
@@ -36,15 +35,35 @@ root.minsize(550,450)
 name=StringVar()
 amount = 0
 
-
 def ind_Bal():
     balance = 0
-    indData = db.child('registerUserExp').child(name.get()).get()
-    for ind in indData.each():
-        balance += int(ind.val()['amount'])
+    
+    try:    
+        indData = db.child('registerUserExp').child(name.get()).get()
+        for ind in indData.each():
+            balance += int(ind.val()['amount'])
+    except:
+        balance = 0
+        tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
 
+    
     print(name.get() + str(balance))
     return balance
+
+def loaninfor():
+    loanAmt = 0
+
+    try:
+        loanData = db.child('loanDemo').get()
+        for ld in loanData.each():
+            if ld.val()['name'] == name.get():
+                loanAmt += ld.val()['amount']
+
+    except:
+        loanAmt = 0
+        # tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
+
+    return loanAmt
 
 def treasure():
     global amount
@@ -55,7 +74,14 @@ def treasure():
     # print(amount)
     return amount
 
-    
+def AccountsPage():
+    root.destroy()
+    import Accounts
+
+def LoanWindow():
+    root.destroy()
+    import Loan_HomePage
+
 
 def Time():
     string = strftime('%H:%M:%S %p')
@@ -64,37 +90,51 @@ def Time():
 
 
 Time_Label = Label(root, fg="black", bg="gold",
-                   font="Devanagari 15 bold", borderwidth=4, relief=SUNKEN)
-Time_Label.place(x=426, y=2)
+                   font="Devanagari 12 bold", borderwidth=4, relief=SUNKEN)
+Time_Label.place(x=444, y=38)
 Time()
 
-def srch():
-    balance=Label(root,fg='gold',bg='midnight blue',font="Devanagari 15 bold",text="Balance:- " + str(ind_Bal()))
-    balance.place(x=100,y=175)
-    Loan=Label(root,fg='gold',bg='midnight blue',font="Devanagari 15 bold",text="Loan:-")
-    Loan.place(x=320,y=175)
+
+def search():
+    balance=Label(root,fg='gold',bg='midnight blue',width= 20,font="Devanagari 15 bold",text="Balance:  " + str(ind_Bal()))
+    balance.place(x=15,y=174)
+    Loan=Label(root,fg='gold',bg='midnight blue',width= 30, font="Devanagari 15 bold",text="Loan:  " + str(loaninfor()))
+    Loan.place(x=240,y=174)
+
 
 date = Label(root, text=f"{dt.datetime.now():%a, %b/%d/%Y}", bg="gold", fg="black", font=(
-    "helvetica 15 bold"), borderwidth=4, relief=SUNKEN)
-date.place(x=1, y=2)
+    "helvetica 12 bold"), borderwidth=4, relief=SUNKEN)
+date.place(x=1, y=38)
 
 
-name.set("Enter Customer Name Here")
-customer_name=Entry(root,justify=CENTER,borderwidth=4,textvariable=name,font="Helvetica 12 bold",width=30)
-customer_name.place(x=140,y=80)
+top_Frame = Frame(root,bg="gold",borderwidth=4,relief=SUNKEN)
+top_Frame.pack(fill=X)
+top_label = Label(top_Frame,text="----HOMEPAGE----",bg="gold",fg="black",font="Helvetica 14 bold")
+top_label.pack()
 
-Check=Button(root,text="Search",bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=RAISED,command=srch)
-Check.place(x=353,y=125)
+customer = Label(root,text="Customer Name:",font="Helvetica 13 bold",bg='midnight blue',fg='gold')
+customer.place(x=50,y=120)
+customer_name=Entry(root,justify=CENTER,borderwidth=4,textvariable=name,font="Helvetica 10 bold",width=25)
+customer_name.place(x=190,y=120)
+
+Check=Button(root,text="Search",bg='gold',font="Helvetica 12 bold",borderwidth=2,relief=SUNKEN,command=search,width=10)
+Check.place(x=385,y=116)
 
 accIcon = PhotoImage(master= root,file = "acc.png")
 loanIcon = PhotoImage(master= root,file = "loan.png")
 
-accounts=Button(root,image = accIcon,bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
-accounts.place(x=180,y=240)
-loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN)
-loan.place(x=320,y=240)
+accounts=Button(root,image = accIcon,bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN, command= AccountsPage)
+accounts.place(x=160,y=240)
+loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 11 bold",borderwidth=4,relief=SUNKEN, command= LoanWindow)
+loan.place(x=300,y=240)
 
-Treasury=Label(root,bg='gold',fg='black',font="Helvetica 13 bold",text="Treasury:- " + str(treasure()))
-Treasury.place(x=70,y=350)
+accLab = Label(root,text="Accounts",font="Helvetica 10 bold",bg='midnight blue',fg='gold')
+accLab.place(x=200,y=330)
+
+loanLab = Label(root,text="Loans",font="Helvetica 10 bold",bg='midnight blue',fg='gold')
+loanLab.place(x=350,y=330)
+
+Treasury=Label(root,bg='gold',fg='black',font="Helvetica 13 bold",text="Treasury:  "+ str(treasure()))
+Treasury.place(x=200,y=380)
 
 root.mainloop()
