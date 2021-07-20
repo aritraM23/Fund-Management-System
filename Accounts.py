@@ -146,7 +146,11 @@ class gui:
 
         def about():
             pass
-             
+        
+        def back():
+            root.destroy()
+            import Homepage
+
 ###################################################################################################################################
         MainFrame= Frame(self.root,bd=10,width=770,height=700,relief=RIDGE,bg='midnight blue')
         MainFrame.grid()
@@ -212,7 +216,7 @@ class gui:
         self.y = 80
 
         self.options = ["Export All", "Import Individual", "About" ]
-        self.methods = [ export , ind_import, about ]
+        self.methods = [ export , ind_import, about , back]
         
         self.navExp = Button(self.navRoot, text="Export All", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = export ).place(x=25, y=self.y)
         self.y += 40
@@ -221,6 +225,9 @@ class gui:
         self.y += 40
 
         self.navAbt = Button(self.navRoot, text="About", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = about ).place(x=25, y=self.y)
+        self.y += 40
+
+        self.backBt = Button(self.navRoot, text="Back to Home", font="arial 13", bg="gold", fg='midnight blue', activebackground="white", activeforeground="black", bd=0, command = back ).place(x=25, y=self.y)
 
         self.closeBtn = Button(self.navRoot, image = self.closeIcon,  width=22,height=22, relief= RIDGE, bd = 0, padx = 1, command= switch )
         self.closeBtn.place(x= 150, y = 20)
@@ -538,13 +545,13 @@ class gui:
 
 #==============================================================================================================================================================================================
 
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SYNC OFFLINE", bd=7, padx=18,pady=1,width=7,height=3,bg = 'gold',command=sync_off).grid(row=7,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SYNC\nOFFLINE", bd=7, padx=18,pady=1,width=7,height=3,bg = 'gold',command=sync_off).grid(row=7,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="UPDATE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=update).grid(row=2,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SAVE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=saveData).grid(row=1,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="DELETE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=delete).grid(row=5,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=search).grid(row=4,column=0,padx=1)
         self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="DISPLAY", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=display).grid(row=3,column=0,padx=1)
-        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="SYNC ONLINE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=sync_on).grid(row=6,column=0,padx=1)
+        self.btnAddNew=Button(RightFrame1a,font=('arial', 13 , 'bold'), text="SYNC\nONLINE", bd=7, padx=18,pady=1,width=7,height=3, bg = 'gold',command=sync_on).grid(row=6,column=0,padx=1)
 
 #================================================================================================================================================================================================
 
