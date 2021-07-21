@@ -1,3 +1,4 @@
+# todo bug bix in update function of firebase subdatabase
 
 import csv
 from functools import partial
@@ -431,16 +432,16 @@ class gui:
 				self.deleteData = 0
 				totalData = db.child('registerUserExp').child(Name.get()).get()
 				totalUser = db.child('mainData').get()
-				for data in totalData.each():
+				for data in totalUser.each():
 					print(Name.get())
 					if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
 						print('Delete' + Name.get())
-						for user in totalUser.each():
+						for user in totalData.each():
 							if user.val()['name'] == Name.get() and user.val()['date'] == Date.get():
-								db.child('mainData').child(user.key()).remove()
+								db.child('mainData').child(Name.get()).child(user.key()).remove()
 							else:
 								tkinter.messagebox.showerror('Error', 'No Data in DataBase')
-						db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
+						db.child('registerUserExp').child(data.key()).remove()
 						myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 															 database='ivs')
 						mycursor = myDataBase.cursor()
