@@ -1,4 +1,3 @@
-# todo bug bix in update function of firebase subdatabase
 
 import csv
 from functools import partial
