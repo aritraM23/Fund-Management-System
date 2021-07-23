@@ -31,6 +31,9 @@ root.config(bg="midnight blue")
 root.title("HomePage")
 root.maxsize(550,450)
 root.minsize(550,450)
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE,p1)
+
 
 name=StringVar()
 amount = 0
@@ -98,7 +101,7 @@ Time()
 def search():
     balance=Label(root,fg='gold',bg='midnight blue',width= 20,font="Devanagari 15 bold",text="Balance:  " + str(ind_Bal()))
     balance.place(x=15,y=174)
-    Loan=Label(root,fg='gold',bg='midnight blue',width= 30, font="Devanagari 15 bold",text="Loan:  " + str(loaninfor()))
+    Loan=Label(root,fg='gold',bg='midnight blue',width= 30, font="Devanagari 15 bold",text="Loan\nRemaining:  " + str(loaninfor()))
     Loan.place(x=240,y=174)
 
 
