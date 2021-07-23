@@ -64,21 +64,22 @@ def add_data():
     interestPaid = 0
     principalLeft = principalAmount
     interestLeft = (int(principalAmount) * int(interestPercent)) / 100
+    interestPaidTillDate = 0
 
     try:
         if (name != '' and mobileNumber != '' and principalAmount != '' and interestPercent != ''):
             datas = {'name': name, 'mobileNumber': mobileNumber, 'address': address, 'shopName': shopName, 'date': date,
                      'principalAmount': principalAmount,
                      'interestPercent': interestPercent, 'priciplePaid': principlePaid, 'interestPaid': interestPaid,
-                     'principalLeft': principalLeft, 'interestLeft': interestLeft}
-            db.child('loanDemo').push(datas)
+                     'principalLeft': principalLeft, 'interestLeft': interestLeft,  'interestPaidTillDate' : interestPaidTillDate}
+            db.child('loanData').push(datas)
 
             myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                  database='ivsLoan')
             mycursor = myDataBase.cursor()
-            dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            dataCollection = 'Insert into loanentry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, interestPaidTillDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
             datas = [(name, mobileNumber, address, shopName, date, principalAmount, interestPercent, principlePaid,
-                      interestPaid, principalLeft, interestLeft)]
+                      interestPaid, principalLeft, interestLeft, interestPaidTillDate)]
 
             mycursor.executemany(dataCollection, datas)
             myDataBase.commit()
@@ -90,9 +91,9 @@ def add_data():
         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
-        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, interestPaidTillDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
         datas = [(name, mobileNumber, address, shopName, date, principalAmount, interestPercent, principlePaid,
-                  interestPaid)]
+                  interestPaid, interestPaidTillDate)]
 
         mycursor.executemany(dataCollection, datas)
         myDataBase.commit()
@@ -121,4 +122,3 @@ interest_entry.place(x=215, y=320)
 add_btn = Button(root, text="Add", font="Arial 12 bold", bg="gold", fg="black", command=add_data)
 add_btn.place(x=270, y=370)
 root.mainloop()
-
