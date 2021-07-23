@@ -100,7 +100,7 @@ def LoanWindow():
 
 
 def Time():
-    string = strftime('%H:%M:%S %p')
+    string = strftime('%I:%M:%S %p')
     Time_Label.config(text=string)
     Time_Label.after(1000, Time)
 
