@@ -1,4 +1,4 @@
-# todo bug bix in update function of firebase subdatabase
+# todo bug bix in update function of firebase subdatabase and search function
 
 import csv
 from functools import partial
@@ -38,6 +38,9 @@ class gui:
         self.root.title(100 * titlespace + "Money Management System")
         self.root.geometry("883x750+330+0")
         self.root.maxsize(883, 750)
+        p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+        self.root.iconphoto(FALSE,p1)
+
 
         # tabControl = ttk.Notebook(root)
         # tab1 = ttk.Frame(tabControl)
@@ -78,15 +81,22 @@ class gui:
         def export():
             with open('FullFile.csv', 'w') as file:
                 write = csv.writer(file)
-                write.writerow(["Name", "Amount", "Date"])
+                write.writerow(["Name", "Amount", "Date", "Loan Taken", "Principal To be Paid", "Interest To be Paid"])
                 file.close()
             totalData = db.child('mainData').get()
+            loanDB = db.child('loanData').get()
             for data in totalData.each():
-                with open('FullFile.csv', 'a') as files:
-                    print('Inside this')
-                    write = csv.writer(files)
-                    write.writerow([data.val()['name'], data.val()['amount'], data.val()['date']])
-                    files.close()
+                for ld in loanDB.each() :
+                    with open('FullFile.csv', 'a') as files:
+                        write = csv.writer(files)
+                        if ld.val()['name'] == data.val()['name']:
+                            write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'],
+                                            ld.val()['principalAmount'], ld.val()['principalLeft'], ld.val()['interestLeft']])
+                            files.close()
+                        else:
+                            write.writerow(
+                                [data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A', 'N/A', 'N/A'])
+                            files.close()
             os.system('FullFile.csv')
             return 0
 
@@ -153,7 +163,7 @@ class gui:
             pass
 
         def back():
-            root.destroy()
+            self.root.destroy()
             import Homepage
 
         
@@ -365,7 +375,7 @@ class gui:
             self.sum = 0
             self.callAll = 'all'
             totalData = db.child('mainData').get()
-            loanDB = db.child('loanDemo').get()
+            loanDB = db.child('loanData').get()
 
             date = Date.get()
             if (date.find("-") > -1):
@@ -389,14 +399,14 @@ class gui:
                             write.writerow(["Name", "Amount", "Date", "Loan"])
                             file.close()
                         totalData = db.child('mainData').get()
-                        loanDB = db.child('loanDemo').get()
-                        for data in totalData.each():
-                            for ld in loanDB.each():
+                        loanDB = db.child('loanData').get()
+                        for data, ld in totalData.each():
+                            for ld in loanDB.each() :
                                 with open('FullFile.csv', 'a') as files:
                                     write = csv.writer(files)
-                                    if ld.val()['Name'] == data.val()['name']:
+                                    if ld.val()['name'] == data.val()['name']:
                                         write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'],
-                                                        ld.val()['Amount']])
+                                                        ld.val()['principalAmount']])
                                         files.close()
                                     else:
                                         write.writerow(
@@ -408,9 +418,9 @@ class gui:
                         'amount'] == Amount.get()):
                         with open('data.csv', 'a') as files:
                             write = csv.writer(files)
-                            if ld.val()['Name'] == data.val()['name']:
+                            if ld.val()['name'] == data.val()['name']:
                                 write.writerow(
-                                    [data.val()['name'], data.val()['amount'], data.val()['date'], ld.val()['Amount']])
+                                    [data.val()['name'], data.val()['amount'], data.val()['date'], ld.val()['principalAmount']])
                                 files.close()
                             else:
                                 write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
