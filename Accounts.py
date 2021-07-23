@@ -55,7 +55,7 @@ class gui:
         self.sumDep = 0
 
         def times():
-            current_time = time.strftime("%H:%M:%S")
+            current_time = time.strftime("%I:%M:%S")
             self.clock.config(text=current_time)
             self.clock.after(200, times)
 
