@@ -54,14 +54,14 @@ def loaninfor():
     loanAmt = 0
 
     try:
-        loanData = db.child('loanDemo').get()
-        for ld in loanData.each():
+        loanDatas = db.child('loanData').get()
+        for ld in loanDatas.each():
             if ld.val()['name'] == name.get():
-                loanAmt += ld.val()['amount']
+                loanAmt += int(ld.val()['principalLeft'])
 
     except:
         loanAmt = 0
-        # tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
+        tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
 
     return loanAmt
 
