@@ -13,6 +13,7 @@ root.title("NewLoan Page")
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE,p1)
 
+
 Top_Frame = Frame(root, borderwidth=6, bg='gold', relief=RAISED)
 Top_Frame.pack(fill=X)
 Top_Label = Label(Top_Frame, text="---New Loan Data Entry---", bg='gold', font="Helvetica 14 bold")
