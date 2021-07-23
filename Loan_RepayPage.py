@@ -23,50 +23,47 @@ root.maxsize(550, 450)
 root.minsize(550, 450)
 root.configure(bg='midnight blue')
 root.title("Deposit on Existing Loan")
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE,p1)
+
 
 name_entry = StringVar()
 mob_entry = StringVar()
 p_entry = StringVar()
 i_entry = StringVar()
 
-def back():
-    root.destroy()
-    import Homepage
-
-
 def repay():
     name = name_entry.get()
     mobileNumber = mob_entry.get()
     principlePaid = p_entry.get()
     interestPaid = i_entry.get()
+    
     try:
         loanInfo = db.child('loanData').get()
         for info in loanInfo.each():
             if (name == info.val()['name'] or mobileNumber == info.val()['mobileNumber']):
                 previousPrinciple = info.val()['principalLeft']
                 interstLeft = info.val()['interestLeft']
+                interestPaidTill = info.val()['interestPaidTillDate']
                 newPriciple = int(previousPrinciple) - int(principlePaid)
-                newInterst = int(interstLeft) - int(interestPaid)
+                newInterst = int(interstLeft) - int(interestPaid) + int((newPriciple * int(info.val()['interestPercent']))/100)
+                interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
                 db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,
-                                                               'interestLeft': newInterst})
+                                                               'interestLeft': newInterst, 'interestPaidTillDate' : interestPaidTillDates})
         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
-        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s where name=%s and mobileNumber = %s ',
-                         (newPriciple,newInterst,name,mobileNumber))
+        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s where name=%s and mobileNumber = %s ',
+                         (newPriciple,newInterst,interestPaidTillDates,name,mobileNumber))
         tkinter.messagebox.showinfo('Success','Priciple and Interest Added')
     except :
         tkinter.messagebox.showinfo('No Internet', 'You are offline. Saving your data offline. Please sync your databases later')
         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
-        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s where name=%s and mobileNumber = %s ',
-                         (newPriciple,newInterst,name,mobileNumber))
-        tkinter.messagebox.showinfo('Success','Priciple and Interest Added offline')
-
-Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
-Back.place(x=25, y=50)
-
+        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s where name=%s and mobileNumber = %s ',
+                         (newPriciple,newInterst,interestPaidTillDates,name,mobileNumber))
+        tkinter.messagebox.showinfo('Success','Priciple and Interest Added In Local DataBase. Please sync later')
 
 f1 = Frame(root, bg='gold', borderwidth=10,
            relief=RAISED, width=500, height=55)
