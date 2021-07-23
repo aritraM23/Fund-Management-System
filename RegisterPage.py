@@ -31,6 +31,9 @@ root.maxsize(550, 550)
 root.minsize(550, 550)
 root.configure(bg='midnight blue')
 root.title("Registration Page/IVS")
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE,p1)
+
 
 def signUp(name,passwd,confirm):
     if (passwd==confirm):
