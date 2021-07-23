@@ -42,6 +42,9 @@ root.iconphoto(FALSE,p1)
 name_entry = StringVar()
 mob_entry = StringVar()
 
+def back():
+    root.destroy()
+    import Homepage
 
 def new():
     root.destroy()
@@ -142,7 +145,8 @@ def sync_down():
         tkinter.messagebox.showerror('Error', e)
     
 
-
+Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
+Back.place(x=20, y=50)
 
 top_frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
 top_frame.pack(side=TOP, fill=X)
