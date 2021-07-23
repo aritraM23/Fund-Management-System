@@ -32,6 +32,11 @@ mob_entry = StringVar()
 p_entry = StringVar()
 i_entry = StringVar()
 
+def back():
+    root.destroy()
+    import Homepage
+
+
 def repay():
     name = name_entry.get()
     mobileNumber = mob_entry.get()
@@ -64,6 +69,11 @@ def repay():
         mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s where name=%s and mobileNumber = %s ',
                          (newPriciple,newInterst,interestPaidTillDates,name,mobileNumber))
         tkinter.messagebox.showinfo('Success','Priciple and Interest Added In Local DataBase. Please sync later')
+
+
+Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
+Back.place(x=20, y=50)
+
 
 f1 = Frame(root, bg='gold', borderwidth=10,
            relief=RAISED, width=500, height=55)
