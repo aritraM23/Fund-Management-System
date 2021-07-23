@@ -10,6 +10,8 @@ root.geometry("580x470+500+130")
 root.maxsize(580, 470)
 root.minsize(580, 470)
 root.title("NewLoan Page")
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE,p1)
 
 Top_Frame = Frame(root, borderwidth=6, bg='gold', relief=RAISED)
 Top_Frame.pack(fill=X)
@@ -70,7 +72,7 @@ def add_data():
                      'principalLeft': principalLeft, 'interestLeft': interestLeft}
             db.child('loanDemo').push(datas)
 
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                  database='ivsLoan')
             mycursor = myDataBase.cursor()
             dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
@@ -84,7 +86,7 @@ def add_data():
     except:
         tkinter.messagebox.showinfo('Offline',
                                     'You are offline your data will be saved offline. Later please Sync Up to sync the databases')
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
         dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
@@ -118,3 +120,4 @@ interest_entry.place(x=215, y=320)
 add_btn = Button(root, text="Add", font="Arial 12 bold", bg="gold", fg="black", command=add_data)
 add_btn.place(x=270, y=370)
 root.mainloop()
+
