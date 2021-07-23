@@ -70,10 +70,23 @@ def loaninfor():
 
 def treasure():
     global amount
+    interest = 0
+    princi = 0
     totalDB = db.child('mainData').get()
+    loanDb = db.child('loanData').get()
     for data in totalDB.each():
         amount += int(data.val()['amount'])
 
+    print(amount)
+    for ld in loanDb.each():
+        interest += int(ld.val()['interestPaidTillDate'])
+    amount += interest
+    print(amount)
+    for ld in loanDb.each():
+        princi += int(ld.val()['principalLeft'])
+
+    amount -= princi 
+    print(amount)
     # print(amount)
     return amount
 
@@ -132,12 +145,12 @@ loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 11 bold",borderwidth
 loan.place(x=300,y=240)
 
 accLab = Label(root,text="Accounts",font="Helvetica 10 bold",bg='midnight blue',fg='gold')
-accLab.place(x=200,y=330)
+accLab.place(x=180,y=330)
 
 loanLab = Label(root,text="Loans",font="Helvetica 10 bold",bg='midnight blue',fg='gold')
-loanLab.place(x=350,y=330)
+loanLab.place(x=320,y=330)
 
-Treasury=Label(root,bg='gold',fg='black',font="Helvetica 13 bold",text="Treasury:  "+ str(treasure()))
+Treasury=Label(root,bg='gold',fg='black',font="Helvetica 13 bold",text="Treasury: Rs. "+ str(treasure()))
 Treasury.place(x=200,y=380)
 
 root.mainloop()
