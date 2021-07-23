@@ -58,7 +58,7 @@ def export():
         write = csv.writer(file)
         write.writerow(
             ["Name", "Loan Amount", "Interest", "Principal Paid", "Interest Paid", "Principal left", "Interest left",
-             "Date"])
+             "InterestPaidTotal","Date", ])
         file.close()
     totalData = db.child('loanData').get()
     for data in totalData.each():
@@ -70,7 +70,7 @@ def export():
                 write = csv.writer(files)
                 write.writerow([data.val()['name'], data.val()['principalAmount'], data.val()['interestPercent'],
                                 data.val()['priciplePaid'], data.val()['principalLeft'], data.val()['interestPaid'],
-                                data.val()['interestLeft'], data.val()['date']])
+                                data.val()['interestLeft'], data.val()['interestPaidTillDate'],data.val()['date']])
                 files.close()
     os.system('LoanFile.csv')
 
@@ -112,8 +112,8 @@ def sync_up():
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
-        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-        datas = [(data.val()['name'], data.val()['mobileNumber'], data.val()['address'],data.val()['shopName'],data.val()['date'], data.val()['principalAmount'], data.val()['interestPercent'], data.val()['priciplePaid'], data.val()['interestPaid'], data.val()['principalLeft'], data.val()['interestLeft'])]
+        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, interestPaidTillDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        datas = [(data.val()['name'], data.val()['mobileNumber'], data.val()['address'],data.val()['shopName'],data.val()['date'], data.val()['principalAmount'], data.val()['interestPercent'], data.val()['priciplePaid'], data.val()['interestPaid'], data.val()['principalLeft'], data.val()['interestLeft'], data.val()['interestPaidTillDate'])]
         mycursor.executemany(dataCollection, datas)
         myDataBase.commit()
     tkinter.messagebox.showinfo('Success', 'Data Synced')
@@ -131,9 +131,9 @@ def sync_down():
         
         for rows in totalEntries:
             datas = {
-                     'name':            rows[0], 'mobileNumber':    rows[1], 'address':      rows[2], 'shopName':     rows[3], 'date': rows[4],
-                     'principalAmount': rows[5], 'interestPercent': rows[6], 'priciplePaid': rows[7], 'interestPaid': rows[8],
-                     'principalLeft':   rows[9], 'interestLeft':    rows[10]
+                     'name':            rows[0], 'mobileNumber':    rows[1], 'address':               rows[2], 'shopName':     rows[3], 'date': rows[4],
+                     'principalAmount': rows[5], 'interestPercent': rows[6], 'priciplePaid':          rows[7], 'interestPaid': rows[8],
+                     'principalLeft':   rows[9], 'interestLeft':    rows[10], 'interestPaidTillDate': rows[11]
                     }
             db.child('loanData').push(datas)
         tkinter.messagebox.showinfo('Success', 'Database Synced')
