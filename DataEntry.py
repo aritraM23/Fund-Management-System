@@ -31,6 +31,9 @@ root.maxsize(500,450)
 root.minsize(500,450)
 root.configure(bg='midnight blue')
 root.title("Registration Page")
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE,p1)
+
 
 f3 = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
 f3.pack(side=TOP, fill=X)
