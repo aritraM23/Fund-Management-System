@@ -49,6 +49,9 @@ root.maxsize(500,450)
 root.minsize(500,450)
 root.configure(bg='midnight blue')
 root.title("Login/Register/IVS")
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE,p1)
+
     
 user_entry = StringVar()
 pass_entry = StringVar()
