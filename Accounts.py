@@ -610,7 +610,6 @@ class gui:
 
 # if __name__ == '__main__':
 
-
 root = tkinter.Tk()
 application = gui(root)
 root.mainloop()
