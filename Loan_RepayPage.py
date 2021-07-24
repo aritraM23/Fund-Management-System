@@ -31,6 +31,7 @@ name_entry = StringVar()
 mob_entry = StringVar()
 p_entry = StringVar()
 i_entry = StringVar()
+date_L = StringVar()
 
 def back():
     root.destroy()
@@ -53,21 +54,30 @@ def repay():
                 newPriciple = int(previousPrinciple) - int(principlePaid)
                 newInterst = int(interstLeft) - int(interestPaid) + int((newPriciple * int(info.val()['interestPercent']))/100)
                 interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
+                date = date_L.get()
+                if (date.find("-") > -1):
+                    tday, tm, ty = date.split("-")
+                    mdate = tday + "/" + tm + "/" + ty
+                    date = mdate
+                elif date.find(".") > -1:
+                    tday, tm, ty = date.split(".")
+                    mdate = tday + "/" + tm + "/" + ty
+                    date = mdate
                 db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,
-                                                               'interestLeft': newInterst, 'interestPaidTillDate' : interestPaidTillDates})
+                                                               'interestLeft': newInterst, 'interestPaidTillDate' : interestPaidTillDates, 'date' : date})
         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
-        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s where name=%s and mobileNumber = %s ',
-                         (newPriciple,newInterst,interestPaidTillDates,name,mobileNumber))
+        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, Date = %s where name=%s and mobileNumber = %s ',
+                         (newPriciple,newInterst,interestPaidTillDates,date,name,mobileNumber))
         tkinter.messagebox.showinfo('Success','Priciple and Interest Added')
     except :
         tkinter.messagebox.showinfo('No Internet', 'You are offline. Saving your data offline. Please sync your databases later')
         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
-        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s where name=%s and mobileNumber = %s ',
-                         (newPriciple,newInterst,interestPaidTillDates,name,mobileNumber))
+        mycursor.execute('UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, Date = %s where name=%s and mobileNumber = %s ',
+                         (newPriciple,newInterst,interestPaidTillDates,date,name,mobileNumber))
         tkinter.messagebox.showinfo('Success','Priciple and Interest Added In Local DataBase. Please sync later')
 
 
@@ -94,6 +104,10 @@ interest_label = Label(root, bg='midnight blue', fg='gold',
                font="Helvetica 11 bold", text="Interest Given")
 interest_label.place(x=102, y=255)
 
+date_label = Label(root, bg='midnight blue', fg='gold',
+               font="Helvetica 11 bold", text="Date")
+date_label.place(x= 172, y=295)
+
 
 name = Entry(root, width=27, textvariable=name_entry,
              borderwidth=8, relief=SUNKEN, font="Helvetica 11 bold")
@@ -108,9 +122,13 @@ interest = Entry(root, width=27, textvariable=i_entry,
                 borderwidth=8, relief=SUNKEN, font="Helvetica 11 bold")
 interest.place(x=230, y=251)
 
+dateEnt = Entry(root, width=27, textvariable=date_L,
+                borderwidth=8, relief=SUNKEN, font="Helvetica 11 bold")
+dateEnt.place(x=230, y=291)
+
 submit_button = Button(root, text="Add", bg='gold', fg='black',
                        font="Helvetica 11 bold", relief=SUNKEN, command=repay)
-submit_button.place(x=425, y=310)
+submit_button.place(x=425, y=330)
 
 
 root.mainloop()
