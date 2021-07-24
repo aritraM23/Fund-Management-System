@@ -10,6 +10,7 @@ from datetime import datetime
 import time
 import pyrebase
 import mysql.connector
+from PIL.ImageTk import PhotoImage
 
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
@@ -52,7 +53,7 @@ def New():
     import DataEntry
 def back():
     root.destroy()
-    import FirstPage
+    import LoginPage
 
 
 user_entry = StringVar()
