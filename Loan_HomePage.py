@@ -50,11 +50,13 @@ def new():
     root.destroy()
     import NewLoan
 
-
 def depo():
     root.destroy()
     import Loan_RepayPage
 
+def display():
+    root.destroy()
+    import LoanTreeView
 
 def export():
     with open('LoanFile.csv', 'w') as file:
@@ -176,5 +178,7 @@ SyncD_button.pack(side=LEFT,padx=100)
 SyncU_button = Button(down_Frame,text="Sync Up",font="Helvetica 12 bold",bg='midnight blue',fg='gold',command= sync_up)
 SyncU_button.pack(side=LEFT,padx=10)
 
+Display = Button(root, text="Display Loan", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=display)
+Display.place(x=430, y=50)
 
 root.mainloop()
