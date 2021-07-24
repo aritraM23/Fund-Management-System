@@ -11,6 +11,7 @@ import time
 import pyrebase
 import mysql.connector
 import datetime as dt
+from PIL.ImageTk import PhotoImage
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
     'authDomain': "fundmang-42ad8.firebaseapp.com",
@@ -78,14 +79,21 @@ def treasure():
         amount += int(data.val()['amount'])
 
     print(amount)
-    for ld in loanDb.each():
-        interest += int(ld.val()['interestPaidTillDate'])
-    amount += interest
-    print(amount)
-    for ld in loanDb.each():
-        princi += int(ld.val()['principalLeft'])
+    try:
+        for ld in loanDb.each():
+            interest += int(ld.val()['interestPaidTillDate'])
+        amount += interest
+        print(amount)
+        for ld in loanDb.each():
+            princi += int(ld.val()['principalLeft'])
 
-    amount -= princi 
+        amount -= princi 
+        # if(amount<=0):
+        #     tkinter.messagebox.showerror('Balance Exhausted!!', "No Balance Left. Loan Can't be Provided!")
+        #     amount += princi
+    except:
+        pass
+
     print(amount)
     # print(amount)
     return amount
