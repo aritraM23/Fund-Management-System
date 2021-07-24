@@ -11,6 +11,7 @@ import os
 import pyrebase
 import mysql.connector
 import csv
+from PIL.ImageTk import PhotoImage
 
 
 firebaseConfig = {
@@ -42,6 +43,13 @@ root.iconphoto(FALSE,p1)
 name_entry = StringVar()
 mob_entry = StringVar()
 
+def back():
+    root.destroy()
+    import Homepage
+
+def displayLoan():
+    root.destroy()
+    import LoanTreeView
 
 def new():
     root.destroy()
@@ -107,8 +115,8 @@ def bal():
 
 def sync_up():
     
-    totalData = db.child('loanDemo').get()
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",database='ivsLoan')
+    totalData = db.child('loanData').get()
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",database='ivsLoan')
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
@@ -122,8 +130,8 @@ def sync_up():
 
 def sync_down():
     try:
-        db.child('loanDemo').remove()
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsLoan')
+        db.child('loanData').remove()
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivsLoan')
         mycursor = myDataBase.cursor()
         query = 'Select * from loanEntry'
         mycursor.execute(query)
@@ -142,6 +150,8 @@ def sync_down():
         tkinter.messagebox.showerror('Error', e)
     
 
+Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
+Back.place(x=20, y=50)
 
 
 top_frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
@@ -172,5 +182,7 @@ SyncD_button.pack(side=LEFT,padx=100)
 SyncU_button = Button(down_Frame,text="Sync Up",font="Helvetica 12 bold",bg='midnight blue',fg='gold',command= sync_up)
 SyncU_button.pack(side=LEFT,padx=10)
 
+Display = Button(root, text="DISPLAY", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=displayLoan)
+Display.place(x=450, y=50)
 
 root.mainloop()
