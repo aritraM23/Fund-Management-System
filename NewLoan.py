@@ -3,6 +3,7 @@ from tkinter import *
 import math
 import pyrebase
 import mysql.connector
+from PIL.ImageTk import PhotoImage
 
 root = Tk()
 root.config(bg='midnight blue')
@@ -10,6 +11,9 @@ root.geometry("580x470+500+130")
 root.maxsize(580, 470)
 root.minsize(580, 470)
 root.title("NewLoan Page")
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.iconphoto(FALSE, p1)
+
 
 Top_Frame = Frame(root, borderwidth=6, bg='gold', relief=RAISED)
 Top_Frame.pack(fill=X)
@@ -48,6 +52,10 @@ interest.place(x=135, y=320)
 
 
 # ------------------------FUNCTIONS-----------------------------#
+
+def back():
+    root.destroy()
+    import Homepage
 
 def add_data():
     name = name_entry.get()
@@ -119,4 +127,8 @@ interest_entry.place(x=215, y=320)
 # --------------------------------Button-----------------------------------#
 add_btn = Button(root, text="Add", font="Arial 12 bold", bg="gold", fg="black", command=add_data)
 add_btn.place(x=270, y=370)
+
+Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
+Back.place(x=20, y=50)
+
 root.mainloop()
