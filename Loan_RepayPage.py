@@ -2,6 +2,7 @@ import tkinter.messagebox
 from tkinter import *
 import pyrebase
 import mysql.connector
+from PIL.ImageTk import PhotoImage
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
 				  'authDomain': "fundmang-42ad8.firebaseapp.com",
