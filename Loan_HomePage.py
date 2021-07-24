@@ -42,28 +42,23 @@ root.iconphoto(FALSE,p1)
 name_entry = StringVar()
 mob_entry = StringVar()
 
-def back():
-    root.destroy()
-    import Homepage
 
 def new():
     root.destroy()
     import NewLoan
 
+
 def depo():
     root.destroy()
     import Loan_RepayPage
 
-def display():
-    root.destroy()
-    import LoanTreeView
 
 def export():
     with open('LoanFile.csv', 'w') as file:
         write = csv.writer(file)
         write.writerow(
             ["Name", "Loan Amount", "Interest", "Principal Paid", "Interest Paid", "Principal left", "Interest left",
-             "InterestPaidTotal","Date", ])
+             "InterestPaidTotal","Date","Last Paid Date" ])
         file.close()
     totalData = db.child('loanData').get()
     for data in totalData.each():
@@ -75,7 +70,7 @@ def export():
                 write = csv.writer(files)
                 write.writerow([data.val()['name'], data.val()['principalAmount'], data.val()['interestPercent'],
                                 data.val()['priciplePaid'], data.val()['principalLeft'], data.val()['interestPaid'],
-                                data.val()['interestLeft'], data.val()['interestPaidTillDate'],data.val()['date']])
+                                data.val()['interestLeft'], data.val()['interestPaidTillDate'],data.val()['date'], data.val()['lastPaidDate']])
                 files.close()
     os.system('LoanFile.csv')
 
@@ -117,8 +112,8 @@ def sync_up():
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
-        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, interestPaidTillDate) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-        datas = [(data.val()['name'], data.val()['mobileNumber'], data.val()['address'],data.val()['shopName'],data.val()['date'], data.val()['principalAmount'], data.val()['interestPercent'], data.val()['priciplePaid'], data.val()['interestPaid'], data.val()['principalLeft'], data.val()['interestLeft'], data.val()['interestPaidTillDate'])]
+        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, InterestPaidTillDate,dateGiven) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        datas = [(data.val()['name'], data.val()['mobileNumber'], data.val()['address'],data.val()['shopName'],data.val()['date'], data.val()['principalAmount'], data.val()['interestPercent'], data.val()['priciplePaid'], data.val()['interestPaid'], data.val()['principalLeft'], data.val()['interestLeft'], data.val()['interestPaidTillDate'],data.val()['lastPaidDate'])]
         mycursor.executemany(dataCollection, datas)
         myDataBase.commit()
     tkinter.messagebox.showinfo('Success', 'Data Synced')
@@ -138,7 +133,7 @@ def sync_down():
             datas = {
                      'name':            rows[0], 'mobileNumber':    rows[1], 'address':               rows[2], 'shopName':     rows[3], 'date': rows[4],
                      'principalAmount': rows[5], 'interestPercent': rows[6], 'priciplePaid':          rows[7], 'interestPaid': rows[8],
-                     'principalLeft':   rows[9], 'interestLeft':    rows[10], 'interestPaidTillDate': rows[11]
+                     'principalLeft':   rows[9], 'interestLeft':    rows[10], 'interestPaidTillDate': rows[11], 'lastPaidDate':rows[12]
                     }
             db.child('loanData').push(datas)
         tkinter.messagebox.showinfo('Success', 'Database Synced')
@@ -147,8 +142,7 @@ def sync_down():
         tkinter.messagebox.showerror('Error', e)
     
 
-Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
-Back.place(x=20, y=50)
+
 
 top_frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
 top_frame.pack(side=TOP, fill=X)
@@ -178,7 +172,5 @@ SyncD_button.pack(side=LEFT,padx=100)
 SyncU_button = Button(down_Frame,text="Sync Up",font="Helvetica 12 bold",bg='midnight blue',fg='gold',command= sync_up)
 SyncU_button.pack(side=LEFT,padx=10)
 
-Display = Button(root, text="Display Loan", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=display)
-Display.place(x=430, y=50)
 
 root.mainloop()
