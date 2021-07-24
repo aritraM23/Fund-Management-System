@@ -10,6 +10,7 @@ from datetime import datetime
 import time
 import pyrebase
 import mysql.connector
+from PIL.ImageTk import PhotoImage
 
 firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
     'authDomain': "fundmang-42ad8.firebaseapp.com",
@@ -24,6 +25,9 @@ firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
 firebase=pyrebase.initialize_app(firebaseConfig)
 db= firebase.database()
 
+def back():
+    root.destroy()
+    import LoginPage
 
 root=Tk()
 root.geometry("500x450")
@@ -63,6 +67,9 @@ mobile.place(x=190, y=238)
 
 Reg_btn = Button(root,text="Register",bg="gold",fg="bLACK",borderwidth=2,relief=SUNKEN,font="Arial 12 bold")
 Reg_btn.place(x=200,y=308)
+
+Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
+Back.place(x=20, y=50)
 
 
 root.mainloop()
