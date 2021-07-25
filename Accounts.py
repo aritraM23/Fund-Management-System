@@ -460,10 +460,14 @@ class gui:
                         print('Delete' + Name.get())
                         for user in totalData.each():
                             if user.val()['name'] == Name.get() and user.val()['date'] == Date.get():
-                                db.child('mainData').child(Name.get()).child(user.key()).remove()
+                                print("deleted")
+                                # db.child('mainData').child(Name.get()).remove()
+                                db.child('mainData').child(data.key()).remove()
+                    
                             else:
                                 tkinter.messagebox.showerror('Error', 'No Data in DataBase')
-                        db.child('registerUserExp').child(data.key()).remove()
+                        #db.child('registerUserExp').child(data.key()).remove()
+                        db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
                         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                              database='ivs')
                         mycursor = myDataBase.cursor()
@@ -609,6 +613,7 @@ class gui:
 # Main:
 
 # if __name__ == '__main__':
+
 
 root = tkinter.Tk()
 application = gui(root)
