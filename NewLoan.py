@@ -52,6 +52,50 @@ interest.place(x=135, y=320)
 
 
 # ------------------------FUNCTIONS-----------------------------#
+amount = 0
+
+def treasure(pAmount):
+    global amount
+    interest = 0
+    princi = 0
+    totalDB = db.child('mainData').get()
+    loanDb = db.child('loanData').get()
+    for data in totalDB.each():
+        amount += int(data.val()['amount'])
+
+    print(amount)
+    try:
+        for ld in loanDb.each():
+            interest += int(ld.val()['interestPaidTillDate'])
+        amount += interest
+        print(amount)
+        for ld in loanDb.each():
+            princi += int(ld.val()['principalLeft'])
+
+        amount -= princi 
+        # if(amount<=0):
+        #     tkinter.messagebox.showerror('Balance Exhausted!!', "No Balance Left. Loan Can't be Provided!")
+        #     amount += princi
+        amount -= pAmount
+        if(amount<=0):
+            tkinter.messagebox.showerror("Insufficient Balance!!", "Loan Can't be Provided!")
+            back()
+            return 0
+            
+
+    except:
+        amount -= pAmount
+        if(amount<=0):
+            tkinter.messagebox.showerror("Insufficient Balance!!", "Loan Can't be Provided!")
+            back()
+            return 0
+            
+
+    print(amount)
+    # print(amount)
+    return amount
+
+
 
 def back():
     root.destroy()
@@ -72,6 +116,10 @@ def add_data():
     interestPaidTillDate = 0
     updatedLoanDate = date
 
+    val = treasure(int(principalAmount))
+    if(val==0):
+        return 0
+        
     try:
         if (name != '' and mobileNumber != '' and principalAmount != '' and interestPercent != ''):
             datas = {'name': name, 'mobileNumber': mobileNumber, 'address': address, 'shopName': shopName, 'date': date,
@@ -80,7 +128,7 @@ def add_data():
                      'principalLeft': principalLeft, 'interestLeft': interestLeft,  'interestPaidTillDate' : interestPaidTillDate, 'lastPaidDate':updatedLoanDate}
             db.child('loanData').push(datas)
 
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                  database='ivsLoan')
             mycursor = myDataBase.cursor()
             dataCollection = 'Insert into loanentry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, interestPaidTillDate,dateGiven) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
@@ -94,7 +142,7 @@ def add_data():
     except:
         tkinter.messagebox.showinfo('Offline',
                                     'You are offline your data will be saved offline. Later please Sync Up to sync the databases')
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
         dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, InterestPaidTillDate, dateGiven) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
