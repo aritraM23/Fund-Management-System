@@ -40,7 +40,7 @@ root.geometry("1100x700+290+55")
 root.minsize(1100,700)
 root.maxsize(1100,700)
 root.title("IVS/Loan/LoanDetails")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 #---------------------------Functions--------------------------------#
 Name = StringVar()
@@ -56,7 +56,7 @@ def home():
     import Homepage
 
 def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivsLoan')
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsLoan')
             mycursor = myDataBase.cursor()
             mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
             result = mycursor.fetchall()
@@ -84,7 +84,7 @@ def repayloan():
 def sync_up():
     
     totalData = db.child('loanData').get()
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",database='ivsLoan')
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",database='ivsLoan')
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
@@ -100,7 +100,7 @@ def sync_up():
 def sync_down():
     try:
         db.child('loanData').remove()
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivsLoan')
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsLoan')
         mycursor = myDataBase.cursor()
         query = 'Select * from loanEntry'
         mycursor.execute(query)

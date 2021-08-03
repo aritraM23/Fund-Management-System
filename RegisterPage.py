@@ -32,7 +32,7 @@ root.maxsize(550, 550)
 root.minsize(550, 550)
 root.configure(bg='midnight blue')
 root.title("Registration Page/IVS")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE,p1)
 
 

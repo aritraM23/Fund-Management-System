@@ -38,7 +38,7 @@ class gui:
         self.root.title(100 * titlespace + "Money Management System")
         self.root.geometry("883x750+330+0")
         self.root.maxsize(883, 750)
-        p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+        p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
         self.root.iconphoto(FALSE,p1)
 
 
@@ -222,8 +222,8 @@ class gui:
         # ===============================================================================================================================================================================================
 
         # nav bar
-        self.navIcon = PhotoImage(file="navbar.png")
-        self.closeIcon = PhotoImage(file="exit.png")
+        self.navIcon = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\navbar.png')
+        self.closeIcon = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\exit.png')
 
         self.nvbarbtn = Button(TitleFrame, image=self.navIcon, width=24, height=24, bd=0, padx=1, command=switch).grid(
             row=0, column=0, padx=0, pady=0)
@@ -288,7 +288,7 @@ class gui:
                     datas = {'name': name, 'amount': amount, 'date': date}
                     db.child('mainData').push(datas)
                     db.child('registerUserExp').child(name).push(datas)
-                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                          database='ivs')
                     mycursor = myDataBase.cursor()
                     dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
@@ -305,7 +305,7 @@ class gui:
                     tkinter.messagebox.showerror('Error', 'Insert Data In All Fields')
 
             except:
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                      database='ivs')
                 mycursor = myDataBase.cursor()
                 dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
@@ -339,7 +339,7 @@ class gui:
                             db.child('registerUserExp').child(Name.get()).child(indi.key()).update({'name': Name.get(),
                                                                                                     'amount': Amount.get(),
                                                                                                     'date': date})
-                            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                                  database='ivs')
                             mycursor = myDataBase.cursor()
 
@@ -355,7 +355,7 @@ class gui:
                 display()
                 reset()
             except:
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                      database='ivs')
                 mycursor = myDataBase.cursor()
 
@@ -437,7 +437,7 @@ class gui:
             tkinter.messagebox.showerror("Search Error", "Data not found!")
 
         def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
             mycursor = myDataBase.cursor()
             mycursor.execute("select * from dataEntry")
             result = mycursor.fetchall()
@@ -455,20 +455,18 @@ class gui:
                 totalData = db.child('registerUserExp').child(Name.get()).get()
                 totalUser = db.child('mainData').get()
                 for data in totalUser.each():
-                    print(Name.get())
+                    
                     if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
-                        print('Delete' + Name.get())
+                    
                         for user in totalData.each():
                             if user.val()['name'] == Name.get() and user.val()['date'] == Date.get():
-                                print("deleted")
-                                # db.child('mainData').child(Name.get()).remove()
+                    
+                    
                                 db.child('mainData').child(data.key()).remove()
                     
-                            else:
-                                tkinter.messagebox.showerror('Error', 'No Data in DataBase')
-                        #db.child('registerUserExp').child(data.key()).remove()
+                    
                         db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
-                        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                              database='ivs')
                         mycursor = myDataBase.cursor()
                         mycursor.execute("delete from dataEntry where name=%s and date=%s", (
@@ -483,18 +481,7 @@ class gui:
                         reset()
                         display()
                         break
-                    if Name.get() == '':
-                        tkinter.messagebox.showerror('Error', 'Enter Name')
-                        self.deleteData += 1
-                        reset()
-                        display()
-                        break
-                    if Date.get() == '':
-                        tkinter.messagebox.showerror('Error', 'Enter Date')
-                        self.deleteData += 1
-                        reset()
-                        display()
-                        break
+
 
                 if (self.deleteData == 0):
                     reset()
@@ -502,7 +489,7 @@ class gui:
                     tkinter.messagebox.showerror('Error', 'No Data Found')
             except:
                 self.deleteData = 0
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                      database='ivs')
                 mycursor = myDataBase.cursor()
                 mycursor.execute("delete from dataEntry where name=%s and date=%s", (
@@ -517,8 +504,7 @@ class gui:
                 if (self.deleteData == 0):
                     reset()
                     display()
-                # tkinter.messagebox.showerror('Error', 'No Data Found')
-
+               
         def TrainInfo(ev):
             viewInfo = self.display_data.focus()
             learnData = self.display_data.item(viewInfo)
@@ -535,7 +521,7 @@ class gui:
         def sync_on():
             # databaseChoice = input('Which one you need')
             totalData = db.child('mainData').get()
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                  database='ivs')
             mycursor = myDataBase.cursor()
             mycursor.execute('Delete From dataEntry')
@@ -554,7 +540,7 @@ class gui:
             try:
                 db.child('mainData').remove()
                 db.child('registerUserExp').remove()
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs')
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
                 mycursor = myDataBase.cursor()
                 query = 'Select * from dataEntry'
                 mycursor.execute(query)
