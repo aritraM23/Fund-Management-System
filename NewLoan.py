@@ -4,14 +4,14 @@ import math
 import pyrebase
 import mysql.connector
 from PIL.ImageTk import PhotoImage
-
+from envVar import firebaseConfig as fc
 root = Tk()
 root.config(bg='midnight blue')
 root.geometry("580x470+500+130")
 root.maxsize(580, 470)
 root.minsize(580, 470)
 root.title("NewLoan Page")
-p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 
 
