@@ -12,21 +12,13 @@ from datetime import datetime
 import time
 import pyrebase
 import mysql.connector
-
+from envVar import firebaseConfig as fc
 # import indiv
 from PIL.ImageTk import PhotoImage
 
-firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
-                  'authDomain': "fundmang-42ad8.firebaseapp.com",
-                  'projectId': "fundmang-42ad8",
-                  'storageBucket': "fundmang-42ad8.appspot.com",
-                  'messagingSenderId': "361815074904",
-                  'databaseURL': 'https://fundmang-42ad8-default-rtdb.firebaseio.com',
-                  'appId': "1:361815074904:web:8504dfd52dbde0b186422d",
-                  'measurementId': "G-MVMXL8CJNK"
-                  }
 
-firebase = pyrebase.initialize_app(firebaseConfig)
+
+firebase = pyrebase.initialize_app(fc)
 db = firebase.database()
 
 
@@ -38,7 +30,7 @@ class gui:
         self.root.title(100 * titlespace + "Money Management System")
         self.root.geometry("883x750+330+0")
         self.root.maxsize(883, 750)
-        p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
+        p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
         self.root.iconphoto(FALSE,p1)
 
 
@@ -222,8 +214,8 @@ class gui:
         # ===============================================================================================================================================================================================
 
         # nav bar
-        self.navIcon = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\navbar.png')
-        self.closeIcon = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\exit.png')
+        self.navIcon = PhotoImage(file='navbar.png')
+        self.closeIcon = PhotoImage(file='exit.png')
 
         self.nvbarbtn = Button(TitleFrame, image=self.navIcon, width=24, height=24, bd=0, padx=1, command=switch).grid(
             row=0, column=0, padx=0, pady=0)
