@@ -112,37 +112,37 @@ class gui:
             # self.ind.maxsize("570x250")
             # self.ind.resizable(False)
 
-            mainFrame = Frame(self.ind, bd=10, width=500, height=370, relief=RIDGE, bg='midnight blue')
+            mainFrame = Frame(self.ind, bd=10, width=500, height=370, relief=RIDGE, bg='black')
             mainFrame.grid()
 
-            # self.labelMain = Label(self.ind, bd=7, width=500, height=400, bg='midnight blue')
+            # self.labelMain = Label(self.ind, bd=7, width=500, height=400, bg='black')
             # self.labelMain.grid(row = 0, column = 0)
-            topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RIDGE, bg='midnight blue')
+            topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RIDGE, bg='black')
             topFrame.grid(row=1, column=0)
 
-            indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='midnight blue')
+            indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='black')
             indtitleFrame.grid(row=0, column=0)
 
-            self.indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), fg='gold',
-                                  text="Import Individual Data by Name:", bd=7, bg='midnight blue')
+            self.indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), fg='pink',
+                                  text="Import Individual Data by Name:", bd=7, bg='black')
             self.indtitle.grid(row=0, column=1, padx=70)
 
             self.indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
                                   textvariable=QName)
             self.indEntry.grid(row=0, column=0, padx=5)
 
-            Label(topFrame, font=('Arial', 18, 'bold'), text=" ", bd=3, bg='midnight blue').grid(row=1, column=0,
+            Label(topFrame, font=('Arial', 18, 'bold'), text=" ", bd=3, bg='black').grid(row=1, column=0,
                                                                                                  padx=70)
 
             Button(topFrame, font=('arial', 13, 'bold'), text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
-                   bg='gold', command=s_byname).grid(row=2, column=0, padx=1)
+                   bg='pink', command=s_byname).grid(row=2, column=0, padx=1)
 
             self.output = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-                                bg='midnight blue', fg='gold', text="Total Output:")
+                                bg='black', fg='pink', text="Total Output:")
             self.output.grid(row=3, column=0, padx=5)
 
             self.deposit = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-                                 bg='midnight blue', fg='gold', text=str(self.sumDep))
+                                 bg='black', fg='pink', text=str(self.sumDep))
             self.deposit.grid(row=4, column=0, padx=5)
 
         # self.root.maxsize(460,350)
@@ -160,55 +160,62 @@ class gui:
 
         
         ###################################################################################################################################
-        MainFrame = Frame(self.root, bd=10, width=770, height=700, relief=RIDGE, bg='midnight blue')
+        MainFrame = Frame(self.root, bd=10, width=770, height=700, relief=RIDGE, bg='black')
         MainFrame.grid()
 
-        TitleFrame = Frame(MainFrame, bd=7, width=770, height=100, bg='midnight blue')
+        TitleFrame = Frame(MainFrame, bd=7, width=770, height=100, bg='black')
         TitleFrame.grid(row=0, column=0)
-        TopFrame3 = Frame(MainFrame, bd=5, width=770, height=500, bg='gold')
+        TopFrame3 = Frame(MainFrame, bd=5, width=770, height=500, bg='pink')
         TopFrame3.grid(row=1, column=0)
 
-        LeftFrame = Frame(TopFrame3, bd=5, width=770, height=500, padx=2, pady=0, bg='midnight blue')
+        LeftFrame = Frame(TopFrame3, bd=5, width=770, height=500, padx=2, pady=0, bg='black')
         LeftFrame.pack(side=LEFT, expand=True, fill='both')
-        LeftFrame1 = Frame(LeftFrame, bd=5, width=770, height=180, padx=2, pady=0, bg='gold')
+        LeftFrame1 = Frame(LeftFrame, bd=5, width=770, height=180, padx=2, pady=0, bg='pink')
         LeftFrame1.pack(side=TOP, expand=True, fill='both')
 
-        RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE, padx=2, bg='midnight blue')
+        RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE, padx=2, bg='black')
         RightFrame.pack(side=RIGHT, expand=True, fill='both')
-        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=90, padx=12, pady=4, bg='midnight blue')
+        RightFrame1a = Frame(RightFrame, bd=5, width=40, height=90, padx=12, pady=4, bg='black')
         RightFrame1a.pack(side=TOP, expand=True, fill='both')
 
-        self.lbltitle = Label(TitleFrame, font=('Arial', 33, 'bold'), fg='gold', text="Money Management System", bd=7,
-                              bg='midnight blue')
+        self.lbltitle = Label(TitleFrame, font=('Arial', 33, 'bold'), fg='pink', text="Money Management System", bd=7,
+                              bg='black')
         self.lbltitle.grid(row=0, column=1, padx=70)
-
+        
+        serialNumber = StringVar()
         Name = StringVar()
         Amount = StringVar()
         Date = StringVar()
         # ===============================================================================================================================================================================================
         # Input Fields:
 
-        self.lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='gold')
-        self.lblname.grid(row=1, column=0, sticky=W, padx=5)
+        self.lblserial = Label(LeftFrame1, font=('arial',10,'bold'),text= 'Serial Number', bd=13, bg='pink')
+        self.lblserial.grid(row=1,column=0,sticky=W,padx=2)
+        
+        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=serialNumber)
+        self.entname.grid(row=1, column=1, sticky=W, padx=2)
+        
+        self.lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='pink')
+        self.lblname.grid(row=2, column=0, sticky=W, padx=2)
 
-        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=13, width=50, justify='left', textvariable=Name)
-        self.entname.grid(row=1, column=1, sticky=W, padx=5)
+        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
+        self.entname.grid(row=2, column=1, sticky=W, padx=2)
 
-        self.lblamount = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Amount', bd=13, bg='gold')
-        self.lblamount.grid(row=2, column=0, sticky=W, padx=5)
+        self.lblamount = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Amount', bd=13, bg='pink')
+        self.lblamount.grid(row=3, column=0, sticky=W, padx=2)
 
-        self.entamount = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
+        self.entamount = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left',
                                textvariable=Amount)
-        self.entamount.grid(row=2, column=1, sticky=W, padx=5)
+        self.entamount.grid(row=3, column=1, sticky=W, padx=2)
 
-        self.lblDate = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Date', bd=13, bg='gold')
-        self.lblDate.grid(row=3, column=0, sticky=W, padx=5)
+        self.lblDate = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Date', bd=13, bg='pink')
+        self.lblDate.grid(row=4, column=0, sticky=W, padx=2)
 
-        self.entDate = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=13, width=50, justify='left', textvariable=Date)
-        self.entDate.grid(row=3, column=1, sticky=W, padx=5)
+        self.entDate = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Date)
+        self.entDate.grid(row=4, column=1, sticky=W, padx=2)
 
         # label for clock display
-        self.clock = Label(TitleFrame, font=("times", 15, "bold"), bg="midnight blue", fg='gold')
+        self.clock = Label(TitleFrame, font=("times", 15, "bold"), bg="black", fg='pink')
         self.clock.grid(row=0, column=2, padx=0, pady=0)
         times()
         # ===============================================================================================================================================================================================
@@ -219,10 +226,10 @@ class gui:
 
         self.nvbarbtn = Button(TitleFrame, image=self.navIcon, width=24, height=24, bd=0, padx=1, command=switch).grid(
             row=0, column=0, padx=0, pady=0)
-        self.navRoot = Frame(root, bg='gold', height=500, width=200)
+        self.navRoot = Frame(root, bg='pink', height=500, width=200)
         self.navRoot.place(x=-300, y=0)
 
-        Label(self.navRoot, text="Menu", font='arial 10 bold', bg='midnight blue', fg='gold', height=3, width=200,
+        Label(self.navRoot, text="Menu", font='arial 10 bold', bg='black', fg='pink', height=3, width=200,
               padx=0).place(x=0, y=0)
 
         self.y = 80
@@ -230,23 +237,18 @@ class gui:
         self.options = ["Export All", "Import Individual", "About"]
         self.methods = [export, ind_import, about, back]
 
-        self.navExp = Button(self.navRoot, text="Export All", font="arial 13", bg="gold", fg='midnight blue',
-                             activebackground="white", activeforeground="black", bd=0, command=export).place(x=25,
+        self.navExp = Button(self.navRoot, text="Export All", font="arial 13", bg="pink", fg='black',
+                             activebackground="pink", activeforeground="black", bd=0, command=export).place(x=25,
                                                                                                              y=self.y)
         self.y += 40
 
-        self.navInd = Button(self.navRoot, text="Import Individual", font="arial 13", bg="gold", fg='midnight blue',
-                             activebackground="white", activeforeground="black", bd=0, command=ind_import).place(x=25,
+        self.navInd = Button(self.navRoot, text="Import Individual", font="arial 13", bg="pink", fg='black',
+                             activebackground="pink", activeforeground="black", bd=0, command=ind_import).place(x=25,
                                                                                                                  y=self.y)
         self.y += 40
 
-        self.navAbt = Button(self.navRoot, text="About", font="arial 13", bg="gold", fg='midnight blue',
-                             activebackground="white", activeforeground="black", bd=0, command=about).place(x=25,
-                                                                                                            y=self.y)
-        self.y += 40
-
-        self.navAbt = Button(self.navRoot, text="Back", font="arial 13", bg="gold", fg='midnight blue',
-                             activebackground="white", activeforeground="black", bd=0, command=back).place(x=25,
+        self.navAbt = Button(self.navRoot, text="Back", font="arial 13", bg="pink", fg='black',
+                             activebackground="pink", activeforeground="black", bd=0, command=back).place(x=25,
                                                                                                             y=self.y)
 
         self.closeBtn = Button(self.navRoot, image=self.closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
@@ -263,7 +265,8 @@ class gui:
                 return
 
         def saveData():
-            # function to save
+          
+            serialNumber = serialNumber.get()
             name = Name.get()
             amount = Amount.get()
             date = Date.get()
@@ -281,10 +284,10 @@ class gui:
                     db.child('mainData').push(datas)
                     db.child('registerUserExp').child(name).push(datas)
                     myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                         database='ivs')
+                                                         database='ivs2')
                     mycursor = myDataBase.cursor()
-                    dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
-                    datas = [(name, amount, date)]
+                    dataCollection = 'Insert into ivs (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
+                    datas = [(serialNumber, name, amount, date)]
 
                     mycursor.executemany(dataCollection, datas)
                     myDataBase.commit()
@@ -298,10 +301,10 @@ class gui:
 
             except:
                 myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                     database='ivs')
+                                                     database='ivs2')
                 mycursor = myDataBase.cursor()
-                dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
-                datas = [(name, amount, date)]
+                dataCollection = 'Insert into ivs (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
+                datas = [(serialNumber, name, amount, date)]
 
                 mycursor.executemany(dataCollection, datas)
                 myDataBase.commit()
@@ -332,14 +335,15 @@ class gui:
                                                                                                     'amount': Amount.get(),
                                                                                                     'date': date})
                             myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                                 database='ivs')
+                                                                 database='ivs2')
                             mycursor = myDataBase.cursor()
 
                             mycursor.execute(
-                                'update dataEntry set amount=%s where name=%s and date = %s', (
+                                'update ivs2 set amount=%s,name=%s,date=%s where serialNumber = %s', (
                                     Amount.get(),
                                     Name.get(),
-                                    Date.get()
+                                    Date.get(),
+                                    serialNumber.get()
                                 ))
                             myDataBase.commit()
                             myDataBase.close()
@@ -348,11 +352,11 @@ class gui:
                 reset()
             except:
                 myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                     database='ivs')
+                                                     database='ivs2')
                 mycursor = myDataBase.cursor()
 
                 mycursor.execute(
-                    'update dataEntry set amount=%s where name=%s and date = %s', (
+                    'update ivs set amount=%s where name=%s and date = %s', (
                         Amount.get(),
                         Name.get(),
                         Date.get()
@@ -429,9 +433,9 @@ class gui:
             tkinter.messagebox.showerror("Search Error", "Data not found!")
 
         def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
             mycursor = myDataBase.cursor()
-            mycursor.execute("select * from dataEntry")
+            mycursor.execute("select * from ivs")
             result = mycursor.fetchall()
             if len(result) != 0:
                 self.display_data.delete(*self.display_data.get_children())
@@ -459,9 +463,9 @@ class gui:
                     
                         db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
                         myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                             database='ivs')
+                                                             database='ivs2')
                         mycursor = myDataBase.cursor()
-                        mycursor.execute("delete from dataEntry where name=%s and date=%s", (
+                        mycursor.execute("delete from ivs where name=%s and date=%s", (
                             Name.get(),
                             Date.get()
                         ))
@@ -482,9 +486,9 @@ class gui:
             except:
                 self.deleteData = 0
                 myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                     database='ivs')
+                                                     database='ivs2')
                 mycursor = myDataBase.cursor()
-                mycursor.execute("delete from dataEntry where name=%s and date=%s", (
+                mycursor.execute("delete from ivs where name=%s and date=%s", (
                     Name.get(),
                     Date.get()
                 ))
@@ -501,9 +505,10 @@ class gui:
             viewInfo = self.display_data.focus()
             learnData = self.display_data.item(viewInfo)
             row = learnData['values']
-            Name.set(row[0])
-            Amount.set(row[1])
-            Date.set(row[2])
+            SerialNumber.set(row[0])
+            Name.set(row[1])
+            Amount.set(row[2])
+            Date.set(row[3])
 
         def reset():
             self.entname.delete(0, END)
@@ -514,11 +519,11 @@ class gui:
             # databaseChoice = input('Which one you need')
             totalData = db.child('mainData').get()
             myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                 database='ivs')
+                                                 database='ivs2')
             mycursor = myDataBase.cursor()
-            mycursor.execute('Delete From dataEntry')
+            mycursor.execute('Delete From ivs')
             for data in totalData.each():
-                dataCollection = 'Insert into dataEntry (name,amount,date) values (%s,%s,%s)'
+                dataCollection = 'Insert into ivs (name,amount,date) values (%s,%s,%s)'
                 datas = [(data.val()['name'], data.val()['amount'], data.val()['date'])]
                 mycursor.executemany(dataCollection, datas)
                 myDataBase.commit()
@@ -532,9 +537,9 @@ class gui:
             try:
                 db.child('mainData').remove()
                 db.child('registerUserExp').remove()
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs')
+                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
                 mycursor = myDataBase.cursor()
-                query = 'Select * from dataEntry'
+                query = 'Select * from ivs'
                 mycursor.execute(query)
                 totalEntries = mycursor.fetchall()
 
@@ -550,16 +555,18 @@ class gui:
         # ==============================================================================================================================================================================================
 
         y_scroll = Scrollbar(LeftFrame, orient=VERTICAL)
-        self.display_data = ttk.Treeview(LeftFrame, height=18, columns=('Name', 'Amount', 'Date'),
+        self.display_data = ttk.Treeview(LeftFrame, height=18, columns=('Serial Number','Name', 'Amount', 'Date'),
                                          yscrollcommand=y_scroll.set)
         y_scroll.pack(side=RIGHT, fill=Y)
-
+        
+        self.display_data.heading("Serial Number", text="Serial Number")
         self.display_data.heading("Name", text="NAME")
         self.display_data.heading("Amount", text="AMOUNT")
         self.display_data.heading("Date", text="DATE")
 
         self.display_data['show'] = 'headings'
 
+        self.display_data.column("Serial Number", width=80)
         self.display_data.column("Name", width=80)
         self.display_data.column("Amount", width=80)
         self.display_data.column("Date", width=80)
@@ -571,19 +578,19 @@ class gui:
         # ==============================================================================================================================================================================================
 
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="SYNC DOWN", bd=7, padx=18, pady=1,
-                                width=7, height=3, bg='gold', command=sync_off).grid(row=7, column=0, padx=1)
+                                width=7, height=3, bg='pink', command=sync_off).grid(row=7, column=0, padx=1)
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="UPDATE", bd=7, padx=18, pady=1, width=7,
-                                height=3, bg='gold', command=update).grid(row=2, column=0, padx=1)
+                                height=3, bg='pink', command=update).grid(row=2, column=0, padx=1)
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="SAVE", bd=7, padx=18, pady=1, width=7,
-                                height=3, bg='gold', command=saveData).grid(row=1, column=0, padx=1)
+                                height=3, bg='pink', command=saveData).grid(row=1, column=0, padx=1)
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="DELETE", bd=7, padx=18, pady=1, width=7,
-                                height=3, bg='gold', command=delete).grid(row=5, column=0, padx=1)
+                                height=3, bg='pink', command=delete).grid(row=5, column=0, padx=1)
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="SEARCH", bd=7, padx=18, pady=1, width=7,
-                                height=3, bg='gold', command=search).grid(row=4, column=0, padx=1)
+                                height=3, bg='pink', command=search).grid(row=4, column=0, padx=1)
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="DISPLAY", bd=7, padx=18, pady=1,
-                                width=7, height=3, bg='gold', command=display).grid(row=3, column=0, padx=1)
+                                width=7, height=3, bg='pink', command=display).grid(row=3, column=0, padx=1)
         self.btnAddNew = Button(RightFrame1a, font=('arial', 13, 'bold'), text="SYNC UP", bd=7, padx=18, pady=1,
-                                width=7, height=3, bg='gold', command=sync_on).grid(row=6, column=0, padx=1)
+                                width=7, height=3, bg='pink', command=sync_on).grid(row=6, column=0, padx=1)
 
 
 # ================================================================================================================================================================================================
