@@ -3,18 +3,9 @@ from tkinter import *
 import pyrebase
 import mysql.connector
 from PIL.ImageTk import PhotoImage
+from envVar import firebaseConfig as fc
 
-firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
-				  'authDomain': "fundmang-42ad8.firebaseapp.com",
-				  'projectId': "fundmang-42ad8",
-				  'storageBucket': "fundmang-42ad8.appspot.com",
-				  'messagingSenderId': "361815074904",
-				  'databaseURL': 'https://fundmang-42ad8-default-rtdb.firebaseio.com',
-				  'appId': "1:361815074904:web:8504dfd52dbde0b186422d",
-				  'measurementId': "G-MVMXL8CJNK"
-				  }
-
-firebase = pyrebase.initialize_app(firebaseConfig)
+firebase = pyrebase.initialize_app(fc)
 db = firebase.database()
 
 root = Tk()
@@ -23,7 +14,7 @@ root.maxsize(550, 450)
 root.minsize(550, 450)
 root.configure(bg='midnight blue')
 root.title("Deposit on Existing Loan")
-p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 
 name_entry = StringVar()
