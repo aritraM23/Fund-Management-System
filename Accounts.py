@@ -1,4 +1,3 @@
-# todo bug bix in update function of firebase subdatabase and search function
 
 import csv
 from functools import partial
@@ -13,6 +12,7 @@ import time
 import pyrebase
 import mysql.connector
 from envVar import firebaseConfig as fc
+from envVar import mycursor,myDataBase
 # import indiv
 from PIL.ImageTk import PhotoImage
 
@@ -182,7 +182,7 @@ class gui:
                               bg='black')
         self.lbltitle.grid(row=0, column=1, padx=70)
         
-        serialNumber = StringVar()
+        SerialNumber = StringVar()
         Name = StringVar()
         Amount = StringVar()
         Date = StringVar()
@@ -192,7 +192,7 @@ class gui:
         self.lblserial = Label(LeftFrame1, font=('arial',10,'bold'),text= 'Serial Number', bd=13, bg='pink')
         self.lblserial.grid(row=1,column=0,sticky=W,padx=2)
         
-        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=serialNumber)
+        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=SerialNumber)
         self.entname.grid(row=1, column=1, sticky=W, padx=2)
         
         self.lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='pink')
@@ -266,7 +266,7 @@ class gui:
 
         def saveData():
           
-            serialNumber = serialNumber.get()
+            serialNumber = SerialNumber.get()
             name = Name.get()
             amount = Amount.get()
             date = Date.get()
@@ -286,8 +286,8 @@ class gui:
                     myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                                          database='ivs2')
                     mycursor = myDataBase.cursor()
-                    dataCollection = 'Insert into ivs (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
-                    datas = [(serialNumber, name, amount, date)]
+                    dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
+                    datas = [(serialNumber,name, amount, date)]
 
                     mycursor.executemany(dataCollection, datas)
                     myDataBase.commit()
@@ -300,10 +300,8 @@ class gui:
                     tkinter.messagebox.showerror('Error', 'Insert Data In All Fields')
 
             except:
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                     database='ivs2')
-                mycursor = myDataBase.cursor()
-                dataCollection = 'Insert into ivs (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
+
+                dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
                 datas = [(serialNumber, name, amount, date)]
 
                 mycursor.executemany(dataCollection, datas)
@@ -334,16 +332,14 @@ class gui:
                             db.child('registerUserExp').child(Name.get()).child(indi.key()).update({'name': Name.get(),
                                                                                                     'amount': Amount.get(),
                                                                                                     'date': date})
-                            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                                 database='ivs2')
-                            mycursor = myDataBase.cursor()
-
+                           
+                            
                             mycursor.execute(
-                                'update ivs2 set amount=%s,name=%s,date=%s where serialNumber = %s', (
+                                'update dataEntry set amount=%s,name=%s,date=%s,serialNumber = %s', (
                                     Amount.get(),
                                     Name.get(),
                                     Date.get(),
-                                    serialNumber.get()
+                                    SerialNumber.get()
                                 ))
                             myDataBase.commit()
                             myDataBase.close()
@@ -351,15 +347,14 @@ class gui:
                 display()
                 reset()
             except:
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                     database='ivs2')
-                mycursor = myDataBase.cursor()
+
 
                 mycursor.execute(
-                    'update ivs set amount=%s where name=%s and date = %s', (
+                    'update dataEntry set amount=%s,name=%s,date=%s ,serialNumber = %s', (
                         Amount.get(),
                         Name.get(),
-                        Date.get()
+                        Date.get(),
+                        SerialNumber.get()
                     ))
                 myDataBase.commit()
                 myDataBase.close()
@@ -433,17 +428,18 @@ class gui:
             tkinter.messagebox.showerror("Search Error", "Data not found!")
 
         def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
-            mycursor = myDataBase.cursor()
-            mycursor.execute("select * from ivs")
+            mycursor.execute("select * from dataEntry")
+           
             result = mycursor.fetchall()
             if len(result) != 0:
                 self.display_data.delete(*self.display_data.get_children())
                 for row in result:
                     self.display_data.insert('', END, values=row)
+         
+            
             myDataBase.commit()
             myDataBase.close()
-
+            
         def delete():
             # function to delete
             try:
@@ -462,12 +458,9 @@ class gui:
                     
                     
                         db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
-                        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                             database='ivs2')
-                        mycursor = myDataBase.cursor()
-                        mycursor.execute("delete from ivs where name=%s and date=%s", (
-                            Name.get(),
-                            Date.get()
+
+                        mycursor.execute("delete from dataEntry where serialNumber=%s", (
+                            SerialNumber.get()
                         ))
                         myDataBase.commit()
                         display()
@@ -485,16 +478,14 @@ class gui:
                     tkinter.messagebox.showerror('Error', 'No Data Found')
             except:
                 self.deleteData = 0
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                     database='ivs2')
-                mycursor = myDataBase.cursor()
-                mycursor.execute("delete from ivs where name=%s and date=%s", (
+
+                mycursor.execute("delete from dataEntry where name=%s and date=%s", (
                     Name.get(),
                     Date.get()
                 ))
                 myDataBase.commit()
-                display()
                 myDataBase.close()
+                display()
                 tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
 
                 if (self.deleteData == 0):
@@ -517,13 +508,12 @@ class gui:
 
         def sync_on():
             # databaseChoice = input('Which one you need')
+            # databaseChoice = input('Which one you need')
             totalData = db.child('mainData').get()
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-                                                 database='ivs2')
-            mycursor = myDataBase.cursor()
-            mycursor.execute('Delete From ivs')
+
+            mycursor.execute('Delete From dataEntry')
             for data in totalData.each():
-                dataCollection = 'Insert into ivs (name,amount,date) values (%s,%s,%s)'
+                dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
                 datas = [(data.val()['name'], data.val()['amount'], data.val()['date'])]
                 mycursor.executemany(dataCollection, datas)
                 myDataBase.commit()
@@ -537,16 +527,14 @@ class gui:
             try:
                 db.child('mainData').remove()
                 db.child('registerUserExp').remove()
-                myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
-                mycursor = myDataBase.cursor()
-                query = 'Select * from ivs'
+                query = 'Select * from dataEntry'
                 mycursor.execute(query)
                 totalEntries = mycursor.fetchall()
 
                 for rows in totalEntries:
-                    datas = {'name': rows[0], 'amount': rows[1], 'date': rows[2]}
+                    datas = {'serialNumber':rows[0],'name': rows[1], 'amount': rows[2], 'date': rows[3]}
                     db.child('mainData').push(datas)
-                    db.child('registerUserExp').child(rows[0]).push(datas)
+                    db.child('registerUserExp').child(rows[1]).push(datas)
                 tkinter.messagebox.showinfo('Success', 'Done')
                 display()
             except Exception as e:
