@@ -8,3 +8,8 @@ firebaseConfig = {
 	'databaseURL' : "https://ivslive-default-rtdb.firebaseio.com/",
     'measurementId': "G-RBWZWSHQSQ"
   }
+import mysql.connector
+
+myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+                                     database='ivs2')
+mycursor = myDataBase.cursor()
