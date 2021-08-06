@@ -9,24 +9,18 @@ from time import strftime
 from datetime import datetime
 import time
 import pyrebase
-import mysql.connector
+from envVar import firebaseConfig as fc
+
 from PIL.ImageTk import PhotoImage
 
-firebaseConfig = {'apiKey': "AIzaSyDR-a5PGjXpXFjvJVS9Ep3FOKXnNy9BsZg",
-    'authDomain': "fundmang-42ad8.firebaseapp.com",
-    'projectId': "fundmang-42ad8",
-    'storageBucket': "fundmang-42ad8.appspot.com",
-    'messagingSenderId': "361815074904",
-    'databaseURL':'https://fundmang-42ad8-default-rtdb.firebaseio.com',
-    'appId': "1:361815074904:web:8504dfd52dbde0b186422d",
-    'measurementId': "G-MVMXL8CJNK"
-}
 
-firebase=pyrebase.initialize_app(firebaseConfig)
+
+
+firebase=pyrebase.initialize_app(fc)
 db= firebase.database()
 
 def signin(username,password):
-    firebase = pyrebase.initialize_app(firebaseConfig)
+    firebase = pyrebase.initialize_app(fc)
     auth = firebase.auth()
     name = username
     password = password
@@ -48,7 +42,7 @@ root.maxsize(500,450)
 root.minsize(500,450)
 root.configure(bg='midnight blue')
 root.title("Login/Register/IVS")
-p1 = PhotoImage(file='C:\\Users\\ASUS\\Desktop\\[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE,p1)
 
     
