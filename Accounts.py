@@ -1,5 +1,3 @@
-# todo bug bix in update function of firebase subdatabase and search function
-
 import csv
 from functools import partial
 import pandas as pd
@@ -32,15 +30,6 @@ class gui:
         self.root.maxsize(883, 750)
         p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
         self.root.iconphoto(FALSE,p1)
-
-
-        # tabControl = ttk.Notebook(root)
-        # tab1 = ttk.Frame(tabControl)
-        # tab2 = ttk.Frame(tabControl)
-
-        # tabControl.add(tab1, text = 'ACCOUNTS')
-        # tabControl.add(tab2, text = 'LOANS')
-        # tabControl.pack(expand = 1, fill ="both")
 
         # clock function for live clock
         QName = StringVar()
@@ -191,28 +180,29 @@ class gui:
         def update(data):
             #update the drop down list
             # Clear the listbox
-            ttk.Combobox.delete(0, END)
+            self.my_list.delete(0, END)
 
             # Add toppings to listbox
             for item in data:
-                ttk.Combobox.insert(END, item)
+                self.my_list.insert(END, item)
         
         def fillout(e):
             # Delete whatever is in the entry box
-            Name.delete(0, END)
+            self.entName.delete(0, END)
 
             # Add clicked list item to entry box
-            Name.insert(0, ttk.Combobox.get(ANCHOR))
+            self.entName.insert(0, self.my_list.get(ANCHOR))
 
         def check(e):
+            print("hello")
             # grab what was typed
             typed = Name.get()
 
             if typed == '':
-                data = self.entName['values']
+                data = listVal
             else:
                 data = []
-                for item in self.entName['values']:
+                for item in listVal:
                     if typed.lower() in item.lower():
                         data.append(item)
 
@@ -224,42 +214,46 @@ class gui:
         self.lblserial = Label(LeftFrame1, font=('arial',10,'bold'),text= 'Serial Number', bd=13, bg='pink')
         self.lblserial.grid(row=1,column=0,sticky=W,padx=2)
         
-        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=SerialNumber)
-        self.entname.grid(row=1, column=1, sticky=W, padx=2)
+        self.entserial = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=SerialNumber)
+        self.entserial.grid(row=1, column=1, sticky=W, padx=2)
         
         self.lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='pink')
         self.lblname.grid(row=2, column=0, sticky=W, padx=2)
         
-        self.entName = ttk.Combobox(LeftFrame1, font =('arial', 13, 'bold'), width=49, justify='left', textvariable=Name)
+        self.entName = Entry(LeftFrame1, font =('arial', 13, 'bold'), bd=6,width=50, justify='left', textvariable=Name)
         self.entName.grid(row=2, column=1, sticky=W, padx=2)
         
-        self.entName['values'] = ['Arnab', 'Anik', 'Aritra']
-        self.entName.current()
+        self.my_list = Listbox(LeftFrame1, font =('arial', 13, 'bold'),height = 3, width=51, justify='left')
+        self.my_list.grid(row=3, column=1, sticky=W, padx=2)
+
+        listVal = ['Arnab', 'Anik', 'Aritra']
+        # self.entName['values'] = listVal
+        # self.entName.current()
 
         # Add the toppings to our list
-        update(self.entName['values'])
+        update(listVal)
 
         # Create a binding on the listbox onclick
-        ttk.Combobox.bind("<>", fillout)
+        self.my_list.bind("<<ListboxSelect>>", fillout)
 
         # Create a binding on the entry box
-        Name.bind("", check)
+        self.entName.bind("<Configure>", check)
 
-#         self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
-#         self.entname.grid(row=2, column=1, sticky=W, padx=2)
+        #self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
+        #self.entname.grid(row=2, column=1, sticky=W, padx=2)
 
         self.lblamount = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Amount', bd=13, bg='pink')
-        self.lblamount.grid(row=3, column=0, sticky=W, padx=2)
+        self.lblamount.grid(row=4, column=0, sticky=W, padx=2)
 
         self.entamount = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left',
                                textvariable=Amount)
-        self.entamount.grid(row=3, column=1, sticky=W, padx=2)
+        self.entamount.grid(row=4, column=1, sticky=W, padx=2)
 
         self.lblDate = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Date', bd=13, bg='pink')
-        self.lblDate.grid(row=4, column=0, sticky=W, padx=2)
+        self.lblDate.grid(row=5, column=0, sticky=W, padx=2)
 
         self.entDate = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Date)
-        self.entDate.grid(row=4, column=1, sticky=W, padx=2)
+        self.entDate.grid(row=5, column=1, sticky=W, padx=2)
 
         # label for clock display
         self.clock = Label(TitleFrame, font=("times", 15, "bold"), bg="black", fg='pink')
@@ -327,10 +321,10 @@ class gui:
                 date = mdate
             try:
                 if (Name.get() != '' and Date.get() != '' and Amount.get() != ''):
-                    datas = {'name': name, 'amount': amount, 'date': date}
+                    datas = {'Serial Number': serialNumber, 'name': name, 'amount': amount, 'date': date}
                     db.child('mainData').push(datas)
                     db.child('registerUserExp').child(name).push(datas)
-                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+                    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                          database='ivs2')
                     mycursor = myDataBase.cursor()
                     dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -375,13 +369,13 @@ class gui:
                             date = mdate
 
                         if data.val()['name'] == Name.get() and data.val()['date'] == date:
-                            db.child('mainData').child(data.key()).update({'name': Name.get(), 'amount': Amount.get(),
+                            db.child('mainData').child(data.key()).update({'Serial Number': SerialNumber.get(),'name': Name.get(), 'amount': Amount.get(),
                                                                            'date': date})
-                            db.child('registerUserExp').child(Name.get()).child(indi.key()).update({'name': Name.get(),
+                            db.child('registerUserExp').child(Name.get()).child(indi.key()).update({'Serial Number': SerialNumber.get(),
+                                                                                                    'name': Name.get(),
                                                                                                     'amount': Amount.get(),
                                                                                                     'date': date})
                            
-                            
                             mycursor.execute(
                                 'update dataEntry set amount=%s,name=%s,date=%s,serialNumber = %s', (
                                     Amount.get(),
@@ -486,7 +480,7 @@ class gui:
             reset()
         def display():
     
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
             mycursor = myDataBase.cursor()
             mycursor.execute("select * from dataEntry")
             result = mycursor.fetchall()
