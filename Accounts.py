@@ -1,3 +1,4 @@
+# todo bug bix in update function of firebase subdatabase and search function
 
 import csv
 from functools import partial
@@ -13,7 +14,6 @@ import pyrebase
 import mysql.connector
 from envVar import firebaseConfig as fc
 from envVar import mycursor,myDataBase
-# import indiv
 from PIL.ImageTk import PhotoImage
 
 
@@ -312,6 +312,7 @@ class gui:
 
         def update():
             try:
+                self.tempData = 0
                 totalMainData = db.child('mainData').get()
                 totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
                 for data in totalMainData.each():
@@ -343,12 +344,15 @@ class gui:
                                 ))
                             myDataBase.commit()
                             myDataBase.close()
-                tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
-                display()
-                reset()
+                            self.tempData +=1
+                            
+                if self.tempData>0:
+                    succesMsg()
+                else:
+                    alertMssg()
+                
             except:
-
-
+                self.tempData = 0
                 mycursor.execute(
                     'update dataEntry set amount=%s,name=%s,date=%s ,serialNumber = %s', (
                         Amount.get(),
@@ -358,9 +362,11 @@ class gui:
                     ))
                 myDataBase.commit()
                 myDataBase.close()
-                tkinter.messagebox.showinfo("Funds Manager", "Updated Successfully")
-                display()
-                reset()
+                self.tempData += 1
+                if self.tempData > 0:
+                    succesMsg()
+                else:
+                    alertMssg()
 
         def search():
             self.sum = 0
@@ -423,23 +429,27 @@ class gui:
 
             if self.sum == 0:
                 alertMssg()
-
+        def succesMsg():
+            tkinter.messagebox.showinfo('Funds Info', 'Success')
+            display()
+            reset()
         def alertMssg():
             tkinter.messagebox.showerror("Search Error", "Data not found!")
-
+            display()
+            reset()
         def display():
+    
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+            mycursor = myDataBase.cursor()
             mycursor.execute("select * from dataEntry")
-           
             result = mycursor.fetchall()
             if len(result) != 0:
                 self.display_data.delete(*self.display_data.get_children())
                 for row in result:
                     self.display_data.insert('', END, values=row)
-         
-            
             myDataBase.commit()
             myDataBase.close()
-            
+           
         def delete():
             # function to delete
             try:
