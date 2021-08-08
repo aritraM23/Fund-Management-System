@@ -187,6 +187,38 @@ class gui:
         Amount = StringVar()
         Date = StringVar()
         # ===============================================================================================================================================================================================
+        
+        def update(data):
+            #update the drop down list
+            # Clear the listbox
+            ttk.Combobox.delete(0, END)
+
+            # Add toppings to listbox
+            for item in data:
+                ttk.Combobox.insert(END, item)
+        
+        def fillout(e):
+            # Delete whatever is in the entry box
+            Name.delete(0, END)
+
+            # Add clicked list item to entry box
+            Name.insert(0, ttk.Combobox.get(ANCHOR))
+
+        def check(e):
+            # grab what was typed
+            typed = Name.get()
+
+            if typed == '':
+                data = self.entName['values']
+            else:
+                data = []
+                for item in self.entName['values']:
+                    if typed.lower() in item.lower():
+                        data.append(item)
+
+            # update our listbox with selected items
+            update(data)				
+        
         # Input Fields:
 
         self.lblserial = Label(LeftFrame1, font=('arial',10,'bold'),text= 'Serial Number', bd=13, bg='pink')
@@ -197,9 +229,24 @@ class gui:
         
         self.lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='pink')
         self.lblname.grid(row=2, column=0, sticky=W, padx=2)
+        
+        self.entName = ttk.Combobox(LeftFrame1, font =('arial', 13, 'bold'), width=49, justify='left', textvariable=Name)
+        self.entName.grid(row=2, column=1, sticky=W, padx=2)
+        
+        self.entName['values'] = ['Arnab', 'Anik', 'Aritra']
+        self.entName.current()
 
-        self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
-        self.entname.grid(row=2, column=1, sticky=W, padx=2)
+        # Add the toppings to our list
+        update(self.entName['values'])
+
+        # Create a binding on the listbox onclick
+        ttk.Combobox.bind("<>", fillout)
+
+        # Create a binding on the entry box
+        Name.bind("", check)
+
+#         self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
+#         self.entname.grid(row=2, column=1, sticky=W, padx=2)
 
         self.lblamount = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Amount', bd=13, bg='pink')
         self.lblamount.grid(row=3, column=0, sticky=W, padx=2)
