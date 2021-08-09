@@ -177,7 +177,7 @@ class gui:
         Date = StringVar()
         # ===============================================================================================================================================================================================
         
-        def update(data):
+        def updateText(data):
             #update the drop down list
             # Clear the listbox
             self.my_list.delete(0, END)
@@ -186,17 +186,18 @@ class gui:
             for item in data:
                 self.my_list.insert(END, item)
         
-        def fillout(e):
+        def fillout(event):
             # Delete whatever is in the entry box
             self.entName.delete(0, END)
 
             # Add clicked list item to entry box
             self.entName.insert(0, self.my_list.get(ANCHOR))
 
-        def check(e):
-            print("hello")
+        def check(event):
+            # print("hello")
             # grab what was typed
             typed = Name.get()
+            print(typed)
 
             if typed == '':
                 data = listVal
@@ -207,11 +208,11 @@ class gui:
                         data.append(item)
 
             # update our listbox with selected items
-            update(data)				
+            updateText(data)				
         
         # Input Fields:
 
-        self.lblserial = Label(LeftFrame1, font=('arial',10,'bold'),text= 'Serial Number', bd=13, bg='pink')
+        self.lblserial = Label(LeftFrame1, font=('arial',13,'bold'),text= 'Serial Number', bd=13, bg='pink')
         self.lblserial.grid(row=1,column=0,sticky=W,padx=2)
         
         self.entserial = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=SerialNumber)
@@ -226,18 +227,22 @@ class gui:
         self.my_list = Listbox(LeftFrame1, font =('arial', 13, 'bold'),height = 3, width=51, justify='left')
         self.my_list.grid(row=3, column=1, sticky=W, padx=2)
 
-        listVal = ['Arnab', 'Anik', 'Aritra']
+        listVal = []
+        listname = db.child('mainData').get()
+        for each in listname.each():
+            print(each.val()['name'])
+            listVal.append(each.val()['name'])
         # self.entName['values'] = listVal
         # self.entName.current()
 
         # Add the toppings to our list
-        update(listVal)
+        updateText(listVal)
 
         # Create a binding on the listbox onclick
         self.my_list.bind("<<ListboxSelect>>", fillout)
 
         # Create a binding on the entry box
-        self.entName.bind("<Configure>", check)
+        self.entName.bind("<KeyRelease>", check)
 
         #self.entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
         #self.entname.grid(row=2, column=1, sticky=W, padx=2)
