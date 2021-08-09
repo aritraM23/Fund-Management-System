@@ -228,12 +228,18 @@ class gui:
         self.my_list.grid(row=3, column=1, sticky=W, padx=2)
 
         listVal = []
-        listname = db.child('mainData').get()
-        for each in listname.each():
-            print(each.val()['name'])
-            listVal.append(each.val()['name'])
+        def getNameList():
+            listVal = []
+            listname = db.child('mainData').get()
+            for each in listname.each():
+                print(each.val()['name'])
+                listVal.append(each.val()['name'])
+
+            listVal = list(set(listVal))
+            return listVal
         # self.entName['values'] = listVal
         # self.entName.current()
+        listVal = getNameList()
 
         # Add the toppings to our list
         updateText(listVal)
@@ -311,7 +317,7 @@ class gui:
                 return
 
         def saveData():
-          
+            global listVal
             serialNumber = SerialNumber.get()
             name = Name.get()
             amount = Amount.get()
@@ -329,6 +335,8 @@ class gui:
                     datas = {'Serial Number': serialNumber, 'name': name, 'amount': amount, 'date': date}
                     db.child('mainData').push(datas)
                     db.child('registerUserExp').child(name).push(datas)
+                    listVal = getNameList()
+                    updateText(listVal)
                     myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                          database='ivs2')
                     mycursor = myDataBase.cursor()
@@ -338,6 +346,8 @@ class gui:
                     mycursor.executemany(dataCollection, datas)
                     myDataBase.commit()
                     myDataBase.close()
+
+                    
                     display()
                     reset()
 
@@ -558,7 +568,8 @@ class gui:
             Date.set(row[3])
 
         def reset():
-            self.entname.delete(0, END)
+            self.entserial.delete(0, END)
+            self.entName.delete(0, END)
             self.entamount.delete(0, END)
             self.entDate.delete(0, END)
 
