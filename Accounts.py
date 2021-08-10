@@ -507,56 +507,48 @@ class gui:
             myDataBase.close()
            
         def delete():
-            # function to delete
+            
             try:
                 self.deleteData = 0
-                totalData = db.child('registerUserExp').child(Name.get()).get()
-                totalUser = db.child('mainData').get()
-                for data in totalUser.each():
+                totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
+                totalUsers = db.child('mainData').get()
+                for data in totalIndividualData.each():
                     
                     if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
-                    
-                        for user in totalData.each():
-                            if user.val()['name'] == Name.get() and user.val()['date'] == Date.get():
-                    
-                    
-                                db.child('mainData').child(data.key()).remove()
-                    
-                    
+    
                         db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
+                        self.deleteData +=1
+                        
+                for user in totalUsers.each():
+                    if user.val()['name'] == Name.get() and user.val()['date'] == Date.get():
+                         print(user.val()['name'])
+                         db.child('mainData').child(data.key()).remove()
+                         self.deleteData +=1
 
-                        mycursor.execute("delete from dataEntry where serialNumber=%s", (
-                            SerialNumber.get()
-                        ))
-                        myDataBase.commit()
-                        display()
-                        myDataBase.close()
-                        tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
-                        self.deleteData += 1
-                        reset()
-                        display()
-                        break
-
-
-                if (self.deleteData == 0):
-                    reset()
-                    display()
-                    tkinter.messagebox.showerror('Error', 'No Data Found')
-            except:
-                self.deleteData = 0
-
-                mycursor.execute("delete from dataEntry where name=%s and date=%s", (
-                    Name.get(),
-                    Date.get()
+                mycursor.execute("delete from dataEntry where serialNumber=%s", (
+                    SerialNumber.get()
                 ))
+                self.deleteData +=1
                 myDataBase.commit()
-                myDataBase.close()
                 display()
-                tkinter.messagebox.showinfo('Deleted', 'Deleted Successfully')
+                myDataBase.close()
+                self.deleteData += 1
+                if self.deleteData==3:
+                    succesMsg()
+                if (self.deleteData <=3):
+                    alertMssg()
+            except:
+                try:
 
-                if (self.deleteData == 0):
-                    reset()
-                    display()
+                    mycursor.execute("delete from dataEntry where serialNumber=%s", (
+                        SerialNumber.get()
+                    ))
+                    myDataBase.commit()
+                    myDataBase.close()
+                    self.deleteData+=1
+                    succesMsg()
+                except :
+                    alertMssg()
                
         def TrainInfo(ev):
             viewInfo = self.display_data.focus()
