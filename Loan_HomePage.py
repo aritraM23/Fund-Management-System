@@ -140,10 +140,42 @@ def sync_down():
     except Exception as e:
         tkinter.messagebox.showerror('Error', e)
     
+def updateText(data):
+    #update the drop down list
+    # Clear the listbox
+    my_list.delete(0, END)
+
+    # Add toppings to listbox
+    for item in data:
+        my_list.insert(END, item)
+
+def fillout(event):
+    # Delete whatever is in the entry box
+    name.delete(0, END)
+
+    # Add clicked list item to entry box
+    name.insert(0, my_list.get(ANCHOR))
+
+def check(event):
+    # print("hello")
+    # grab what was typed
+    typed = name_entry.get()
+    print(typed)
+
+    if typed == '':
+        data = listVal
+    else:
+        data = []
+        for item in listVal:
+            if typed.lower() in item.lower():
+                data.append(item)
+
+    # update our listbox with selected items
+    updateText(data)
+
 
 Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
 Back.place(x=20, y=50)
-
 
 top_frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
 top_frame.pack(side=TOP, fill=X)
@@ -157,14 +189,38 @@ name_lab.place(x=120, y=100)
 name = Entry(root, width=27, textvariable=name_entry, borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
 name.place(x=200, y=98)
 
+my_list = Listbox(root, font =('arial', 13, 'bold'),height = 2, width=25, justify='left')
+my_list.place(x = 200, y=133)
+
+listVal = []
+def getNameList():
+    listVal = []
+    listname = db.child('loanData').get()
+    for each in listname.each():
+        print(each.val()['name'])
+        listVal.append(each.val()['name'])
+
+    listVal = list(set(listVal))
+    return listVal
+
+listVal = getNameList()
+
+updateText(listVal)
+
+# Create a binding on the listbox onclick
+my_list.bind("<<ListboxSelect>>", fillout)
+
+# Create a binding on the entry box
+name.bind("<KeyRelease>", check)
+
 mob_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 12 bold", text="Mobile No.:-")
-mob_lab.place(x=90, y=140)
+mob_lab.place(x=90, y=184)
 
 mob = Entry(root, width=27, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
-mob.place(x=200, y=138)
+mob.place(x=200, y=183)
 
 Check = Button(root, text="Check", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=bal)
-Check.place(x=245, y=185)
+Check.place(x=245, y=220)
 
 down_Frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED)
 down_Frame.pack(side=BOTTOM,fill=X)
