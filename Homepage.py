@@ -31,6 +31,43 @@ root.iconphoto(FALSE,p1)
 name=StringVar()
 amount = 0
 
+def updateText(data):
+    #update the drop down list
+    # Clear the listbox
+    try:
+        my_list.delete(0, END)
+
+        # Add toppings to listbox
+        for item in data:
+            my_list.insert(END, item)
+    except:
+        pass
+
+def fillout(event):
+    # Delete whatever is in the entry box
+    customer_name.delete(0, END)
+
+    # Add clicked list item to entry box
+    customer_name.insert(0, my_list.get(ANCHOR))
+
+def check(event):
+    # print("hello")
+    # grab what was typed
+    typed = name.get()
+    print(typed)
+
+    if typed == '':
+        data = listVal
+    else:
+        data = []
+        for item in listVal:
+            if typed.lower() in item.lower():
+                data.append(item)
+
+    # update our listbox with selected items
+    updateText(data)
+
+
 def ind_Bal():
     balance = 0
     
@@ -63,26 +100,29 @@ def loaninfor():
 
 def treasure():
     global amount
-    interest = 0
-    princi = 0
-    totalDB = db.child('mainData').get()
-    loanDb = db.child('loanData').get()
-    for data in totalDB.each():
-        amount += int(data.val()['amount'])
-
-    print(amount)
     try:
-        for ld in loanDb.each():
-            interest += int(ld.val()['interestPaidTillDate'])
-        amount += interest
-        print(amount)
-        for ld in loanDb.each():
-            princi += int(ld.val()['principalLeft'])
+        interest = 0
+        princi = 0
+        totalDB = db.child('mainData').get()
+        loanDb = db.child('loanData').get()
+        for data in totalDB.each():
+            amount += int(data.val()['amount'])
 
-        amount -= princi 
-        # if(amount<=0):
-        #     tkinter.messagebox.showerror('Balance Exhausted!!', "No Balance Left. Loan Can't be Provided!")
-        #     amount += princi
+        print(amount)
+        try:
+            for ld in loanDb.each():
+                interest += int(ld.val()['interestPaidTillDate'])
+            amount += interest
+            print(amount)
+            for ld in loanDb.each():
+                princi += int(ld.val()['principalLeft'])
+
+            amount -= princi 
+            # if(amount<=0):
+            #     tkinter.messagebox.showerror('Balance Exhausted!!', "No Balance Left. Loan Can't be Provided!")
+            #     amount += princi
+        except:
+            pass
     except:
         pass
 
@@ -132,6 +172,33 @@ customer = Label(root,text="Customer Name:",font="Helvetica 13 bold",bg='midnigh
 customer.place(x=50,y=120)
 customer_name=Entry(root,justify=CENTER,borderwidth=4,textvariable=name,font="Helvetica 10 bold",width=25)
 customer_name.place(x=190,y=120)
+
+my_list = Listbox(root, font =('arial', 13, 'bold'),height = 2, width=20, justify='left')
+my_list.place(x = 190, y=150)
+
+listVal = []
+def getNameList():
+    try:
+        listVal = []
+        listname = db.child('mainData').get()
+        for each in listname.each():
+            
+            listVal.append(each.val()['name'])
+        
+        listVal = list(set(listVal))
+        return listVal
+    except:
+        pass
+
+listVal = getNameList()
+
+updateText(listVal)
+
+# Create a binding on the listbox onclick
+my_list.bind("<<ListboxSelect>>", fillout)
+
+# Create a binding on the entry box
+customer_name.bind("<KeyRelease>", check)
 
 Check=Button(root,text="Search",bg='gold',font="Helvetica 12 bold",borderwidth=2,relief=SUNKEN,command=search,width=10)
 Check.place(x=385,y=116)
