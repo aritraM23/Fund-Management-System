@@ -355,20 +355,10 @@ class gui:
 					mycursor.executemany(dataCollection, datas)
 					myDataBase.commit()
 					myDataBase.close()
-					
-					# 
-					# print('Yes or no')
-					# q=input('')
-					# if q =='y':
-					# 	displayNameWise(name)
-					# else:
-					# 	alertMssg('Chadarmod','Fuk Off')
-					display()
-					reset()
-				else:
-					reset()
-					tkinter.messagebox.showerror('Error', 'Insert Data In All Fields')
+					succesMsg('Success','Data Inserted')
 				
+				else:
+					alertMssg('Error', 'Insert Data In All Fields')
 			except:
 				
 				dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -377,8 +367,7 @@ class gui:
 				mycursor.executemany(dataCollection, datas)
 				myDataBase.commit()
 				myDataBase.close()
-				display()
-				reset()
+				succesMsg('Offline','Data Inserted')
 		
 		def update():
 			try:
@@ -386,7 +375,6 @@ class gui:
 				totalMainData = db.child('mainData').get()
 				totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
 				for data in totalMainData.each():
-					for indi in totalIndividualData.each():
 						date = Date.get()
 						if (date.find("-") > -1):
 							tday, tm, ty = date.split("-")
@@ -396,40 +384,57 @@ class gui:
 							tday, tm, ty = date.split(".")
 							mdate = tday + "/" + tm + "/" + ty
 							date = mdate
-						
 						if data.val()['name'] == Name.get() and data.val()['date'] == date:
-							db.child('mainData').child(data.key()).update(
-								{'Serial Number': SerialNumber.get(), 'name': Name.get(), 'amount': Amount.get(),
-								 'date': date})
-							db.child('registerUserExp').child(Name.get()).child(indi.key()).update(
-								{'Serial Number': SerialNumber.get(),
-								 'name': Name.get(),
-								 'amount': Amount.get(),
-								 'date': date})
-							myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
-																 database='ivs2')
-							mycursor = myDataBase.cursor()
-							
-							mycursor.execute(
-								'update dataEntry set amount=%s,name=%s,date=%s,serialNumber = "%s"', (
-									Amount.get(),
-									Name.get(),
-									Date.get(),
-									SerialNumber.get()
-								))
-							myDataBase.commit()
-							myDataBase.close()
-							self.tempData += 1
+							db.child('mainData').child(data.key()).update({'Serial Number': SerialNumber.get(), 'name': Name.get(), 'amount': Amount.get(),'date': date})
+						self.tempData += 1
+				for indi in totalIndividualData.each():
+					date = Date.get()
+					if (date.find("-") > -1):
+						tday, tm, ty = date.split("-")
+						mdate = tday + "/" + tm + "/" + ty
+						date = mdate
+					elif date.find(".") > -1:
+						tday, tm, ty = date.split(".")
+						mdate = tday + "/" + tm + "/" + ty
+						date = mdate
+					if indi.val()['name'] == Name.get() and indi.val()['date'] == date:
+						db.child('registerUserExp').child(Name.get()).child(indi.key()).update(
+									{'Serial Number': SerialNumber.get(),
+									 'name': Name.get(),
+									 'amount': Amount.get(),
+									 'date': date
+									 }
+						)
+					self.tempData += 1
+				myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+													 database='ivs2')
+				mycursor = myDataBase.cursor()
+				
+				mycursor.execute(
+					'update dataEntry set amount=%s,name=%s,date=%s where serialNumber = %s', (
+						Amount.get(),
+						Name.get(),
+						date,
+						SerialNumber.get()
+					))
+				myDataBase.commit()
+				myDataBase.close()
+				self.tempData += 1
 				
 				if self.tempData > 0:
 					succesMsg('Update Info', 'Data Updated' )
 				else:
 					alertMssg('Update Info', 'Problem Not Updated')
 			
-			except:
+			except Exception as e:
+				
+				myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+													 database='ivs2')
+				mycursor = myDataBase.cursor()
+				
 				self.tempData = 0
 				mycursor.execute(
-					'update dataEntry set amount=%s,name=%s,date=%s ,serialNumber = %s', (
+					'update dataEntry set amount=%s,name=%s,date=%s where serialNumber = %s', (
 						Amount.get(),
 						Name.get(),
 						Date.get(),
@@ -438,8 +443,8 @@ class gui:
 				myDataBase.commit()
 				myDataBase.close()
 				self.tempData += 1
-				if self.tempData > 0:
-					succesMsg('Update Info', 'Data Updated')
+				if self.tempData >= 3:
+					succesMsg('Update Info', e)
 				else:
 					alertMssg('Update Info', 'Problem Not Updated')
 		
@@ -477,8 +482,7 @@ class gui:
 								with open('FullFile.csv', 'a') as files:
 									write = csv.writer(files)
 									if ld.val()['name'] == data.val()['name']:
-										write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'],
-														ld.val()['principalAmount']])
+										write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'],ld.val()['principalAmount']])
 										files.close()
 									else:
 										write.writerow(
@@ -534,7 +538,7 @@ class gui:
 		def delete():
 			
 			try:
-				print(SerialNumber.get())
+				print(SerialNumber.get())    
 				self.deleteData = 0
 				totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
 			
