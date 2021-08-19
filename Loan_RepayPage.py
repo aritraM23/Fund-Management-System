@@ -24,10 +24,51 @@ i_entry = StringVar()
 date_L = StringVar()
 
 
+
 def back():
-	root.destroy()
+	Tk.quit()
 	import Homepage
 
+def delete():
+	try:
+		name = name_entry.get()
+		mob = mob_entry.get()
+		deleteSum = 0
+		loanDB = db.child('loanData').get()
+		for datas in loanDB.each():
+			if datas.val()['name']==name and datas.val()['mobileNumber']==mob:
+				print(datas.val()['name'])
+				db.child('loanData').child(datas.key()).remove()
+				deleteSum = deleteSum + 1
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			mycursor = myDataBase.cursor()
+
+			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
+					name_entry.get(),
+					mob_entry.get()
+				))
+			deleteSum += 1
+			myDataBase.commit()
+			myDataBase.close()
+			deleteSum += 1
+			if deleteSum == 3:
+				tkinter.messagebox.showinfo('Delete Info','Delete Success')
+			if (deleteSum <= 3):
+				tkinter.messagebox.showerror('Delete Info','Delete Failure')
+
+	except:
+		try:
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			mycursor = myDataBase.cursor()
+
+			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
+					name_entry.get(),
+					mob_entry.get()
+				))
+			myDataBase.commit()
+			myDataBase.close()
+		except Exception as err:
+			tkinter.messagebox.showerror(name_entry.get(),err)
 
 def repay():
 	name = name_entry.get()
@@ -184,6 +225,10 @@ dateEnt.place(x=230, y=308)
 
 submit_button = Button(root, text="Add", bg='gold', fg='black',
 					   font="Helvetica 11 bold", relief=SUNKEN, command=repay)
-submit_button.place(x=425, y=350)
+submit_button.place(x=360, y=350)
+
+delete_button = Button(root, text="Delete", bg='gold', fg='black',
+					   font="Helvetica 11 bold", relief=SUNKEN, command=delete)
+delete_button.place(x=403, y=350)
 
 root.mainloop()
