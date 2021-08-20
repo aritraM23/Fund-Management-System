@@ -22,9 +22,9 @@ db = firebase.database()
 
 
 root = Tk()
-root.geometry("550x500+600+90")
-root.maxsize(550, 500)
-root.minsize(550, 500)
+root.geometry("1100x700+290+55")
+root.minsize(1100,700)
+root.maxsize(1100,700)
 root.configure(bg='midnight blue')
 root.title("Loan Window")
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
@@ -91,18 +91,14 @@ def bal():
                 break
     except:
         tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
-    bal_lab = Label(root, bg='midnight blue', fg='gold', width=30, font="Helvetica 12 bold",
-                    text="Balance:" + str(balance))
-    bal_lab.place(x=10, y=248)
-    download = Button(root, text="Download\nBalance Sheet", bg='gold', fg='black', font="Helvetica 11 bold",
-                      borderwidth=2, relief=SUNKEN, command=export)
-    download.place(x=310, y=235)
-    newLoan = Button(root, text="New Loan", bg='gold', fg='black', font="Helvetica 11 bold", borderwidth=2,
-                     relief=SUNKEN, command=new)
-    newLoan.place(x=120, y=325)
-    deposit = Button(root, text="Deposit on Existing Loan", bg='gold', fg='black', font="Helvetica 11 bold",
-                     borderwidth=2, relief=SUNKEN, command=depo)
-    deposit.place(x=270, y=325)
+    bal_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold",
+                    text="Balance:-" + " "+str(balance))
+    bal_lab.place(x=142, y=468)
+    download = Button(root, text="Download\n"
+    "Balance Sheet", bg='gold', fg='black', font="Helvetica 19 bold",
+                      borderwidth=4, relief=SUNKEN, command=export)
+    download.place(x=510, y=445)
+
 
 def sync_up():
     
@@ -139,97 +135,46 @@ def sync_down():
      
     except Exception as e:
         tkinter.messagebox.showerror('Error', e)
-    
-def updateText(data):
-    #update the drop down list
-    # Clear the listbox
-    my_list.delete(0, END)
-
-    # Add toppings to listbox
-    for item in data:
-        my_list.insert(END, item)
-
-def fillout(event):
-    # Delete whatever is in the entry box
-    name.delete(0, END)
-
-    # Add clicked list item to entry box
-    name.insert(0, my_list.get(ANCHOR))
-
-def check(event):
-    # print("hello")
-    # grab what was typed
-    typed = name_entry.get()
-    print(typed)
-
-    if typed == '':
-        data = listVal
-    else:
-        data = []
-        for item in listVal:
-            if typed.lower() in item.lower():
-                data.append(item)
-
-    # update our listbox with selected items
-    updateText(data)
 
 
-Back = Button(root, text="Back", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=back)
-Back.place(x=20, y=50)
-
+#---------------HEADING-------------------------------#
 top_frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
 top_frame.pack(side=TOP, fill=X)
-
-heading = Label(top_frame, bg='gold', fg='black', font="Arial 12 bold", text="---Loan Window---")
+heading = Label(top_frame, bg='gold', fg='black', font="Arial 20 bold", text="--------Loan Window--------")
 heading.pack()
+#---------------------ENTRY STUFFS--------------------------#
+name_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Name:-")
+name_lab.place(x=172, y=240)
+name = Entry(root, width=27, textvariable=name_entry, borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")
+name.place(x=290, y=240)
+mob_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Mobile No.:-")
+mob_lab.place(x=110, y=310)
+mob = Entry(root, width=27, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")
+mob.place(x=290, y=310)
 
-name_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 12 bold", text="Name:-")
-name_lab.place(x=120, y=100)
-
-name = Entry(root, width=27, textvariable=name_entry, borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
-name.place(x=200, y=98)
-
-my_list = Listbox(root, font =('arial', 13, 'bold'),height = 2, width=25, justify='left')
-my_list.place(x = 200, y=133)
-
-listVal = []
-def getNameList():
-    listVal = []
-    listname = db.child('loanData').get()
-    for each in listname.each():
-        print(each.val()['name'])
-        listVal.append(each.val()['name'])
-
-    listVal = list(set(listVal))
-    return listVal
-
-listVal = getNameList()
-
-updateText(listVal)
-
-# Create a binding on the listbox onclick
-my_list.bind("<<ListboxSelect>>", fillout)
-
-# Create a binding on the entry box
-name.bind("<KeyRelease>", check)
-
-mob_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 12 bold", text="Mobile No.:-")
-mob_lab.place(x=90, y=184)
-
-mob = Entry(root, width=27, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 11 bold")
-mob.place(x=200, y=183)
-
-Check = Button(root, text="Check", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=bal)
-Check.place(x=245, y=220)
-
-down_Frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED)
-down_Frame.pack(side=BOTTOM,fill=X)
-SyncD_button = Button(down_Frame,text="Sync Down",font="Helvetica 12 bold",bg='midnight blue',fg='gold',command = sync_down)
-SyncD_button.pack(side=LEFT,padx=100)
-SyncU_button = Button(down_Frame,text="Sync Up",font="Helvetica 12 bold",bg='midnight blue',fg='gold',command= sync_up)
-SyncU_button.pack(side=LEFT,padx=10)
-
-Display = Button(root, text="DISPLAY", bg='gold', font="Helvetica 11 bold", borderwidth=4, relief=RAISED, command=displayLoan)
-Display.place(x=450, y=50)
-
+#----Buttons Frame along with Buttons---------#
+btn_frame = Frame(root,bg='gold',width= 500,height=500,borderwidth=3,relief=RAISED)
+btn_frame.place(x=840,y=170)
+Check = Button(btn_frame, text="CHECK", bg='gold', font="Helvetica 19 bold",
+               width=10,borderwidth=4, relief=RAISED, command=bal)
+Check.pack()
+Display = Button(btn_frame, text="DISPLAY", bg='gold', font="Helvetica 19 bold", borderwidth=4,
+                 relief=RAISED, command=displayLoan,width=10)
+Display.pack()
+Back = Button(btn_frame, text="BACK", bg='gold', font="Helvetica 19 bold",
+              borderwidth=4, relief=RAISED, command=back,width=10)
+Back.pack()
+Sync_Up = Button(btn_frame, text="SYNC UP", bg='gold', font="Helvetica 19 bold",
+              borderwidth=4, relief=RAISED, command=sync_up,width=10)
+Sync_Up.pack()
+Sync_Down = Button(btn_frame, text="SYNC DOWN", bg='gold', font="Helvetica 18 bold",
+              borderwidth=4, relief=RAISED, command=sync_down,width=10)
+Sync_Down.pack()
+newLoan = Button(btn_frame, text="NEW LOAN", bg='gold', fg='black', font="Helvetica 19 bold", borderwidth=4,
+                     relief=RAISED, command=new,width=10)
+newLoan.pack()
+deposit = Button(btn_frame, text="DEPOSIT", bg='gold', fg='black', font="Helvetica 19 bold",
+                     borderwidth=4, relief=RAISED, command=depo,width=10)
+deposit.pack()
+#---------------------------------------------------------------------------------------------#
 root.mainloop()
