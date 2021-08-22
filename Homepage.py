@@ -13,10 +13,12 @@ import mysql.connector
 import datetime as dt
 from PIL.ImageTk import PhotoImage
 from envVar import firebaseConfig as fc
-
+import threading
+import concurrent.futures
 
 firebase=pyrebase.initialize_app(fc)
 db= firebase.database()
+
 
 root = Tk()
 root.geometry("1100x700+290+55")
@@ -25,7 +27,7 @@ root.title("HomePage")
 root.minsize(1100,700)
 root.maxsize(1100,700)
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
-root.iconphoto(FALSE,p1)
+#root.iconphoto(False,p1)
 
 
 name=StringVar()
@@ -41,9 +43,6 @@ def ind_Bal():
     except:
         balance = 0
         tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
-
-
-    print(name.get() + str(balance))
     return balance
 
 def loaninfor():
@@ -70,32 +69,30 @@ def treasure():
     for data in totalDB.each():
         amount += int(data.val()['amount'])
 
-    print(amount)
+    
     try:
         for ld in loanDb.each():
             interest += int(ld.val()['interestPaidTillDate'])
         amount += interest
-        print(amount)
         for ld in loanDb.each():
             princi += int(ld.val()['principalLeft'])
-
         amount -= princi
-        # if(amount<=0):
-        #     tkinter.messagebox.showerror('Balance Exhausted!!', "No Balance Left. Loan Can't be Provided!")
-        #     amount += princi
+
     except:
         pass
 
-    print(amount)
-    # print(amount)
     return amount
 
-def AccountsPage():
-    root.destroy()
-    import Accounts
 
-def LoanWindow():
-    root.destroy()
+def AccountsPage():
+    import _thread
+    _thread.start_new(accountsPage, (1,2))
+def accountsPage(w,e):
+    import Accounts
+def loadtransfer():
+    import _thread
+    _thread.start_new(LoanWindow,(1,2))
+def LoanWindow(l,s):
     import Loan_HomePage
 
 
@@ -141,7 +138,7 @@ loanIcon = PhotoImage(master= root,file = "loan.png")
 
 accounts=Button(root,image = accIcon,bg='gold',font="Helvetica 18 bold",borderwidth=4,relief=SUNKEN, command= AccountsPage)
 accounts.place(x=400,y=330)
-loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 20 bold",borderwidth=4,relief=SUNKEN, command= LoanWindow)
+loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 20 bold",borderwidth=4,relief=SUNKEN, command= loadtransfer)
 loan.place(x=600,y=330)
 
 accLab = Label(root,text="Accounts",font="Helvetica 17 bold", bg='midnight blue', fg='gold')
