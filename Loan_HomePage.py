@@ -28,16 +28,15 @@ root.maxsize(1100,700)
 root.configure(bg='midnight blue')
 root.title("Loan Window")
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
-root.iconphoto(FALSE,p1)
+#root.iconphoto(FALSE,p1)
 
 
 name_entry = StringVar()
 mob_entry = StringVar()
 
 def back():
-    root.destroy()
-    import Homepage
-
+    import _thread
+    _thread.exit_thread()
 def displayLoan():
     root.destroy()
     import LoanTreeView
