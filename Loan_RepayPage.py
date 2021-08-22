@@ -29,6 +29,28 @@ def back():
 	Tk.quit()
 	import Homepage
 
+def monthlycalc(currentDate):
+	date_cur = pd.to_datetime(currentDate)
+	try:
+		loanDB = db.child('loanData').get()
+		nameList = [info.val()['name'] for info in loanDB.each()]
+		mobileList = [info.val()['name'] for info in loanDB.each()]
+		ppaid = 0
+		intPaid = 0
+		last_date = [info.val()['lastPaidDate'] for info in loanDB.each()]
+		count = 0
+		for each in last_date:
+			count = count + 1
+			each = pd.to_datetime(each)
+		i = 1
+		while(i<=count):
+			if date_cur.month - last_date[i].month == 1:
+				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
+			i = i+1
+
+	except:
+		pass
+
 def delete():
 	try:
 		name = name_entry.get()
@@ -70,13 +92,17 @@ def delete():
 		except Exception as err:
 			tkinter.messagebox.showerror(name_entry.get(),err)
 
-def repay():
-	name = name_entry.get()
-	mobileNumber = mob_entry.get()
-	principlePaid = p_entry.get()
-	interestPaid = i_entry.get()
-	updateDate = date_L.get()
+def repay(nameP = name_entry.get(), mobileNumberP = mob_entry.get(), principlePaidP = p_entry.get(),interestPaidP = i_entry.get(), updateDateP = date_L.get() ):
 	
+	name = nameP
+	mobileNumber = mobileNumberP
+	principlePaid = principlePaidP
+	interestPaid = interestPaidP
+	updateDate = updateDateP
+
+	if name == 'ALL':
+		monthlycalc(updateDate)
+
 	try:
 		loanInfo = db.child('loanData').get()
 		for info in loanInfo.each():
@@ -114,7 +140,7 @@ def repay():
 		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
-		
+
 		mycursor.execute(
 				'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
 				(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
