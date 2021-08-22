@@ -50,7 +50,40 @@ def depo():
     root.destroy()
     import Loan_RepayPage
 
+def updateText(data):
+    #update the drop down list
+    # Clear the listbox
+    my_list.delete(0, END)
 
+    # Add toppings to listbox
+    for item in data:
+        my_list.insert(END, item)
+
+def fillout(event):
+    # Delete whatever is in the entry box
+    name.delete(0, END)
+
+    # Add clicked list item to entry box
+    name.insert(0, my_list.get(ANCHOR))
+
+def check(event):
+    # print("hello")
+    # grab what was typed
+    typed = name_entry.get()
+    print(typed)
+
+    if typed == '':
+        data = listVal
+    else:
+        data = []
+        for item in listVal:
+            if typed.lower() in item.lower():
+                data.append(item)
+
+    # update our listbox with selected items
+    updateText(data)
+
+    
 def export():
     with open('LoanFile.csv', 'w') as file:
         write = csv.writer(file)
@@ -144,6 +177,31 @@ heading.pack()
 #---------------------ENTRY STUFFS--------------------------#
 name_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Name:-")
 name_lab.place(x=172, y=240)
+
+my_list = Listbox(root, font =('arial', 13, 'bold'),height = 2, width=25, justify='left')
+my_list.place(x = 200, y=133)
+
+listVal = []
+def getNameList():
+    listVal = []
+    listname = db.child('loanData').get()
+    for each in listname.each():
+        print(each.val()['name'])
+        listVal.append(each.val()['name'])
+
+    listVal = list(set(listVal))
+    return listVal
+
+listVal = getNameList()
+
+updateText(listVal)
+
+# Create a binding on the listbox onclick
+my_list.bind("<<ListboxSelect>>", fillout)
+
+# Create a binding on the entry box
+name.bind("<KeyRelease>", check)
+
 name = Entry(root, width=27, textvariable=name_entry, borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")
 name.place(x=290, y=240)
 mob_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Mobile No.:-")
