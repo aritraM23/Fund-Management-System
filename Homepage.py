@@ -32,6 +32,15 @@ p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 
 name=StringVar()
 amount = 0
+def refresh():
+        today_date = datetime.today().strftime("%d/%m/%Y")
+            
+        try:
+            import Loan_RepayPage as LP
+            LP.repay('ALL','ALL','0','0',today_date)
+            print('loan interest calculated')
+        except:
+            print("loan calculation of all failed")
 
 def ind_Bal():
     balance = 0
