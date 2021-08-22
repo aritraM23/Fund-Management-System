@@ -33,14 +33,51 @@ p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 name=StringVar()
 amount = 0
 def refresh():
-        today_date = datetime.today().strftime("%d/%m/%Y")
-            
-        try:
-            import Loan_RepayPage as LP
-            LP.repay('ALL','ALL','0','0',today_date)
-            print('loan interest calculated')
-        except:
-            print("loan calculation of all failed")
+    today_date = datetime.today().strftime("%d/%m/%Y")
+
+    try:
+        import Loan_RepayPage as LP
+        LP.repay('ALL','ALL','0','0',today_date)
+        print('loan interest calculated')
+    except:
+        print("loan calculation of all failed")
+    
+def updateText(data):
+    #update the drop down list
+    # Clear the listbox
+    try:
+        my_list.delete(0, END)
+
+        # Add toppings to listbox
+        for item in data:
+            my_list.insert(END, item)
+    except:
+        pass
+
+def fillout(event):
+    # Delete whatever is in the entry box
+    customer_name.delete(0, END)
+
+    # Add clicked list item to entry box
+    customer_name.insert(0, my_list.get(ANCHOR))
+
+def check(event):
+    # print("hello")
+    # grab what was typed
+    typed = name.get()
+    print(typed)
+
+    if typed == '':
+        data = listVal
+    else:
+        data = []
+        for item in listVal:
+            if typed.lower() in item.lower():
+                data.append(item)
+
+    # update our listbox with selected items
+    updateText(data)
+
 
 def ind_Bal():
     balance = 0
@@ -138,6 +175,33 @@ customer = Label(root,text="Customer Name:",font="Helvetica 20 bold",bg='midnigh
 customer.place(x=230, y=180)
 customer_name=Entry(root,justify=CENTER,borderwidth=4,textvariable=name,font="Helvetica 20 bold",width=25)
 customer_name.place(x=500, y=180)
+
+my_list = Listbox(root, font =('arial', 13, 'bold'),height = 4, width=30, justify='left')
+my_list.place(x = 495, y=200)
+
+listVal = []
+def getNameList():
+    try:
+        listVal = []
+        listname = db.child('mainData').get()
+        for each in listname.each():
+
+            listVal.append(each.val()['name'])
+
+        listVal = list(set(listVal))
+        return listVal
+    except:
+        pass
+
+listVal = getNameList()
+
+updateText(listVal)
+
+# Create a binding on the listbox onclick
+my_list.bind("<<ListboxSelect>>", fillout)
+
+# Create a binding on the entry box
+customer_name.bind("<KeyRelease>", check)
 
 Check=Button(root,text="Search",bg='gold',font="Helvetica 17 bold",borderwidth=2,relief=SUNKEN,command=search,width=8)
 Check.place(x=500,y=250)
