@@ -14,7 +14,7 @@ root.maxsize(550, 450)
 root.minsize(550, 450)
 root.configure(bg='midnight blue')
 root.title("Deposit on Existing Loan")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(master=root,file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 
 name_entry = StringVar()
@@ -24,10 +24,9 @@ i_entry = StringVar()
 date_L = StringVar()
 
 
-
 def back():
-	Tk.quit()
-	import Homepage
+    import _thread
+    _thread.exit_thread()
 
 def monthlycalc(currentDate):
 	date_cur = pd.to_datetime(currentDate)

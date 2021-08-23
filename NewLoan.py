@@ -11,7 +11,7 @@ root.geometry("580x470+500+130")
 root.maxsize(580, 470)
 root.minsize(580, 470)
 root.title("NewLoan Page")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(master=root,file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 
 
@@ -98,8 +98,8 @@ def treasure(pAmount):
 
 
 def back():
-    root.destroy()
-    import Homepage
+    import _thread
+    _thread.exit_thread()
 
 def add_data():
     name = name_entry.get()

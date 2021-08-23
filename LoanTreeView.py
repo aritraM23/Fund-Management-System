@@ -19,7 +19,7 @@ import csv
 from PIL.ImageTk import PhotoImage
 from envVar import firebaseConfig as fc
 from envVar import mycursor,myDataBase
-
+import _thread
 
 
 firebase = pyrebase.initialize_app(fc)
@@ -31,7 +31,7 @@ root.geometry("1100x700+290+55")
 root.minsize(1100,700)
 root.maxsize(1100,700)
 root.title("IVS/Loan/LoanDetails")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(master=root,file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 #---------------------------Functions--------------------------------#
 Name = StringVar()
@@ -42,70 +42,71 @@ Interest = StringVar()
 MonthlyInterest = StringVar()
 PaidInterest = StringVar()
 Date = StringVar()
-# def home():
-#     root.destroy()
-#     import Homepage
-#
-# def display():
-#             mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
-#             result = mycursor.fetchall()
-#             if len(result) != 0:
-#                 tree_v.delete(*tree_v.get_children())
-#                 for row in result:
-#                     tree_v.insert('', END, values=row)
-#             myDataBase.commit()
-#             myDataBase.close()
-#
-# def do_press(ev):
-#     display()
-#
-# def refresh():
-#     display()
-#
-# def newloan():
-#     root.destroy()
-#     import NewLoan
-#
-# def repayloan():
-#     root.destroy()
-#     import Loan_RepayPage
-#
-# def sync_up():
-#
-#     totalData = db.child('loanData').get()
-#     mycursor.execute('Delete From loanEntry')
-#     for data in totalData.each():
-#         dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, InterestPaidTillDate,dateGiven) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-#         datas = [(data.val()['name'], data.val()['mobileNumber'], data.val()['address'],data.val()['shopName'],data.val()['date'], data.val()['principalAmount'], data.val()['interestPercent'], data.val()['priciplePaid'], data.val()['interestPaid'], data.val()['principalLeft'], data.val()['interestLeft'], data.val()['interestPaidTillDate'],data.val()['lastPaidDate'])]
-#         mycursor.executemany(dataCollection, datas)
-#         myDataBase.commit()
-#     tkinter.messagebox.showinfo('Success', 'Data Synced')
-#     myDataBase.close()
-#     display()
-#
-#
-# def sync_down():
-#     try:
-#         db.child('loanData').remove()
-#         query = 'Select * from loanEntry'
-#         mycursor.execute(query)
-#         totalEntries = mycursor.fetchall()
-#
-#         for rows in totalEntries:
-#             datas = {
-#                      'name':            rows[0], 'mobileNumber':    rows[1], 'address':               rows[2], 'shopName':     rows[3], 'date': rows[4],
-#                      'principalAmount': rows[5], 'interestPercent': rows[6], 'priciplePaid':          rows[7], 'interestPaid': rows[8],
-#                      'principalLeft':   rows[9], 'interestLeft':    rows[10], 'interestPaidTillDate': rows[11], 'lastPaidDate':rows[12]
-#                     }
-#             db.child('loanData').push(datas)
-#         tkinter.messagebox.showinfo('Success', 'Database Synced')
-#         display()
-#     except Exception as e:
-#         tkinter.messagebox.showerror('Error', e)
-#         display()
-#
-#
-#
+def home():
+    _thread.exit_thread()
+
+def display():
+            mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
+            result = mycursor.fetchall()
+            if len(result) != 0:
+                tree_v.delete(*tree_v.get_children())
+                for row in result:
+                    tree_v.insert('', END, values=row)
+            myDataBase.commit()
+            myDataBase.close()
+
+def do_press(ev):
+    display()
+
+def refresh():
+    display()
+
+def newloan():
+    _thread.start_new(newL,(1,2))
+def newL(j,k):
+    import NewLoan
+
+def repayloan():
+    _thread.start_new(loanRepay,(1,2))
+def loanRepay(j,k):
+    import Loan_RepayPage
+
+def sync_up():
+
+    totalData = db.child('loanData').get()
+    mycursor.execute('Delete From loanEntry')
+    for data in totalData.each():
+        dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, InterestPaidTillDate,dateGiven) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        datas = [(data.val()['name'], data.val()['mobileNumber'], data.val()['address'],data.val()['shopName'],data.val()['date'], data.val()['principalAmount'], data.val()['interestPercent'], data.val()['priciplePaid'], data.val()['interestPaid'], data.val()['principalLeft'], data.val()['interestLeft'], data.val()['interestPaidTillDate'],data.val()['lastPaidDate'])]
+        mycursor.executemany(dataCollection, datas)
+        myDataBase.commit()
+    tkinter.messagebox.showinfo('Success', 'Data Synced')
+    myDataBase.close()
+    display()
+
+
+def sync_down():
+    try:
+        db.child('loanData').remove()
+        query = 'Select * from loanEntry'
+        mycursor.execute(query)
+        totalEntries = mycursor.fetchall()
+
+        for rows in totalEntries:
+            datas = {
+                     'name':            rows[0], 'mobileNumber':    rows[1], 'address':               rows[2], 'shopName':     rows[3], 'date': rows[4],
+                     'principalAmount': rows[5], 'interestPercent': rows[6], 'priciplePaid':          rows[7], 'interestPaid': rows[8],
+                     'principalLeft':   rows[9], 'interestLeft':    rows[10], 'interestPaidTillDate': rows[11], 'lastPaidDate':rows[12]
+                    }
+            db.child('loanData').push(datas)
+        tkinter.messagebox.showinfo('Success', 'Database Synced')
+        display()
+    except Exception as e:
+        tkinter.messagebox.showerror('Error', e)
+        display()
+
+
+
 # #-----------------------------------Heading Frame and Label---------------------------------#
 Heading = Frame(root,bg='DarkGoldenRod1',borderwidth=4,relief=SUNKEN)
 Heading.pack(fill=X)
@@ -178,18 +179,18 @@ tree_v.bind('<ButtonRelease-1>')
 #-----------------------------Footer Frame& buttons-----------------------------------#
 footer = Frame(root,borderwidth=4,relief=RAISED)
 footer.pack(side=BOTTOM,fill=X)
-btn_syncup = Button(footer,text="Sync Up",font="Helvetica 12 bold",bg="DarkGoldenRod1")
+btn_syncup = Button(footer,text="Sync Up",font="Helvetica 12 bold",bg="DarkGoldenRod1",command=sync_up)
 btn_syncup.pack(side=LEFT,padx=40)
-btn_syncdown = Button(footer,text="Sync Down",font="Helvetica 12 bold",bg="DarkGoldenRod1")
+btn_syncdown = Button(footer,text="Sync Down",font="Helvetica 12 bold",bg="DarkGoldenRod1",command=sync_down)
 btn_syncdown.pack(side=RIGHT,padx=40)
-btn_new = Button(footer,text="New",font="Helvetica 12 bold",bg="DarkGoldenRod1")
+btn_new = Button(footer,text="New",font="Helvetica 12 bold",bg="DarkGoldenRod1",command= newloan)
 btn_new.pack(side=LEFT,padx= 135)
-btn_update = Button(footer,text="Update",font="Helvetica 12 bold",bg="DarkGoldenRod1")
+btn_update = Button(footer,text="Update",font="Helvetica 12 bold",bg="DarkGoldenRod1",command=repayloan)
 btn_update.pack(side=RIGHT,padx=135)
 
-btn_back = Button(root,text="HOMEPAGE",font="Helvetica 12 bold",bg="DarkGoldenRod1")
+btn_back = Button(root,text="HOMEPAGE",font="Helvetica 12 bold",bg="DarkGoldenRod1",command=home)
 btn_back.place(x=550,y=55)
-ref_btn = Button(root,text="REFRESH",font="Helvetica 12 bold",bg="DarkGoldenRod1")
+ref_btn = Button(root,text="REFRESH",font="Helvetica 12 bold",bg="DarkGoldenRod1",command=refresh)
 ref_btn.place(x=435,y=55)
 
 root.mainloop()

@@ -13,7 +13,7 @@ import mysql.connector
 import csv
 from PIL.ImageTk import PhotoImage
 from envVar import firebaseConfig as fc
-
+import _thread
 
 
 
@@ -35,19 +35,18 @@ name_entry = StringVar()
 mob_entry = StringVar()
 
 def back():
-    import _thread
     _thread.exit_thread()
 def displayLoan():
-    root.destroy()
+    _thread.start_new(loanDis, (1, 2))
+def loanDis(l,k):
     import LoanTreeView
-
 def new():
-    root.destroy()
+    _thread.start_new(newPage, (1, 2))
+def newPage(l,k):
     import NewLoan
-
-
 def depo():
-    root.destroy()
+    _thread.start_new(depos, (1, 2))
+def depos(l,k):
     import Loan_RepayPage
 
 def updateText(data):
@@ -200,10 +199,10 @@ updateText(listVal)
 my_list.bind("<<ListboxSelect>>", fillout)
 
 # Create a binding on the entry box
-name.bind("<KeyRelease>", check)
-
 name = Entry(root, width=27, textvariable=name_entry, borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")
 name.place(x=290, y=240)
+name.bind("<KeyRelease>", check)
+
 mob_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Mobile No.:-")
 mob_lab.place(x=110, y=310)
 mob = Entry(root, width=27, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")

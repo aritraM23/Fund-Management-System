@@ -29,8 +29,6 @@ root.configure(bg='navy')
 root.title("Registration Page")
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
-
-
 #---Entry Format----#
 shop = StringVar()
 pro = StringVar()
