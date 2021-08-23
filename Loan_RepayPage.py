@@ -91,26 +91,33 @@ def delete():
 		except Exception as err:
 			tkinter.messagebox.showerror(name_entry.get(),err)
 
-def repay(nameP = name_entry.get(), mobileNumberP = mob_entry.get(), principlePaidP = p_entry.get(),interestPaidP = i_entry.get(), updateDateP = date_L.get() ):
+def repay():
 	
-	name = nameP
-	mobileNumber = mobileNumberP
-	principlePaid = principlePaidP
-	interestPaid = interestPaidP
-	updateDate = updateDateP
-
+	name = name_entry.get()
+	print(name)
+	mobileNumber = mob_entry.get()
+	print(mobileNumber)
+	principlePaid = p_entry.get()
+	interestPaid = i_entry.get()
+	updateDate = date_L.get()
+	
 	if name == 'ALL':
 		monthlycalc(updateDate)
-
+	newPriciple = 0
+	newInterst = 0
+	interestPaidTillDates = 0
 	try:
 		loanInfo = db.child('loanData').get()
 		for info in loanInfo.each():
+			print('calcuation started')
 			if (name == info.val()['name'] or mobileNumber == info.val()['mobileNumber']):
+				
 				previousPrinciple = info.val()['principalLeft']
 				interstLeft = info.val()['interestLeft']
 				interestPaidTill = info.val()['interestPaidTillDate']
 				newPriciple = int(previousPrinciple) - int(principlePaid)
-				newInterst = int(interstLeft) - int(interestPaid) + int(
+				print(newPriciple)
+				newInterst = int(interstLeft) - int(interestPaid) + math.ceil(
 					(newPriciple * int(info.val()['interestPercent'])) / 100)
 				interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
 				date = date_L.get()
@@ -139,7 +146,7 @@ def repay(nameP = name_entry.get(), mobileNumberP = mob_entry.get(), principlePa
 		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
-
+		
 		mycursor.execute(
 				'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
 				(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
