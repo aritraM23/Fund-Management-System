@@ -40,19 +40,24 @@ def monthlycalc(currentDate):
 		print("Refreshing...")
 		loanDB = db.child('loanData').get()
 		nameList = [info.val()['name'] for info in loanDB.each()]
+		print(nameList)
 		mobileList = [info.val()['name'] for info in loanDB.each()]
+		print(mobileList)
 		ppaid = 0
 		intPaid = 0
 		last_date = [info.val()['lastPaidDate'] for info in loanDB.each()]
+		print(last_date)
 		count = 0
 		for each in last_date:
 			count = count + 1
 			each = pd.to_datetime(each)
-		i = 1
-		while(i<=count):
+		print(count)
+
+		for i in range(count):
+			print('inside loop')
 			if date_cur.month - last_date[i].month == 1:
+                
 				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
-			i = i+1
         
 	except:
 		pass
