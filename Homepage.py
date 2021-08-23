@@ -50,13 +50,16 @@ def monthlycalc(currentDate):
 		count = 0
 		for each in last_date:
 			count = count + 1
-			each = pd.to_datetime(each)
+			# each = pd.to_datetime(each)
+			
 		print(count)
-
+# 		print(last_date)
 		for i in range(count):
 			print('inside loop')
-			if date_cur.month - last_date[i].month == 1:
-                
+			last_payday = pd.to_datetime(last_date[i])
+			print(last_payday.month)
+			if (date_cur.month - last_payday.month == 1):
+				print('inside if')
 				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
         
 	except:
