@@ -143,7 +143,7 @@ def ind_import():
 # root.destroy()
 # indiv.gui(tkinter.Tk())
 
-def about():
+def display_all():
 	pass
 def back():
 	_thread.exit_thread()
@@ -299,8 +299,8 @@ Label(navRoot, text="Menu", font='arial 10 bold', bg='black', fg='pink', height=
 
 y = 80
 
-options = ["Export All", "Import Individual", "About"]
-methods = [export, ind_import, about, back]
+options = ["Export All", "Import Individual", "Display All"]
+methods = [export, ind_import, display_all, back]
 
 navExp = Button(navRoot, text="Export All", font="arial 13", bg="pink", fg='black',
 					 activebackground="pink", activeforeground="black", bd=0, command=export).place(x=25,
