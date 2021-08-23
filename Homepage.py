@@ -37,29 +37,28 @@ amount = 0
 def monthlycalc(currentDate):
 	date_cur = pd.to_datetime(currentDate)
 	try:
-		print("Refreshing...")
+		
 		loanDB = db.child('loanData').get()
 		nameList = [info.val()['name'] for info in loanDB.each()]
-		print(nameList)
+		
 		mobileList = [info.val()['name'] for info in loanDB.each()]
-		print(mobileList)
+		
 		ppaid = 0
 		intPaid = 0
 		last_date = [info.val()['lastPaidDate'] for info in loanDB.each()]
-		print(last_date)
+		
 		count = 0
 		for each in last_date:
 			count = count + 1
 			# each = pd.to_datetime(each)
 			
-		print(count)
-# 		print(last_date)
+		
 		for i in range(count):
-			print('inside loop')
+		
 			last_payday = pd.to_datetime(last_date[i])
-			print(last_payday.month)
+		
 			if (date_cur.month - last_payday.month == 1):
-				print('inside if')
+		
 				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
         
 	except:
@@ -103,12 +102,8 @@ def repay(nameL = 'ALL',mobL = 'ALL', princL = 0, intL = 0, Payment_date = datet
 					tday, tm, ty = date.split(".")
 					mdate = tday + "/" + tm + "/" + ty
 					date = mdate
-				db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,
-															   'interestLeft': newInterst,
-															   'interestPaidTillDate': interestPaidTillDates,
-															   'lastPaidDate': updateDate})
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
-											 database='ivsLoan')
+				db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,'interestLeft': newInterst,'interestPaidTillDate': interestPaidTillDates,'lastPaidDate': updateDate})
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		mycursor.execute(
 			'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
