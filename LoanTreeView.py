@@ -47,7 +47,7 @@ def home():
 
 def display():
 
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                                  database='ivsLoan')
             mycursor = myDataBase.cursor()
             mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
@@ -79,7 +79,7 @@ def sync_up():
 
     totalData = db.child('loanData').get()
 
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                          database='ivsLoan')
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
