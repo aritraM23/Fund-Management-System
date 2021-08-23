@@ -286,10 +286,10 @@ times()
 # ===============================================================================================================================================================================================
 
 # nav bar
-navIcon = PhotoImage(file='navbar.png')
-closeIcon = PhotoImage(file='exit.png')
+navIcon = PhotoImage(master = root,file='navbar.png')
+closeIcon = PhotoImage(master= root,file='exit.png')
 
-nvbarbtn = Button(TitleFrame, text='s' ,width=24, height=24, bd=0, padx=1, command=switch).grid(
+nvbarbtn = Button(TitleFrame, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).grid(
 	row=0, column=0, padx=0, pady=0)
 navRoot = Frame(root, bg='pink', height=500, width=200)
 navRoot.place(x=-300, y=0)
@@ -316,7 +316,7 @@ navAbt = Button(navRoot, text="Back", font="arial 13", bg="pink", fg='black',
 					 activebackground="pink", activeforeground="black", bd=0, command=back).place(x=25,
 																								  y=y)
 
-closeBtn = Button(navRoot, text='sds', width=22, height=22, relief=RIDGE, bd=0, padx=1,
+closeBtn = Button(navRoot, image = closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
 					   command=switch)
 closeBtn.place(x=150, y=20)
 
@@ -350,7 +350,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
 			datas = [(serialNumber, name, amount, date)]
@@ -409,7 +409,7 @@ def update():
 							 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -431,7 +431,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -525,7 +525,7 @@ def alertMssg(heading,msg):
 
 def display():
 	
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry")
@@ -556,7 +556,7 @@ def delete():
 				print(datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -574,7 +574,7 @@ def delete():
 		try:
 #					print(type(SerialNumber.get()))
 
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
 				Name.get(),
