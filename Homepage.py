@@ -129,12 +129,11 @@ def repay(nameL = 'ALL',mobL = 'ALL', princL = 0, intL = 0, Payment_date = datet
 def refresh():
     today_date = datetime.today().strftime("%d/%m/%Y")
 
-    # try:
-        # import Loan_RepayPage as LP
-    repay()
-    print('loan interest calculated')
-    # except:
-    #     print("loan calculation of all failed")
+    try:
+        repay()
+        print('loan interest calculated')
+    except:
+    	print("loan calculation of all failed")
     
 def updateText(data):
     #update the drop down list
