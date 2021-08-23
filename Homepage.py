@@ -32,12 +32,90 @@ p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 
 name=StringVar()
 amount = 0
+
+def monthlycalc(currentDate):
+	date_cur = pd.to_datetime(currentDate)
+	try:
+		loanDB = db.child('loanData').get()
+		nameList = [info.val()['name'] for info in loanDB.each()]
+		mobileList = [info.val()['name'] for info in loanDB.each()]
+		ppaid = 0
+		intPaid = 0
+		last_date = [info.val()['lastPaidDate'] for info in loanDB.each()]
+		count = 0
+		for each in last_date:
+			count = count + 1
+			each = pd.to_datetime(each)
+		i = 1
+		while(i<=count):
+			if date_cur.month - last_date[i].month == 1:
+				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
+			i = i+1
+
+	except:
+		pass
+
+def repay(nameP , mobileNumberP , principlePaidP ,interestPaidP , updateDateP ):
+	
+	name = nameP
+	mobileNumber = mobileNumberP
+	principlePaid = principlePaidP
+	interestPaid = interestPaidP
+	updateDate = updateDateP
+	
+	if name == 'ALL':
+		monthlycalc(updateDate)
+
+	try:
+		loanInfo = db.child('loanData').get()
+		for info in loanInfo.each():
+			if (name == info.val()['name'] or mobileNumber == info.val()['mobileNumber']):
+				previousPrinciple = info.val()['principalLeft']
+				interstLeft = info.val()['interestLeft']
+				interestPaidTill = info.val()['interestPaidTillDate']
+				newPriciple = int(previousPrinciple) - int(principlePaid)
+				newInterst = int(interstLeft) - int(interestPaid) + int(
+					(newPriciple * int(info.val()['interestPercent'])) / 100)
+				interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
+				date = updateDateP
+				if (date.find("-") > -1):
+					tday, tm, ty = date.split("-")
+					mdate = tday + "/" + tm + "/" + ty
+					date = mdate
+				elif date.find(".") > -1:
+					tday, tm, ty = date.split(".")
+					mdate = tday + "/" + tm + "/" + ty
+					date = mdate
+				db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,
+															   'interestLeft': newInterst,
+															   'interestPaidTillDate': interestPaidTillDates,
+															   'lastPaidDate': updateDate})
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+											 database='ivsLoan')
+		mycursor = myDataBase.cursor()
+		mycursor.execute(
+			'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
+			(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
+		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added')
+	except:
+		tkinter.messagebox.showinfo('No Internet',
+									'You are offline. Saving your data offline. Please sync your databases later')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+											 database='ivsLoan')
+		mycursor = myDataBase.cursor()
+		
+		mycursor.execute(
+				'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
+				(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
+		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added In Local DataBase. Please sync later')
+
+
 def refresh():
     today_date = datetime.today().strftime("%d/%m/%Y")
 
     try:
-        import Loan_RepayPage as LP
-        LP.repay('ALL','ALL','0','0',today_date)
+        # import Loan_RepayPage as LP
+        repay('ALL','ALL','0','0',today_date)
         print('loan interest calculated')
     except:
         print("loan calculation of all failed")
