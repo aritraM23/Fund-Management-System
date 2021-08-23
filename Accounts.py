@@ -345,7 +345,7 @@ def saveData():
 		date = mdate
 	try:
 		if (Name.get() != '' and Date.get() != '' and Amount.get() != ''):
-			datas = {'Serial Number': serialNumber, 'name': name, 'amount': amount, 'date': date}
+			datas = {'serialNumber': serialNumber, 'name': name, 'amount': amount, 'date': date}
 			db.child('mainData').push(datas)
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
@@ -388,7 +388,7 @@ def update():
 					mdate = tday + "/" + tm + "/" + ty
 					date = mdate
 				if data.val()['name'] == Name.get() and data.val()['date'] == date:
-					db.child('mainData').child(data.key()).update({'Serial Number': SerialNumber.get(), 'name': Name.get(), 'amount': Amount.get(),'date': date})
+					db.child('mainData').child(data.key()).update({'serialNumber': SerialNumber.get(), 'name': Name.get(), 'amount': Amount.get(),'date': date})
 				tempData += 1
 		for indi in totalIndividualData.each():
 			date = Date.get()
@@ -402,7 +402,7 @@ def update():
 				date = mdate
 			if indi.val()['name'] == Name.get() and indi.val()['date'] == date:
 				db.child('registerUserExp').child(Name.get()).child(indi.key()).update(
-							{'Serial Number': SerialNumber.get(),
+							{'serialNumber': SerialNumber.get(),
 							 'name': Name.get(),
 							 'amount': Amount.get(),
 							 'date': date
@@ -469,27 +469,27 @@ def search():
 	
 	with open('data.csv', 'w') as file:
 		write = csv.writer(file)
-		write.writerow(["Name", "Amount", "Date", "Loan"])
+		write.writerow(["Serial Number","Name", "Amount", "Date", "Loan"])
 		file.close()
 	for data in totalData.each():
 		for ld in loanDB.each():
 			if ('all' == Name.get().lower()):
 				with open('FullFile.csv', 'w') as file:
 					write = csv.writer(file)
-					write.writerow(["Name", "Amount", "Date", "Loan"])
+					write.writerow(["Serial Number","Name", "Amount", "Date", "Loan"])
 					file.close()
 				totalData = db.child('mainData').get()
 				loanDB = db.child('loanData').get()
-				for data, ld in totalData.each():
+				for data in totalData.each():
 					for ld in loanDB.each():
 						with open('FullFile.csv', 'a') as files:
 							write = csv.writer(files)
 							if ld.val()['name'] == data.val()['name']:
-								write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'],ld.val()['principalAmount']])
+								write.writerow([data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'],ld.val()['principalAmount']])
 								files.close()
 							else:
 								write.writerow(
-									[data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
+									[data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
 								files.close()
 				os.system('FullFile.csv')
 				return 0
@@ -499,11 +499,11 @@ def search():
 					write = csv.writer(files)
 					if ld.val()['name'] == data.val()['name']:
 						write.writerow(
-							[data.val()['name'], data.val()['amount'], data.val()['date'],
+							[data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'],
 							 ld.val()['principalAmount']])
 						files.close()
 					else:
-						write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
+						write.writerow([data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
 						files.close()
 					sum += 1
 	
@@ -612,13 +612,13 @@ def sync_on():
 		mycursor.execute('Delete From dataEntry')
 		for data in totalData.each():
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
-			datas = [(data.val()['Serial Number'],data.val()['name'], data.val()['amount'], data.val()['date'])]
+			datas = [(data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'])]
 			mycursor.executemany(dataCollection, datas)
 			myDataBase.commit()
 		myDataBase.close()
 		succesMsg('Sync Info','Data Synced')
 	except Exception as e:
-		
+		print(e)
 		alertMssg('Sync Info',e)
 
 # if (databaseChoice == 'f'):
