@@ -182,14 +182,18 @@ my_list.place(x = 200, y=133)
 
 listVal = []
 def getNameList():
-    listVal = []
-    listname = db.child('loanData').get()
-    for each in listname.each():
-        print(each.val()['name'])
-        listVal.append(each.val()['name'])
+    try:
+        listVal = []
+        listname = db.child('loanData').get()
+        for each in listname.each():
+            print(each.val()['name'])
+            listVal.append(each.val()['name'])
 
-    listVal = list(set(listVal))
-    return listVal
+        listVal = list(set(listVal))
+        return listVal
+    except:
+        listVal =[]
+        return listVal
 
 listVal = getNameList()
 
