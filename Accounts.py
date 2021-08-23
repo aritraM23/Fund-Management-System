@@ -312,6 +312,11 @@ navInd = Button(navRoot, text="Import Individual", font="arial 13", bg="pink", f
 																										y=y)
 y += 40
 
+navInd = Button(navRoot, text="Display All", font="arial 13", bg="pink", fg='black',
+					 activebackground="pink", activeforeground="black", bd=0, command=display_all).place(x=25,
+																										y=y)
+y += 40
+
 navAbt = Button(navRoot, text="Back", font="arial 13", bg="pink", fg='black',
 					 activebackground="pink", activeforeground="black", bd=0, command=back).place(x=25,
 																								  y=y)
