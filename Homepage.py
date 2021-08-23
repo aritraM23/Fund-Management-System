@@ -9,6 +9,7 @@ from time import strftime
 from datetime import datetime
 import time
 import pyrebase
+import math
 import mysql.connector
 import datetime as dt
 from PIL.ImageTk import PhotoImage
@@ -36,6 +37,7 @@ amount = 0
 def monthlycalc(currentDate):
 	date_cur = pd.to_datetime(currentDate)
 	try:
+		print("Refreshing...")
 		loanDB = db.child('loanData').get()
 		nameList = [info.val()['name'] for info in loanDB.each()]
 		mobileList = [info.val()['name'] for info in loanDB.each()]
@@ -51,33 +53,40 @@ def monthlycalc(currentDate):
 			if date_cur.month - last_date[i].month == 1:
 				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
 			i = i+1
-
+        
 	except:
 		pass
 
-def repay(nameP , mobileNumberP , principlePaidP ,interestPaidP , updateDateP ):
+def repay(nameL = 'ALL',mobL = 'ALL', princL = 0, intL = 0, Payment_date = datetime.today().strftime("%d/%m/%Y")):
 	
-	name = nameP
-	mobileNumber = mobileNumberP
-	principlePaid = principlePaidP
-	interestPaid = interestPaidP
-	updateDate = updateDateP
+	name = nameL
+	print(name)
+	mobileNumber = mobL
+	print(mobileNumber)
+	principlePaid = princL
+	interestPaid = intL
+	updateDate = Payment_date
 	
 	if name == 'ALL':
 		monthlycalc(updateDate)
-
+	newPriciple = 0
+	newInterst = 0
+	interestPaidTillDates = 0
 	try:
 		loanInfo = db.child('loanData').get()
 		for info in loanInfo.each():
+			print('calcuation started')
 			if (name == info.val()['name'] or mobileNumber == info.val()['mobileNumber']):
+				
 				previousPrinciple = info.val()['principalLeft']
 				interstLeft = info.val()['interestLeft']
 				interestPaidTill = info.val()['interestPaidTillDate']
 				newPriciple = int(previousPrinciple) - int(principlePaid)
-				newInterst = int(interstLeft) - int(interestPaid) + int(
+				print(newPriciple)
+				newInterst = int(interstLeft) - int(interestPaid) + math.ceil(
 					(newPriciple * int(info.val()['interestPercent'])) / 100)
 				interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
-				date = updateDateP
+				date = updateDate
 				if (date.find("-") > -1):
 					tday, tm, ty = date.split("-")
 					mdate = tday + "/" + tm + "/" + ty
@@ -109,16 +118,15 @@ def repay(nameP , mobileNumberP , principlePaidP ,interestPaidP , updateDateP ):
 				(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added In Local DataBase. Please sync later')
 
-
 def refresh():
     today_date = datetime.today().strftime("%d/%m/%Y")
 
-    try:
+    # try:
         # import Loan_RepayPage as LP
-        repay('ALL','ALL','0','0',today_date)
-        print('loan interest calculated')
-    except:
-        print("loan calculation of all failed")
+    repay()
+    print('loan interest calculated')
+    # except:
+    #     print("loan calculation of all failed")
     
 def updateText(data):
     #update the drop down list
@@ -283,6 +291,9 @@ customer_name.bind("<KeyRelease>", check)
 
 Check=Button(root,text="Search",bg='gold',font="Helvetica 17 bold",borderwidth=2,relief=SUNKEN,command=search,width=8)
 Check.place(x=500,y=250)
+
+Refresh=Button(root,text="Refresh",bg='gold',font="Helvetica 17 bold",borderwidth=2,relief=SUNKEN,command=refresh,width=8)
+Refresh.place(x=500,y=450)
 
 accIcon = PhotoImage(master= root,file = "acc.png")
 loanIcon = PhotoImage(master= root,file = "loan.png")
