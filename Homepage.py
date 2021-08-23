@@ -22,11 +22,13 @@ db= firebase.database()
 
 
 root = Tk()
-root.geometry("1100x700+290+55")
-root.config(bg="midnight blue")
+# root.geometry("1100x700+290+55")
+root.state('zoomed')
+root.config(bg="navy")
 root.title("HomePage")
-root.minsize(1100,700)
-root.maxsize(1100,700)
+root.resizable(0,0)
+# root.minsize(1100,700)
+# root.maxsize(1100,700)
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 #root.iconphoto(False,p1)
 
@@ -37,28 +39,29 @@ amount = 0
 def monthlycalc(currentDate):
 	date_cur = pd.to_datetime(currentDate)
 	try:
-		
+		print("Refreshing...")
 		loanDB = db.child('loanData').get()
 		nameList = [info.val()['name'] for info in loanDB.each()]
-		
+		print(nameList)
 		mobileList = [info.val()['name'] for info in loanDB.each()]
-		
+		print(mobileList)
 		ppaid = 0
 		intPaid = 0
 		last_date = [info.val()['lastPaidDate'] for info in loanDB.each()]
-		
+		print(last_date)
 		count = 0
 		for each in last_date:
 			count = count + 1
 			# each = pd.to_datetime(each)
 			
-		
+		print(count)
+# 		print(last_date)
 		for i in range(count):
-		
+			print('inside loop')
 			last_payday = pd.to_datetime(last_date[i])
-		
+			print(last_payday.month)
 			if (date_cur.month - last_payday.month == 1):
-		
+				print('inside if')
 				repay(nameList[i],mobileList[i],ppaid, intPaid, currentDate)
         
 	except:
@@ -102,8 +105,12 @@ def repay(nameL = 'ALL',mobL = 'ALL', princL = 0, intL = 0, Payment_date = datet
 					tday, tm, ty = date.split(".")
 					mdate = tday + "/" + tm + "/" + ty
 					date = mdate
-				db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,'interestLeft': newInterst,'interestPaidTillDate': interestPaidTillDates,'lastPaidDate': updateDate})
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",database='ivsLoan')
+				db.child('loanData').child(info.key()).update({'principalLeft': newPriciple,
+															   'interestLeft': newInterst,
+															   'interestPaidTillDate': interestPaidTillDates,
+															   'lastPaidDate': updateDate})
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",
+											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		mycursor.execute(
 			'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
@@ -112,7 +119,7 @@ def repay(nameL = 'ALL',mobL = 'ALL', princL = 0, intL = 0, Payment_date = datet
 	except:
 		tkinter.messagebox.showinfo('No Internet',
 									'You are offline. Saving your data offline. Please sync your databases later')
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		
@@ -236,36 +243,39 @@ def Time():
     Time_Label.after(1000, Time)
 
 
-Time_Label = Label(root, fg="black", bg="gold",
-                   font="Devanagari 17 bold", borderwidth=4, relief=SUNKEN)
-Time_Label.place(x=954, y=48)
+Time_Label = Label(root, fg="black", bg="DarkGoldenrod1",
+                   font="Devanagari 25 bold", borderwidth=6, relief=SUNKEN)
+Time_Label.place(x=1326, y=65)
 Time()
 
 
 def search():
-    balance=Label(root,fg='gold',bg='midnight blue',width= 20,font="Devanagari 15 bold",text="Balance:  " + str(ind_Bal()))
-    balance.place(x=15,y=174)
-    Loan=Label(root,fg='gold',bg='midnight blue',width= 30, font="Devanagari 15 bold",text="Loan\nRemaining:  " + str(loaninfor()))
-    Loan.place(x=240,y=174)
+    balance=Label(mainFrame,fg='black',bg='DarkGoldenrod1',width= 15,font="Constantia 26 bold",text="Balance:  " + str(ind_Bal()))
+    balance.place(x=60,y=195)
+    Loan=Label(mainFrame,fg='black',bg='DarkGoldenrod1', width = 20,font="Constantia 26 bold",text="Loan Remaining:  " + str(loaninfor()))
+    Loan.place(x=480,y=195)
 
 
-date = Label(root, text=f"{dt.datetime.now():%a, %b/%d/%Y}", bg="gold", fg="black", font=(
-    "helvetica 17 bold"), borderwidth=4, relief=SUNKEN)
-date.place(x=1, y=48)
+date = Label(root, text=f"{dt.datetime.now():%a, %b/%d/%Y}", bg="DarkGoldenrod1", fg="black", font=(
+    "helvetica 26 bold"), borderwidth=6, relief=SUNKEN)
+date.place(x=1, y=65)
 
 
-top_Frame = Frame(root,bg="gold",borderwidth=4,relief=SUNKEN)
+top_Frame = Frame(root,bg="DarkGoldenrod1",borderwidth=4,relief=SUNKEN)
 top_Frame.pack(fill=X)
-top_label = Label(top_Frame,text="---------HOMEPAGE--------",bg="gold",fg="black",font="Helvetica 20 bold")
+top_label = Label(top_Frame,text="---------HOMEPAGE--------",bg="DarkGoldenrod1",fg="black",font="Orbitron-Bold 30 bold")
 top_label.pack()
 
-customer = Label(root,text="Customer Name:",font="Helvetica 20 bold",bg='midnight blue',fg='gold')
-customer.place(x=230, y=180)
-customer_name=Entry(root,justify=CENTER,borderwidth=4,textvariable=name,font="Helvetica 20 bold",width=25)
-customer_name.place(x=500, y=180)
+#-----MainFrame-------
+mainFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=6, relief=SUNKEN, width=1000, height=650)
+mainFrame.place(x=307, y=140)
+customer = Label(mainFrame,text="Customer Name:",font="Constantia 25 bold",bg='DarkGoldenrod1',fg='black')
+customer.place(x=45, y=24)
+customer_name=Entry(mainFrame,justify=CENTER,borderwidth=4,textvariable=name,font="Consolas 25 bold",width=30)
+customer_name.place(x=400, y=24)
 
-my_list = Listbox(root, font =('arial', 13, 'bold'),height = 4, width=30, justify='left')
-my_list.place(x = 495, y=200)
+my_list = Listbox(mainFrame, font =('arial', 22, 'bold'),height = 3, width=34, justify='left')
+my_list.place(x = 400, y=74)
 
 listVal = []
 def getNameList():
@@ -291,27 +301,41 @@ my_list.bind("<<ListboxSelect>>", fillout)
 # Create a binding on the entry box
 customer_name.bind("<KeyRelease>", check)
 
-Check=Button(root,text="Search",bg='gold',font="Helvetica 17 bold",borderwidth=2,relief=SUNKEN,command=search,width=8)
-Check.place(x=500,y=250)
+chk_btn_frame = Frame(mainFrame, bg='navy', borderwidth=6, relief=SUNKEN)
+chk_btn_frame.place(x=30, y=70)
+Check=Button(chk_btn_frame,text="Search",bg='DarkGoldenrod1',font="Helvetica 22 bold",borderwidth=4,
+             relief=RIDGE,command=search,width=6)
+Check.pack()
+ref_btn_frame = Frame(mainFrame, bg='navy', borderwidth=6, relief=SUNKEN)
+ref_btn_frame.place(x=200, y=70)
+Refresh=Button(ref_btn_frame,text="Refresh",bg='DarkGoldenrod1',font="Helvetica 22 bold",borderwidth=4,
+             relief=RIDGE,command=refresh,width=6)
+Refresh.pack()
 
-Refresh=Button(root,text="Refresh",bg='gold',font="Helvetica 17 bold",borderwidth=2,relief=SUNKEN,command=refresh,width=8)
-Refresh.place(x=500,y=450)
+# Refresh=Button(root,text="Refresh",bg='DarkGoldenrod1',font="Helvetica 17 bold",borderwidth=2,relief=SUNKEN,command=refresh,width=8)
+# Refresh.place(x=500,y=450)
 
 accIcon = PhotoImage(master= root,file = "acc.png")
 loanIcon = PhotoImage(master= root,file = "loan.png")
 
-accounts=Button(root,image = accIcon,bg='gold',font="Helvetica 18 bold",borderwidth=4,relief=SUNKEN, command= AccountsPage)
-accounts.place(x=400,y=330)
-loan=Button(root,image = loanIcon,bg='gold',font="Helvetica 20 bold",borderwidth=4,relief=SUNKEN, command= loadtransfer)
-loan.place(x=600,y=330)
+accFrame = Frame(mainFrame, bg='black', borderwidth=5, relief=SUNKEN)
+accFrame.place(x=120, y=250)
+accounts=Button(accFrame,image = accIcon,bg='DarkGoldenrod1',font="Helvetica 16 bold",
+                borderwidth=4,relief=RIDGE, command= AccountsPage)
+accounts.pack()
+loanFrame = Frame(mainFrame, bg='black', borderwidth=5, relief=SUNKEN)
+loanFrame.place(x=600, y=250)
+loan=Button(loanFrame,image = loanIcon,bg='DarkGoldenrod1',font="Helvetica 16 bold",
+            borderwidth=4,relief=SUNKEN, command= loadtransfer)
+loan.pack()
 
-accLab = Label(root,text="Accounts",font="Helvetica 17 bold", bg='midnight blue', fg='gold')
-accLab.place(x=390,y=430)
+accLab = Label(mainFrame,text="Accounts",font="Constantia 24 bold", bg='DarkGoldenrod1', fg='black')
+accLab.place(x=160, y=450)
 
-loanLab = Label(root,text="Loans",font="Helvetica 17 bold", bg='midnight blue', fg='gold')
-loanLab.place(x=610,y=430)
+loanLab = Label(mainFrame,text="Loans",font="Constantia 24 bold", bg='DarkGoldenrod1', fg='black')
+loanLab.place(x=670, y=450)
 
-Treasury=Label(root,bg='gold',fg='black',font="Helvetica 18 bold",text="Treasury: Rs. "+ str(treasure()))
-Treasury.place(x=440,y=500)
+Treasury=Label(mainFrame,bg='DarkGoldenrod1',fg='black',font="Constantia 27 bold",text="Treasury: Rs. "+ str(treasure()))
+Treasury.place(x=340, y=550)
 
 root.mainloop()
