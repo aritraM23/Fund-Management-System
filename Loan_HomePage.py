@@ -13,7 +13,7 @@ import mysql.connector
 import csv
 from PIL.ImageTk import PhotoImage
 from envVar import firebaseConfig as fc
-import _thread
+
 
 
 
@@ -22,31 +22,31 @@ db = firebase.database()
 
 
 root = Tk()
-root.geometry("1100x700+290+55")
-root.minsize(1100,700)
-root.maxsize(1100,700)
-root.configure(bg='midnight blue')
+root.state('zoomed')
+root.config(bg="navy")
+root.resizable(0,0)
 root.title("Loan Window")
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
-#root.iconphoto(FALSE,p1)
+root.iconphoto(False,p1)
 
 
 name_entry = StringVar()
 mob_entry = StringVar()
 
 def back():
+    import _thread
     _thread.exit_thread()
 def displayLoan():
-    _thread.start_new(loanDis, (1, 2))
-def loanDis(l,k):
+    root.destroy()
     import LoanTreeView
+
 def new():
-    _thread.start_new(newPage, (1, 2))
-def newPage(l,k):
+    root.destroy()
     import NewLoan
+
+
 def depo():
-    _thread.start_new(depos, (1, 2))
-def depos(l,k):
+    root.destroy()
     import Loan_RepayPage
 
 def updateText(data):
@@ -87,7 +87,8 @@ def export():
     with open('LoanFile.csv', 'w') as file:
         write = csv.writer(file)
         write.writerow(
-            ["Name", "Loan Amount", "Interest", "Principal Paid", "Interest Paid", "Principal left", "Interest left",
+            ["Name", "Loan Amount", "Interest", "Principal Paid",
+             "Interest Paid", "Principal left", "Interest left",
              "InterestPaidTotal","Date","Last Paid Date" ])
         file.close()
     totalData = db.child('loanData').get()
@@ -122,19 +123,19 @@ def bal():
                 break
     except:
         tkinter.messagebox.showinfo("Search Mismatch", "No such Name in Directory!!")
-    bal_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold",
+    bal_lab = Label(mainFrame, fg='black', bg='DarkGoldenrod1', font="Orbitron-Bold 25 bold",
                     text="Balance:-" + " "+str(balance))
-    bal_lab.place(x=142, y=468)
-    download = Button(root, text="Download\n"
-    "Balance Sheet", bg='gold', fg='black', font="Helvetica 19 bold",
+    bal_lab.place(x=92, y=440)
+    download = Button(mainFrame, text="Download\n"
+    "Balance Sheet", bg='DarkGoldenrod1', fg='black', font="Orbitron-bold 25 bold",
                       borderwidth=4, relief=SUNKEN, command=export)
-    download.place(x=510, y=445)
+    download.place(x=410, y=405)
 
 
 def sync_up():
     
     totalData = db.child('loanData').get()
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",database='ivsLoan')
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",database='ivsLoan')
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
@@ -149,7 +150,7 @@ def sync_up():
 def sync_down():
     try:
         db.child('loanData').remove()
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsLoan')
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#", database='ivsLoan')
         mycursor = myDataBase.cursor()
         query = 'Select * from loanEntry'
         mycursor.execute(query)
@@ -169,31 +170,36 @@ def sync_down():
 
 
 #---------------HEADING-------------------------------#
-top_frame = Frame(root, bg='gold', borderwidth=10, relief=RAISED, width=500, height=55)
+top_frame = Frame(root, bg='DarkGoldenrod1', borderwidth=10, relief=RAISED,
+                  width=500, height=55)
 top_frame.pack(side=TOP, fill=X)
-heading = Label(top_frame, bg='gold', fg='black', font="Arial 20 bold", text="--------Loan Window--------")
+heading = Label(top_frame, bg='DarkGoldenrod1', fg='black',
+                font="Orbitron-Bold 30 bold", text="--------Loan Window--------")
 heading.pack()
 #---------------------ENTRY STUFFS--------------------------#
-name_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Name:-")
-name_lab.place(x=172, y=240)
-
-my_list = Listbox(root, font =('arial', 13, 'bold'),height = 2, width=25, justify='left')
-my_list.place(x = 200, y=133)
+mainFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=8,
+                  relief=SUNKEN, width=800, height=650)
+mainFrame.place(x=207, y=125)
+name_lab = Label(mainFrame, fg='black', bg='DarkGoldenrod1',
+                 font="Constantia 28 bold", text="Name:-")
+name_lab.place(x=75, y=94)
+name = Entry(mainFrame, width=25, textvariable=name_entry,
+             borderwidth=5, relief=SUNKEN,justify=CENTER, font="Consolas 27 bold")
+name.place(x=240, y=94)
+my_list = Listbox(mainFrame, font =('arial', 24, 'bold'),height = 3, width=28, justify='left')
+my_list.place(x = 242, y=148)
 
 listVal = []
-def getNameList():
-    try:
-        listVal = []
-        listname = db.child('loanData').get()
-        for each in listname.each():
-            print(each.val()['name'])
-            listVal.append(each.val()['name'])
 
-        listVal = list(set(listVal))
-        return listVal
-    except:
-        listVal =[]
-        return listVal
+def getNameList():
+    listVal = []
+    listname = db.child('loanData').get()
+    for each in listname.each():
+        print(each.val()['name'])
+        listVal.append(each.val()['name'])
+
+    listVal = list(set(listVal))
+    return listVal
 
 listVal = getNameList()
 
@@ -203,37 +209,36 @@ updateText(listVal)
 my_list.bind("<<ListboxSelect>>", fillout)
 
 # Create a binding on the entry box
-name = Entry(root, width=27, textvariable=name_entry, borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")
-name.place(x=290, y=240)
 name.bind("<KeyRelease>", check)
 
-mob_lab = Label(root, bg='midnight blue', fg='gold', font="Helvetica 20 bold", text="Mobile No.:-")
-mob_lab.place(x=110, y=310)
-mob = Entry(root, width=27, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Helvetica 20 bold")
-mob.place(x=290, y=310)
+mob_lab = Label(mainFrame, fg='black', bg='DarkGoldenrod1', font="Constantia 27 bold",
+                justify=CENTER , text="Mobile No.:-")
+mob_lab.place(x=15, y=290)
+mob = Entry(mainFrame, width=25, textvariable=mob_entry,borderwidth=5, relief=SUNKEN, font="Consolas 27 bold")
+mob.place(x=240, y=290)
 
 #----Buttons Frame along with Buttons---------#
-btn_frame = Frame(root,bg='gold',width= 500,height=500,borderwidth=3,relief=RAISED)
-btn_frame.place(x=840,y=170)
-Check = Button(btn_frame, text="CHECK", bg='gold', font="Helvetica 19 bold",
+btn_frame = Frame(root,bg='DarkGoldenrod1',width= 800,height=800,borderwidth=3,relief=RAISED)
+btn_frame.place(x=1140,y=170)
+Check = Button(btn_frame, text="CHECK", bg='DarkGoldenrod1', font="Orbitron-bold 25 bold",
                width=10,borderwidth=4, relief=RAISED, command=bal)
 Check.pack()
-Display = Button(btn_frame, text="DISPLAY", bg='gold', font="Helvetica 19 bold", borderwidth=4,
+Display = Button(btn_frame, text="DISPLAY", bg='DarkGoldenrod1', font="Orbitron-bold 25 bold", borderwidth=4,
                  relief=RAISED, command=displayLoan,width=10)
 Display.pack()
-Back = Button(btn_frame, text="BACK", bg='gold', font="Helvetica 19 bold",
+Back = Button(btn_frame, text="BACK", bg='DarkGoldenrod1', font="Orbitron-bold 25 bold",
               borderwidth=4, relief=RAISED, command=back,width=10)
 Back.pack()
-Sync_Up = Button(btn_frame, text="SYNC UP", bg='gold', font="Helvetica 19 bold",
+Sync_Up = Button(btn_frame, text="SYNC UP", bg='DarkGoldenrod1', font="Orbitron-bold 25 bold",
               borderwidth=4, relief=RAISED, command=sync_up,width=10)
 Sync_Up.pack()
-Sync_Down = Button(btn_frame, text="SYNC DOWN", bg='gold', font="Helvetica 18 bold",
+Sync_Down = Button(btn_frame, text="SYNC DOWN", bg='DarkGoldenrod1', font="Orbitron-bold 25 bold",
               borderwidth=4, relief=RAISED, command=sync_down,width=10)
 Sync_Down.pack()
-newLoan = Button(btn_frame, text="NEW LOAN", bg='gold', fg='black', font="Helvetica 19 bold", borderwidth=4,
+newLoan = Button(btn_frame, text="NEW LOAN", bg='DarkGoldenrod1', fg='black', font="Orbitron-bold 25 bold", borderwidth=4,
                      relief=RAISED, command=new,width=10)
 newLoan.pack()
-deposit = Button(btn_frame, text="DEPOSIT", bg='gold', fg='black', font="Helvetica 19 bold",
+deposit = Button(btn_frame, text="DEPOSIT", bg='DarkGoldenrod1', fg='black', font="Orbitron-bold 25 bold",
                      borderwidth=4, relief=RAISED, command=depo,width=10)
 deposit.pack()
 #---------------------------------------------------------------------------------------------#
