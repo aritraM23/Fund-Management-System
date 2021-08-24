@@ -52,36 +52,38 @@ def depo():
 def updateText(data):
     #update the drop down list
     # Clear the listbox
-    my_list.delete(0, END)
-
-    # Add toppings to listbox
-    for item in data:
-        my_list.insert(END, item)
-
+    try:
+        my_list.delete(0, END)
+    
+        # Add toppings to listbox
+        for item in data:
+            my_list.insert(END, item)
+    except :
+        pass
 def fillout(event):
     # Delete whatever is in the entry box
-    name.delete(0, END)
-
-    # Add clicked list item to entry box
-    name.insert(0, my_list.get(ANCHOR))
-
+    try:
+        name.delete(0, END)
+    
+        # Add clicked list item to entry box
+        name.insert(0, my_list.get(ANCHOR))
+    except :pass
 def check(event):
-    # print("hello")
     # grab what was typed
-    typed = name_entry.get()
-    print(typed)
-
-    if typed == '':
-        data = listVal
-    else:
-        data = []
-        for item in listVal:
-            if typed.lower() in item.lower():
-                data.append(item)
-
-    # update our listbox with selected items
-    updateText(data)
-
+    try:
+        typed = name_entry.get()
+    
+        if typed == '':
+            data = listVal
+        else:
+            data = []
+            for item in listVal:
+                if typed.lower() in item.lower():
+                    data.append(item)
+    
+        # update our listbox with selected items
+        updateText(data)
+    except :pass
     
 def export():
     with open('LoanFile.csv', 'w') as file:
@@ -96,8 +98,6 @@ def export():
         
         if data.val()['name'] == name_entry.get() or data.val()['mobileNumber'] == (mob_entry.get()):
             with open('LoanFile.csv', 'a') as files:
-                # print('Inside this')
-                print(mob_entry.get())
                 write = csv.writer(files)
                 write.writerow([data.val()['name'], data.val()['principalAmount'], data.val()['interestPercent'],
                                 data.val()['priciplePaid'], data.val()['principalLeft'], data.val()['interestPaid'],
@@ -113,7 +113,6 @@ def bal():
         for loan in loanData.each():
             
             if loan.val()['name'] == name_entry.get() and loan.val()['mobileNumber'] == (mob_entry.get()):
-                print(f'{name_entry.get()} entered if')
                 balData = db.child('mainData').get()
                 for var in balData.each():
                     if var.val()['name'] == name_entry.get():
@@ -194,13 +193,14 @@ listVal = []
 def getNameList():
     listVal = []
     listname = db.child('loanData').get()
-    for each in listname.each():
-        print(each.val()['name'])
-        listVal.append(each.val()['name'])
-
-    listVal = list(set(listVal))
-    return listVal
-
+    try:
+        for each in listname.each():
+            listVal.append(each.val()['name'])
+    
+        listVal = list(set(listVal))
+        return listVal
+    except :
+        pass
 listVal = getNameList()
 
 updateText(listVal)

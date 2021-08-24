@@ -22,7 +22,7 @@ def signin(username,password):
     name = username
     password = password
     auth.sign_in_with_email_and_password(name, password)
-    print("Done")
+    
 
 def New():
     root.destroy()

@@ -59,12 +59,12 @@ def treasure(pAmount):
     for data in totalDB.each():
         amount += int(data.val()['amount'])
 
-    print(amount)
+  
     try:
         for ld in loanDb.each():
             interest += int(ld.val()['interestPaidTillDate'])
         amount += interest
-        print(amount)
+  
         for ld in loanDb.each():
             princi += int(ld.val()['principalLeft'])
 
@@ -87,8 +87,7 @@ def treasure(pAmount):
             return 0
             
 
-    print(amount)
-    # print(amount)
+  
     return amount
 
 

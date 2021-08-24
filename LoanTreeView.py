@@ -46,10 +46,6 @@ def home():
     _thread.exit_thread()
 
 def display():
-
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
-                                                 database='ivsLoan')
-            mycursor = myDataBase.cursor()
             mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
             result = mycursor.fetchall()
             if len(result) != 0:
@@ -78,10 +74,6 @@ def loanRepay(j,k):
 def sync_up():
 
     totalData = db.child('loanData').get()
-
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
-                                         database='ivsLoan')
-    mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
         dataCollection = 'Insert into loanEntry (name ,mobileNumber ,address ,shopName ,date ,pricipalAmount ,interestPercent ,principlePaid ,interestPaid, principleLeft , interestLeft, InterestPaidTillDate,dateGiven) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
