@@ -24,10 +24,9 @@ firebase = pyrebase.initialize_app(fc)
 db = firebase.database()
 
 root = Tk()
-root.config(bg='DarkGoldenrod1')
-root.geometry("1100x700+290+55")
-root.minsize(1100,700)
-root.maxsize(1100,700)
+root.config(bg='navy')
+root.state('zoomed')
+root.resizable(0,0)
 root.title("IVS/Loan/LoanDetails")
 p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
@@ -41,68 +40,10 @@ MonthlyInterest = StringVar()
 PaidInterest = StringVar()
 Date = StringVar()
 
-def home():
-    root.destroy()
-    import Homepage
-
-def display():
-	
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
-										 database='ivs2')
-	mycursor = myDataBase.cursor()
-	mycursor.execute("select * from dataEntry")
-	result = mycursor.fetchall()
-	if len(result) != 0:
-		tree_v.delete(*tree_v.get_children())
-		for row in result:
-			tree_v.insert('', END, values=row)
-	myDataBase.commit()
-	myDataBase.close()
-
-def sync_on():
-
-	try:
-		totalData = db.child('mainData').get()
-		
-		mycursor.execute('Delete From dataEntry')
-		for data in totalData.each():
-			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
-			datas = [(data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'])]
-			mycursor.executemany(dataCollection, datas)
-			myDataBase.commit()
-		myDataBase.close()
-		tkinter.messagebox.showinfo('Sync Info','Data Synced')
-	except Exception as e:
-		print(e)
-		tkinter.messagebox.showerror('Sync Info',e)
-
-# if (databaseChoice == 'f'):
-def sync_off():
-	try:
-		db.child('mainData').remove()
-		db.child('registerUserExp').remove()
-		query = 'Select * from dataEntry'
-		mycursor.execute(query)
-		totalEntries = mycursor.fetchall()
-		
-		for rows in totalEntries:
-			datas = {'serialNumber': rows[0], 'name': rows[1], 'amount': rows[2], 'date': rows[3]}
-			db.child('mainData').push(datas)
-			db.child('registerUserExp').child(rows[1]).push(datas)
-		tkinter.messagebox.showinfo('Success', 'Done')
-	except Exception as e:
-		tkinter.messagebox.showerror('Sync Info', e)
-
-def refresh():
-    display()
-
-def do_press(ev):
-    display()
-
 # #-----------------------------------Heading Frame and Label---------------------------------#
-Heading = Frame(root,bg='SpringGreen4',borderwidth=4,relief=SUNKEN)
+Heading = Frame(root,bg='DarkGoldenrod1',borderwidth=5,relief=SUNKEN)
 Heading.pack(fill=X)
-Heading_Label = Label(Heading,text="------------ACCOUNT DETAILS------------",font="Helvetica 18 bold", bg='SpringGreen4',fg='black')
+Heading_Label = Label(Heading,text="---------ACCOUNT DETAILS---------",font="Orbitron-Bold 32 bold", bg='DarkGoldenrod1',fg='black')
 Heading_Label.pack()
 #------------------------------------Time and Date Widgets----------------------------------#
 def time_widget():
@@ -111,67 +52,75 @@ def time_widget():
     Time_Label.after(1000, time_widget)
 
 
-Time_Label = Label(root, fg="black", bg="DarkGoldenrod1",
-                   font="Helvetica 17 bold")
-Time_Label.place(x=955, y=48)
+timeFrame = Frame(root, bg='black', borderwidth=4, relief=SUNKEN)
+timeFrame.place(x=1352, y=70)
+Time_Label = Label(timeFrame, fg="black", bg="DarkGoldenrod1",
+                   font="Constantia 26 bold")
+Time_Label.pack()
 time_widget()
 
 
-date = Label(root, text=f"{dt.datetime.now():%A, %b/%d/%Y}", fg="black", bg="DarkGoldenrod1", font=(
-    "Helvetica 15 bold"))
-date.place(x=1, y=50)
+dateFrame = Frame(root, bg='DarkGoldenrod1',borderwidth=4, relief=SUNKEN)
+dateFrame.place(x=2, y=70)
+date = Label(dateFrame, text=f"{dt.datetime.now():%a, %b/%d/%Y}", fg="black", bg="DarkGoldenrod1",
+    font="Constantia 26 bold")
+date.pack()
 #-----------------------------------------Tree View------------------------------------------#
-tv_Frame = Frame(root, width=320, height=500,borderwidth=6,relief=SUNKEN)
-tv_Frame.place(x=70, y=100)
+tv_Frame = Frame(root, width=640, height=480,borderwidth=6,relief=SUNKEN)
+tv_Frame.place(x=230, y=150)
 
 y_scroll = Scrollbar(tv_Frame, orient=VERTICAL)
 x_scroll = Scrollbar(tv_Frame, orient=HORIZONTAL)
-tree_v = ttk.Treeview(tv_Frame,height=25,selectmode="extended")
+tree_v = ttk.Treeview(tv_Frame,height=28,selectmode="extended")
 y_scroll.pack(side=RIGHT, fill=Y)
 x_scroll.pack(side=BOTTOM, fill=X)
-tree_v['columns'] = ("Serial Number","Name","Amount","Date")
+tree_v['columns'] = ("Name","Date","Amount","Total Amount","Loan Taken")
 #name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate
 # ~TreeView Styling~
 style = ttk.Style()
 style.theme_use("clam")
-style.configure("Treeview.Heading", font="Consolas 10 bold ",fieldbackground='hotDarkGoldenrod1')
+style.configure("Treeview.Heading", font="Orbitron-Bold 15 bold ",fieldbackground='hotDarkGoldenrod1')
 style.configure("Treeview",fieldbackground="white")
 style.map('Treeview',background=[('selected','DarkGoldenrod1')])
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 tree_v.column('#0', width=0, stretch=NO)
-tree_v.column('Serial Number', anchor=CENTER, width=140)
-tree_v.column('Name', anchor=CENTER, width=200)
-tree_v.column('Amount', anchor=CENTER, width=120)
-tree_v.column('Date', anchor=CENTER, width=148)
-# tree_v.column('Loan Taken', anchor=CENTER, width=125)
+tree_v.column('Name', anchor=CENTER, width=150)
+tree_v.column('Date', anchor=CENTER, width=140)
+tree_v.column('Amount', anchor=CENTER, width=150)
+tree_v.column('Total Amount', anchor=CENTER, width=178)
+tree_v.column('Loan Taken', anchor=CENTER, width=175)
 
 tree_v.heading('#0', anchor=CENTER,text='')
-tree_v.heading('Serial Number', anchor=CENTER, text="Serial Number")
 tree_v.heading('Name', anchor=CENTER, text="Name")
-tree_v.heading('Amount', anchor=CENTER, text="Amount")
 tree_v.heading('Date', anchor=CENTER, text="Date")
-# tree_v.heading('Loan Taken', anchor=CENTER, text="Loan Taken")
+tree_v.heading('Amount', anchor=CENTER, text="Amount")
+tree_v.heading('Total Amount', anchor=CENTER, text="Total Amount")
+tree_v.heading('Loan Taken', anchor=CENTER, text="Loan Taken")
 
 tree_v.pack(fill=X)
 
 # while True:
 #     sleep(60 - time() % 60)
-tree_v.bind('<ButtonRelease-1>',do_press)
-display()
+tree_v.bind('<ButtonRelease-1>')
+# display()
 #------------Buttons-------------#
-btn_Frame = Frame(root,bg='SpringGreen4',height = 280,width =160,borderwidth=4,relief=SUNKEN)
-btn_Frame.place(x=860,y=190)
-sync_up = Button(btn_Frame,text='Sync Up',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1', command= sync_on)
-sync_down = Button(btn_Frame,text='Sync Down',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1',command = sync_off)
-# DataEntry = Button(btn_Frame,text='Data Entry',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1')
-HomePage = Button(btn_Frame,text='Home Page',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1',command=home)
-Refresh = Button(btn_Frame,text='Refresh',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1', command= refresh)
-sync_up.place(x=12,y=20)
-sync_down.place(x=12, y=85)
-# DataEntry.place(x=12, y=150)
-HomePage.place(x=12, y=150)
-Refresh.place(x=12, y=215)
-
+btn_Frame = Frame(root,bg='DarkGoldenrod1',height = 520,width =280,borderwidth=4,relief=SUNKEN)
+btn_Frame.place(x=1057,y=190)
+sync_up = Button(btn_Frame,text='Sync Up',font="Orbitron-Bold 25 bold",borderwidth=4,relief=RAISED,
+                 height=0,width=9,bg='navy', fg='white')
+sync_down = Button(btn_Frame,text='Sync Down',font="Orbitron-Bold 25 bold",borderwidth=4,relief=RAISED,
+                   height=0,width=9,bg='navy', fg='white')
+DataEntry = Button(btn_Frame,text='Data Entry',font="Orbitron-Bold 25 bold",borderwidth=4,relief=RAISED,
+                   height=0,width=9,bg='navy', fg='white')
+HomePage = Button(btn_Frame,text='Home Page',font="Orbitron-Bold 25 bold",borderwidth=4,relief=RAISED,
+                  height=0,width=9,bg='navy', fg='white')
+Refresh = Button(btn_Frame,text='Refresh',font="Orbitron-Bold 25 bold",borderwidth=4,relief=RAISED,
+                 height=0,width=9,bg='navy', fg='white')
+sync_up.place(x=23,y=20)
+sync_down.place(x=23, y=120)
+DataEntry.place(x=23, y=220)
+HomePage.place(x=23, y=320)
+Refresh.place(x=23, y=420)
 
 root.mainloop()
