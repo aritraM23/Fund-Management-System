@@ -44,12 +44,12 @@ def home():
     _thread.exit_thread()
 def totalLoanDetials():
 
-    engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/ivsLoan')
+    engine = sqlalchemy.create_engine('mysql+pymysql://root:mancunian@2002@localhost:3306/ivsLoan')
     totalLoan = pd.read_sql_table('loanentry', engine, columns=['pricipalAmount'])
     totalLoanReceived = pd.read_sql_table('loanentry', engine, columns=['principleLeft'])
     totalLoanLeft = pd.read_sql_table('loanentry', engine, columns=['principleLeft'])
     totalInterestReceived = pd.read_sql_table('loanentry', engine, columns=['InterestPaidTillDate'])
-    engine2 = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/ivs2')
+    engine2 = sqlalchemy.create_engine('mysql+pymysql://root:mancunian@2002@localhost:3306/ivs2')
     totalMoney = pd.read_sql_table('dataentry', engine2, columns=['amount'])
     
     totalLoan = str(totalLoan.sum(axis=0)).split('\n')[0][18:]
@@ -59,10 +59,10 @@ def totalLoanDetials():
     totalLoanReceived = str(totalLoanReceived.sum(axis=0)).split('\n')[0][17:]
     loanReceived = float(totalLoan)-float(totalLoanReceived)
     return totalLoan,totalMoney,totalInterestReceived,totalLoanLeft,loanReceived
-print(totalLoanDetials())
+# print(totalLoanDetials())
 
 def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                          database='ivsLoan')
             mycursor = myDataBase.cursor()
             mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
@@ -91,7 +91,7 @@ def loanRepay(j,k):
     import Loan_RepayPage
 
 def sync_up():
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                          database='ivsLoan')
     mycursor = myDataBase.cursor()
     totalData = db.child('loanData').get()
@@ -108,7 +108,7 @@ def sync_up():
 
 def sync_down():
     try:
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
         db.child('loanData').remove()
@@ -155,6 +155,28 @@ dateFrame.place(x=2, y=66)
 date = Label(dateFrame, text=f"{dt.datetime.now():%a, %b/%d/%Y}", fg="black", bg="DarkGoldenrod1", font=(
     "Constantia 25 bold"))
 date.pack()
+
+loanDetails = Frame(root, bg='DarkGoldenrod1', borderwidth=5, relief=SUNKEN)
+loanDetails.place(x=450, y=66)
+
+totalLoan,totalMoney,totalInterestReceived,totalLoanLeft,loanReceived = totalLoanDetials()
+loanT = Label(loanDetails, text='Total Loan : '+str(totalLoan), fg="black", bg="DarkGoldenrod1", font=(
+    "Constantia 12 bold"))
+loanT.pack()
+loanT = Label(loanDetails, text='Total Money : '+str(totalMoney), fg="black", bg="DarkGoldenrod1", font=(
+    "Constantia 12 bold"))
+loanT.pack()
+loanT = Label(loanDetails, text='Total Interest Received : '+str(totalInterestReceived), fg="black", bg="DarkGoldenrod1", font=(
+    "Constantia 12 bold"))
+loanT.pack()
+loanT = Label(loanDetails, text='Total Loan Left : '+str(totalLoanLeft), fg="black", bg="DarkGoldenrod1", font=(
+    "Constantia 12 bold"))
+loanT.pack()
+loanT = Label(loanDetails, text='Total Loan Received : '+str(loanReceived), fg="black", bg="DarkGoldenrod1", font=(
+    "Constantia 12 bold"))
+loanT.pack()
+
+
 #-----------------------------------------Tree View------------------------------------------#
 tv_Frame = Frame(root, width=640, height=500,borderwidth=7,relief=SUNKEN)
 tv_Frame.place(x=85,y=200)
@@ -202,7 +224,7 @@ tree_v.pack(fill=X)
 # while True:
 #     sleep(60 - time() % 60)
 tree_v.bind('<ButtonRelease-1>')
-display()
+# display()
 #-----------------------------Footer Frame& buttons-----------------------------------#
 btn_frame = Frame(root, borderwidth=5, relief=SUNKEN, bg='black',width=250, height=600)
 btn_frame.place(x=1225, y=250)
