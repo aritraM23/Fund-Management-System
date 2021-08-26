@@ -60,6 +60,7 @@ def totalLoanDetials():
     loanReceived = float(totalLoan)-float(totalLoanReceived)
     return totalLoan,totalMoney,totalInterestReceived,totalLoanLeft,loanReceived
 print(totalLoanDetials())
+
 def display():
             myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                          database='ivsLoan')
@@ -201,7 +202,7 @@ tree_v.pack(fill=X)
 # while True:
 #     sleep(60 - time() % 60)
 tree_v.bind('<ButtonRelease-1>')
-# display()
+display()
 #-----------------------------Footer Frame& buttons-----------------------------------#
 btn_frame = Frame(root, borderwidth=5, relief=SUNKEN, bg='black',width=250, height=600)
 btn_frame.place(x=1225, y=250)
