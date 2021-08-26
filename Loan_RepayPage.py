@@ -63,19 +63,19 @@ def delete():
 				print(datas.val()['name'])
 				db.child('loanData').child(datas.key()).remove()
 				deleteSum = deleteSum + 1
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
-			mycursor = myDataBase.cursor()
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsloan')
+		mycursor = myDataBase.cursor()
 
-			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
-					name_entry.get(),
-					mob_entry.get()
-				))
-			myDataBase.commit()
-			myDataBase.close()
-			deleteSum += 1
-			if deleteSum == 3:
+		mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
+				name_entry.get(),
+				mob_entry.get()
+			))
+		myDataBase.commit()
+		myDataBase.close()
+		deleteSum += 1
+		if deleteSum == 2:
 				tkinter.messagebox.showinfo('Delete Info','Delete Success')
-			if (deleteSum <= 3):
+		elif (deleteSum < 2):
 				tkinter.messagebox.showerror('Delete Info','Delete Failure')
 
 	except:
@@ -89,7 +89,7 @@ def delete():
 				))
 			myDataBase.commit()
 			myDataBase.close()
-			
+			tkinter.messagebox.showinfo('Delete Info', 'Delete Success')
 		except Exception as err:
 			tkinter.messagebox.showerror(name_entry.get(),err)
 
