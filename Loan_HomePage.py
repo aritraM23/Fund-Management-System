@@ -26,27 +26,27 @@ root.state('zoomed')
 root.config(bg="navy")
 root.resizable(0,0)
 root.title("Loan Window")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(master=root,file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(False,p1)
 
 
 name_entry = StringVar()
 mob_entry = StringVar()
-
+import _thread
 def back():
-    import _thread
     _thread.exit_thread()
 def displayLoan():
-    root.destroy()
+    _thread.start_new_thread(displayL, (1,3))
+def displayL(j,k):
     import LoanTreeView
 
 def new():
-    root.destroy()
+    _thread.start_new_thread(newLoanPage, (1,2))
+def newLoanPage(l,a):
     import NewLoan
-
-
 def depo():
-    root.destroy()
+    _thread.start_new_thread(newDepo, (1,2))
+def newDepo(j,k):
     import Loan_RepayPage
 
 def updateText(data):
@@ -134,7 +134,7 @@ def bal():
 def sync_up():
     
     totalData = db.child('loanData').get()
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",database='ivsLoan')
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",database='ivsLoan')
     mycursor = myDataBase.cursor()
     mycursor.execute('Delete From loanEntry')
     for data in totalData.each():
@@ -149,7 +149,7 @@ def sync_up():
 def sync_down():
     try:
         db.child('loanData').remove()
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#", database='ivsLoan')
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsLoan')
         mycursor = myDataBase.cursor()
         query = 'Select * from loanEntry'
         mycursor.execute(query)

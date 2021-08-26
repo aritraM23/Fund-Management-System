@@ -63,14 +63,13 @@ def delete():
 				print(datas.val()['name'])
 				db.child('loanData').child(datas.key()).remove()
 				deleteSum = deleteSum + 1
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 			mycursor = myDataBase.cursor()
 
 			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
 					name_entry.get(),
 					mob_entry.get()
 				))
-			deleteSum += 1
 			myDataBase.commit()
 			myDataBase.close()
 			deleteSum += 1
@@ -81,7 +80,7 @@ def delete():
 
 	except:
 		try:
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 			mycursor = myDataBase.cursor()
 
 			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
@@ -90,6 +89,7 @@ def delete():
 				))
 			myDataBase.commit()
 			myDataBase.close()
+			
 		except Exception as err:
 			tkinter.messagebox.showerror(name_entry.get(),err)
 
@@ -135,25 +135,29 @@ def repay():
 															   'interestLeft': newInterst,
 															   'interestPaidTillDate': interestPaidTillDates,
 															   'lastPaidDate': updateDate})
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		mycursor.execute(
 			'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
 			(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
+		myDataBase.commit()
+		myDataBase.close()
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added')
 	except:
 		tkinter.messagebox.showinfo('No Internet',
 									'You are offline. Saving your data offline. Please sync your databases later')
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute(
 				'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
 				(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
+		
+		myDataBase.commit()
+		myDataBase.close()
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added In Local DataBase. Please sync later')
-
 def updateText(data):
     #update the drop down list
     # Clear the listbox

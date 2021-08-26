@@ -8,16 +8,12 @@ import tkinter.messagebox
 import os
 from time import strftime
 from datetime import datetime
-import threading
 import time
 import pyrebase
 import mysql.connector
 from envVar import firebaseConfig as fc
 from envVar import mycursor, myDataBase
 from PIL.ImageTk import PhotoImage
-import sys
-if "Tkinter" not in sys.modules:
-	from tkinter import *
 firebase = pyrebase.initialize_app(fc)
 db = firebase.database()
 
@@ -144,7 +140,9 @@ def ind_import():
 # indiv.gui(tkinter.Tk())
 
 def display_all():
-	pass
+	_thread.start_new_thread(accountsInfo,(1,2))
+def accountsInfo(j,k):
+	import treeViewAccounts
 def back():
 	_thread.exit_thread()
 	
@@ -355,7 +353,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
 			datas = [(serialNumber, name, amount, date)]
@@ -363,7 +361,7 @@ def saveData():
 			mycursor.executemany(dataCollection, datas)
 			myDataBase.commit()
 			myDataBase.close()
-			succesMsg('Success','Data Inserted')
+			display()
 		
 		else:
 			alertMssg('Error', 'Insert Data In All Fields')
@@ -414,7 +412,7 @@ def update():
 							 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -436,7 +434,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -530,10 +528,10 @@ def alertMssg(heading,msg):
 
 def display():
 	
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
-	mycursor.execute("select * from dataEntry")
+	mycursor.execute("select * from dataEntry ORDER BY serialNumber DESC")
 	result = mycursor.fetchall()
 	if len(result) != 0:
 		display_data.delete(*display_data.get_children())
@@ -546,7 +544,7 @@ def display():
 def delete():
 	
 	try:
-		print(SerialNumber.get())
+		
 		deleteData = 0
 		totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
 	
@@ -558,20 +556,25 @@ def delete():
 		allUserDataBase = db.child('mainData').get()
 		for datas in allUserDataBase.each():
 			if datas.val()['name'] == Name.get() and datas.val()['date'] == Date.get():
-				print(datas.val()['name'])
+		
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
 			SerialNumber.get()
 		))
+		
+
+		
+		
 		deleteData += 1
 		myDataBase.commit()
 		myDataBase.close()
 		deleteData += 1
 		if deleteData == 3:
+			print(totta)
 			succesMsg('Delete Info','Delete Success')
 		if (deleteData <= 3):
 			alertMssg('Delete Info','Delete Failure')
@@ -579,7 +582,7 @@ def delete():
 		try:
 #					print(type(SerialNumber.get()))
 
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
 				Name.get(),
