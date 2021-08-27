@@ -51,7 +51,7 @@ def switch():
 	if btnState is True:
 		for x in range(300):
 			navRoot.place(x=-x, y=0)
-			TitleFrame.update()
+			top_frame.update()
 		
 		btnState = False
 	
@@ -59,7 +59,7 @@ def switch():
 		
 		for x in range(-300, 0):
 			navRoot.place(x=x, y=0)
-			TitleFrame.update()
+			top_frame.update()
 		
 		btnState = True
 
@@ -243,10 +243,10 @@ def updateText(data):
 def fillout(event):
 	# Delete whatever is in the entry box
 	try:
-		entName.delete(0, END)
+		nameEntry.delete(0, END)
 		
 		# Add clicked list item to entry box
-		entName.insert(0, my_list.get(ANCHOR))
+		nameEntry.insert(0, my_list.get(ANCHOR))
 	except:
 		pass
 def check(event):
@@ -309,6 +309,10 @@ dateEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwi
 				relief=SUNKEN, width=27, textvariable=Date)
 dateEntry.place(x=300, y=230)
 
+listboxFrame = Frame(rightFrame, bg='navy', width=340, height=200)
+listboxFrame.place(x=0, y=0)
+my_list = Listbox(listboxFrame, font=('Constantia', 20, 'bold'), height=6, width=21, justify='left')
+my_list.pack()
 
 listVal = []
 
@@ -332,10 +336,10 @@ listVal = getNameList()
 updateText(listVal)
 
 # Create a binding on the listbox onclick
-# my_list.bind("<<ListboxSelect>>", fillout)
+my_list.bind("<<ListboxSelect>>", fillout)
 #
 # # Create a binding on the entry box
-# entName.bind("<KeyRelease>", check)
+nameEntry.bind("<KeyRelease>", check)
 
 # entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
 # entname.grid(row=2, column=1, sticky=W, padx=2)
@@ -362,34 +366,34 @@ updateText(listVal)
 # nav bar
 # navIcon = PhotoImage(master = root,file='navbar.png')
 # closeIcon = PhotoImage(master= root,file='exit.png')
-#
-# nvbarbtn = Button(TitleFrame, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).grid(
+
+# nvbarbtn = Button(top_frame, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).grid(
 # 	row=0, column=0, padx=0, pady=0)
 # navRoot = Frame(root, bg='Navy', height=500, width=200)
 # navRoot.place(x=-300, y=0)
-#
+# #
 # Label(navRoot, text="Menu", font='arial 10 bold', bg='DarkGoldenrod1', fg='Navy', height=3, width=200,
 # 	  padx=0).place(x=0, y=0)
-#
+
 # y = 80
-#
+
 # options = ["Export All", "Import Individual", "About"]
 # methods = [export, ind_import, about, back]
-#
+
 # navExp = Button(navRoot, text="Export All", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
 # 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=export).place(x=25,
 # 																									y=y)
 # y += 40
-#
+
 # navInd = Button(navRoot, text="Import Individual", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
 # 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=ind_import).place(x=25,
 # 																										y=y)
 # y += 40
-#
+
 # navAbt = Button(navRoot, text="Back", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
 # 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=back).place(x=25,
 # 																								  y=y)
-#
+
 # closeBtn = Button(navRoot, image = closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
 # 					   command=switch)
 # closeBtn.place(x=150, y=20)
@@ -417,34 +421,43 @@ def saveData():
 		tday, tm, ty = date.split(".")
 		mdate = tday + "/" + tm + "/" + ty
 		date = mdate
-	try:
-		if (Name.get() != '' and Date.get() != '' and Amount.get() != ''):
-			datas = {'serialNumber': serialNumber, 'name': name, 'amount': amount, 'date': date}
-			db.child('mainData').push(datas)
-			db.child('registerUserExp').child(name).push(datas)
-			listVal = getNameList()
-			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#", database='ivs2')
-			mycursor = myDataBase.cursor()
+		
+	accData = db.child('mainData').get()
+	countSave = 0
+	for data in accData.each():
+		if (serialNumber == data.val()['serialNumber'] and name == data.val()['name']):
+			tkinter.messagebox.showinfo("Data Error!", "Name already exists!!")
+		else:
+			countSave = 1
+	if countSave ==1:
+		try:
+			if (Name.get() != '' and Date.get() != '' and Amount.get() != ''):
+			    datas = {'serialNumber': serialNumber, 'name': name, 'amount': amount, 'date': date}
+			    db.child('mainData').push(datas)
+			    db.child('registerUserExp').child(name).push(datas)
+			    listVal = getNameList()
+			    updateText(listVal)
+			    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			    mycursor = myDataBase.cursor()
+			    dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
+			    datas = [(serialNumber, name, amount, date)]
+
+			    mycursor.executemany(dataCollection, datas)
+			    myDataBase.commit()
+			    myDataBase.close()
+			    tkinter.messagebox.showinfo('Success','Data Inserted')
+
+			else:
+			    tkinter.messagebox.showerror('Error', 'Insert Data In All Fields')
+		except:
+
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
 			datas = [(serialNumber, name, amount, date)]
-			
+
 			mycursor.executemany(dataCollection, datas)
 			myDataBase.commit()
 			myDataBase.close()
-			succesMsg('Success','Data Inserted')
-		
-		else:
-			alertMssg('Error', 'Insert Data In All Fields')
-	except:
-		
-		dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
-		datas = [(serialNumber, name, amount, date)]
-		
-		mycursor.executemany(dataCollection, datas)
-		myDataBase.commit()
-		myDataBase.close()
-		succesMsg('Offline','Data Inserted')
+			tkinter.messagebox.showinfo('Offline','Data Inserted')
 
 def update():
 	try:
@@ -483,7 +496,7 @@ def update():
 							 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -499,13 +512,13 @@ def update():
 		tempData += 1
 		
 		if tempData > 0:
-			succesMsg('Update Info', 'Data Updated' )
+			tkinter.messagebox.showinfo('Update Info', 'Data Updated' )
 		else:
-			alertMssg('Update Info', 'Problem Not Updated')
+			tkinter.messagebox.showerror('Update Info', 'Problem Not Updated')
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -521,12 +534,12 @@ def update():
 		myDataBase.close()
 		tempData += 1
 		if tempData >= 3:
-			succesMsg('Update Info', e)
+			tkinter.messagebox.showinfo('Update Info', e)
 		else:
-			alertMssg('Update Info', 'Problem Not Updated')
+			tkinter.messagebox.showerror('Update Info', 'Problem Not Updated')
 
 def search():
-	sum = 0
+	search_Sum = 0
 	callAll = 'all'
 	totalData = db.child('mainData').get()
 	loanDB = db.child('loanData').get()
@@ -579,13 +592,13 @@ def search():
 					else:
 						write.writerow([data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
 						files.close()
-					sum += 1
+					search_Sum += 1
 	
-	if sum > 0:
+	if search_Sum > 0:
 		os.system('data.csv')
 	
-	if sum == 0:
-		alertMssg()
+	if search_Sum == 0:
+		alertMssg("Search error!", "No data found!!")
 
 def succesMsg(heading,msg):
 	tkinter.messagebox.showinfo(heading, msg)
@@ -599,7 +612,7 @@ def alertMssg(heading,msg):
 
 def display():
 	
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry")
@@ -630,7 +643,7 @@ def delete():
 				print(datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -648,7 +661,7 @@ def delete():
 		try:
 #					print(type(SerialNumber.get()))
 
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="Anik123#", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
 				Name.get(),
@@ -673,10 +686,10 @@ def TrainInfo(ev):
 	Date.set(row[3])
 
 def reset():
-	entserial.delete(0, END)
-	entName.delete(0, END)
-	entamount.delete(0, END)
-	entDate.delete(0, END)
+	snEntry.delete(0, END)
+	nameEntry.delete(0, END)
+	amountEntry.delete(0, END)
+	dateEntry.delete(0, END)
 
 def sync_on():
 
@@ -748,10 +761,7 @@ tree_v.heading('Date', anchor=CENTER, text="Date")
 tree_v.pack(fill=X)
 tree_v.bind('<ButtonRelease-1>')
 #=======================================================================================#
-listboxFrame = Frame(rightFrame, bg='navy', width=340, height=200)
-listboxFrame.place(x=0, y=0)
-my_list = Listbox(listboxFrame, font=('Constantia', 20, 'bold'), height=6, width=21, justify='left')
-my_list.pack()
+
 # y_scroll = Scrollbar(treevFrame, orient=VERTICAL)
 # display_data = ttk.Treeview(leftFrame, height=18,
 # 							columns=('Serial Number', 'Name', 'Amount', 'Date'),
@@ -830,4 +840,3 @@ syndownbtn.pack()
 
 # if __name__ == '__main__':
 root.mainloop()
-
