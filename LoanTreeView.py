@@ -42,14 +42,17 @@ PaidInterest = StringVar()
 Date = StringVar()
 def home():
     _thread.exit_thread()
+from numba import njit
+import time
+
 def totalLoanDetials():
 
-    engine = sqlalchemy.create_engine('mysql+pymysql://root:mancunian@2002@localhost:3306/ivsLoan')
+    engine = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/ivsLoan')
     totalLoan = pd.read_sql_table('loanentry', engine, columns=['pricipalAmount'])
     totalLoanReceived = pd.read_sql_table('loanentry', engine, columns=['principleLeft'])
     totalLoanLeft = pd.read_sql_table('loanentry', engine, columns=['principleLeft'])
     totalInterestReceived = pd.read_sql_table('loanentry', engine, columns=['InterestPaidTillDate'])
-    engine2 = sqlalchemy.create_engine('mysql+pymysql://root:mancunian@2002@localhost:3306/ivs2')
+    engine2 = sqlalchemy.create_engine('mysql+pymysql://root:12345@localhost:3306/ivs2')
     totalMoney = pd.read_sql_table('dataentry', engine2, columns=['amount'])
     
     totalLoan = str(totalLoan.sum(axis=0)).split('\n')[0][18:]
@@ -62,7 +65,7 @@ def totalLoanDetials():
 # print(totalLoanDetials())
 
 def display():
-            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                          database='ivsLoan')
             mycursor = myDataBase.cursor()
             mycursor.execute("select name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate, dateGiven from loanEntry")
@@ -91,7 +94,7 @@ def loanRepay(j,k):
     import Loan_RepayPage
 
 def sync_up():
-    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                          database='ivsLoan')
     mycursor = myDataBase.cursor()
     totalData = db.child('loanData').get()
@@ -105,10 +108,10 @@ def sync_up():
     myDataBase.close()
     display()
 
-
+@njit
 def sync_down():
     try:
-        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+        myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
                                              database='ivsLoan')
         mycursor = myDataBase.cursor()
         db.child('loanData').remove()

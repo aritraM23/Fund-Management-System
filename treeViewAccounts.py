@@ -29,7 +29,7 @@ root.geometry("1100x700+290+55")
 root.minsize(1100,700)
 root.maxsize(1100,700)
 root.title("IVS/Loan/LoanDetails")
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(master=root,file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 #---------------------------Functions--------------------------------#
 Name = StringVar()

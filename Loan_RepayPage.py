@@ -96,9 +96,9 @@ def delete():
 def repay():
 	
 	name = name_entry.get()
-	print(name)
+	
 	mobileNumber = mob_entry.get()
-	print(mobileNumber)
+	
 	principlePaid = p_entry.get()
 	interestPaid = i_entry.get()
 	updateDate = date_L.get()
@@ -145,8 +145,7 @@ def repay():
 		myDataBase.close()
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added')
 	except:
-		tkinter.messagebox.showinfo('No Internet',
-									'You are offline. Saving your data offline. Please sync your databases later')
+		tkinter.messagebox.showinfo('No Internet', 'You are offline. Saving your data offline. Please sync your databases later')
 		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
