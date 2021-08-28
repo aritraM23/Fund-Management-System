@@ -38,10 +38,10 @@ QName = StringVar()
 sumDep = 0
 
 
-def times():
-	current_time = time.strftime("%I:%M:%S")
-	clock.config(text=current_time)
-	clock.after(200, times)
+# def times():
+# 	current_time = time.strftime("%I:%M:%S")
+# 	clock.config(text=current_time)
+# 	clock.after(200, times)
 
 
 btnState = False
@@ -151,6 +151,10 @@ def ind_import():
 def about():
 	pass
 
+def display_all():
+	_thread.start_new_thread(accountsInfo,(1,2))
+def accountsInfo(j,k):
+	import treeViewAccounts
 
 def back():
 	_thread.exit_thread()
@@ -379,39 +383,43 @@ nameEntry.bind("<KeyRelease>", check)
 # ===============================================================================================================================================================================================
 
 # nav bar
-# navIcon = PhotoImage(master = root,file='navbar.png')
-# closeIcon = PhotoImage(master= root,file='exit.png')
+navIcon = PhotoImage(master = root,file='navbar.png')
+closeIcon = PhotoImage(master= root,file='exit.png')
 
-# nvbarbtn = Button(top_frame, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).grid(
-# 	row=0, column=0, padx=0, pady=0)
-# navRoot = Frame(root, bg='Navy', height=500, width=200)
-# navRoot.place(x=-300, y=0)
-# #
-# Label(navRoot, text="Menu", font='arial 10 bold', bg='DarkGoldenrod1', fg='Navy', height=3, width=200,
-# 	  padx=0).place(x=0, y=0)
+nvbarbtn = Button(root, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).place(x=5, y = 75)
+navRoot = Frame(root, bg='DarkGoldenrod1', height=500, width=200)
+navRoot.place(x=-300, y=0)
+#
+Label(navRoot, text="Menu", font='arial 10 bold', bg='Navy', fg='Navy', height=3, width=200,
+	  padx=0).place(x=0, y=0)
 
-# y = 80
+y = 80
 
-# options = ["Export All", "Import Individual", "About"]
-# methods = [export, ind_import, about, back]
+options = ["Export All", "Import Individual", "Display All", "Back"]
+methods = [export, ind_import, display_all, back]
 
-# navExp = Button(navRoot, text="Export All", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
-# 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=export).place(x=25,
-# 																									y=y)
-# y += 40
+navExp = Button(navRoot, text="Export All", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=export).place(x=25,
+																									y=y)
+y += 40
 
-# navInd = Button(navRoot, text="Import Individual", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
-# 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=ind_import).place(x=25,
-# 																										y=y)
-# y += 40
+navInd = Button(navRoot, text="Import Individual", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=ind_import).place(x=25,
+																										y=y)
+y += 40
 
-# navAbt = Button(navRoot, text="Back", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
-# 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=back).place(x=25,
-# 																								  y=y)
+navInd = Button(navRoot, text="Display All", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=display_all).place(x=25,
+																										y=y)
+y += 40
 
-# closeBtn = Button(navRoot, image = closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
-# 					   command=switch)
-# closeBtn.place(x=150, y=20)
+navAbt = Button(navRoot, text="Back", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=back).place(x=25,
+																								  y=y)
+
+closeBtn = Button(navRoot, image = closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
+					   command=switch)
+closeBtn.place(x=150, y=20)
 
 # ===============================================================================================================================================================================================
 # The functions:
@@ -449,7 +457,7 @@ def saveData():
 	
 	except:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		query = 'Select * from dataEntry'
@@ -469,7 +477,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -531,7 +539,7 @@ def update():
 					 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -553,7 +561,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -653,7 +661,7 @@ def alertMssg(heading, msg):
 
 
 def display():
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry order by serialnumber DESC")
@@ -682,7 +690,7 @@ def delete():
 				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -700,7 +708,7 @@ def delete():
 		try:
 			#					#(type(SerialNumber.get()))
 			
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
@@ -737,7 +745,7 @@ def reset():
 def sync_on():
 	try:
 		totalData = db.child('mainData').get()
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		mycursor.execute('Delete From dataEntry')
@@ -756,7 +764,7 @@ def sync_on():
 # if (databaseChoice == 'f'):
 def sync_off():
 	try:
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		db.child('mainData').remove()
