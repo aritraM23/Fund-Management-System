@@ -1,3 +1,4 @@
+import _thread
 from tkinter import *
 from tkinter import ttk
 from time import strftime
@@ -42,12 +43,11 @@ PaidInterest = StringVar()
 Date = StringVar()
 
 def home():
-    root.destroy()
-    import Homepage
+	_thread.exit_thread()
 
 def display():
 	
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry")
@@ -165,8 +165,8 @@ btn_Frame.place(x=860,y=190)
 sync_up = Button(btn_Frame,text='Sync Up',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1', command= sync_on)
 sync_down = Button(btn_Frame,text='Sync Down',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1',command = sync_off)
 # DataEntry = Button(btn_Frame,text='Data Entry',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1')
-HomePage = Button(btn_Frame,text='Home Page',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1',command=home)
-Refresh = Button(btn_Frame,text='Refresh',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1', command= refresh)
+HomePage = Button(btn_Frame,text='Refresh',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1',command=refresh)
+Refresh = Button(btn_Frame,text='Back',font="Helvetica 16 bold",borderwidth=4,relief=RAISED,height=0,width=9,bg='DarkGoldenrod1', command= home)
 sync_up.place(x=12,y=20)
 sync_down.place(x=12, y=85)
 # DataEntry.place(x=12, y=150)

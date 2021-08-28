@@ -457,7 +457,7 @@ def saveData():
 	
 	except:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		query = 'Select * from dataEntry'
@@ -477,7 +477,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -539,7 +539,7 @@ def update():
 					 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -561,7 +561,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -661,7 +661,7 @@ def alertMssg(heading, msg):
 
 
 def display():
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry order by serialnumber DESC")
@@ -690,7 +690,7 @@ def delete():
 				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -708,7 +708,7 @@ def delete():
 		try:
 			#					#(type(SerialNumber.get()))
 			
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
@@ -745,7 +745,7 @@ def reset():
 def sync_on():
 	try:
 		totalData = db.child('mainData').get()
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		mycursor.execute('Delete From dataEntry')
@@ -764,7 +764,7 @@ def sync_on():
 # if (databaseChoice == 'f'):
 def sync_off():
 	try:
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		db.child('mainData').remove()
