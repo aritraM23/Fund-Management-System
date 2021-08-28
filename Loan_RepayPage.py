@@ -63,7 +63,7 @@ def delete():
 				print(datas.val()['name'])
 				db.child('loanData').child(datas.key()).remove()
 				deleteSum = deleteSum + 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivsloan')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivsloan')
 		mycursor = myDataBase.cursor()
 
 		mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
@@ -80,7 +80,7 @@ def delete():
 
 	except:
 		try:
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 			mycursor = myDataBase.cursor()
 
 			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
@@ -96,9 +96,9 @@ def delete():
 def repay():
 	
 	name = name_entry.get()
-	
+	print(name)
 	mobileNumber = mob_entry.get()
-	
+	print(mobileNumber)
 	principlePaid = p_entry.get()
 	interestPaid = i_entry.get()
 	updateDate = date_L.get()
@@ -135,7 +135,7 @@ def repay():
 															   'interestLeft': newInterst,
 															   'interestPaidTillDate': interestPaidTillDates,
 															   'lastPaidDate': updateDate})
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		mycursor.execute(
@@ -145,8 +145,9 @@ def repay():
 		myDataBase.close()
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added')
 	except:
-		tkinter.messagebox.showinfo('No Internet', 'You are offline. Saving your data offline. Please sync your databases later')
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		tkinter.messagebox.showinfo('No Internet',
+									'You are offline. Saving your data offline. Please sync your databases later')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
 		
