@@ -90,6 +90,7 @@ def export():
 
 
 def ind_import():
+	
 	def s_byname():
 		name = QName.get()
 		sumDep = 0
@@ -108,37 +109,37 @@ def ind_import():
 	# ind.maxsize("570x250")
 	# ind.resizable(False)
 	
-	mainFrame = Frame(ind, bd=10, width=500, height=370, relief=RIDGE, bg='DarkGoldenrod1')
-	mainFrame.place(x=500, y=500)
+	mainFrame = Frame(ind, bd=10, width=500, height=370, relief=SUNKEN, bg='DarkGoldenrod1')
+	mainFrame.grid()
 	
 	# labelMain = Label(ind, bd=7, width=500, height=400, bg='DarkGoldenrod1')
 	# labelMain.grid(row = 0, column = 0)
-	topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RIDGE, bg='DarkGoldenrod1')
+	topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RAISED, bg='DarkGoldenrod1')
 	topFrame.grid(row=1, column=0)
 	
-	indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='DarkGoldenrod1')
+	indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='Navy')
 	indtitleFrame.grid(row=0, column=0)
 	
-	indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), fg='Navy',
-					 text="Import Individual Data by Name:", bd=7, bg='DarkGoldenrod1')
+	indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), bg='Navy',
+						  text="Import Individual Data by Name:", bd=7, fg='DarkGoldenrod1')
 	indtitle.grid(row=0, column=1, padx=70)
 	
 	indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-					 textvariable=QName)
+						  textvariable=QName)
 	indEntry.grid(row=0, column=0, padx=5)
 	
 	Label(topFrame, font=('Arial', 18, 'bold'), text=" ", bd=3, bg='DarkGoldenrod1').grid(row=1, column=0,
-																						  padx=70)
+																				 padx=70)
 	
-	Button(topFrame, font=('arial', 13, 'bold'), text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
+	Button(topFrame, font=('arial', 13, 'bold'), fg = 'DarkGoldenrod1',text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
 		   bg='Navy', command=s_byname).grid(row=2, column=0, padx=1)
 	
 	output = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-				   bg='DarkGoldenrod1', fg='Navy', text="Total Output:")
+						bg='DarkGoldenrod1', fg='Navy', text="Total Output:")
 	output.grid(row=3, column=0, padx=5)
 	
 	deposit = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-					bg='DarkGoldenrod1', fg='Navy', text=str(sumDep))
+						 bg='DarkGoldenrod1', fg='Navy', text=str(sumDep))
 	deposit.grid(row=4, column=0, padx=5)
 
 
@@ -185,10 +186,10 @@ time_widget()
 mainFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=8, relief=SUNKEN,
 				  width=1200, height=700)
 mainFrame.place(x=170, y=100)
-leftFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=RIDGE,
+leftFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=SUNKEN,
 				  width=850, height=700)
 leftFrame.pack(side=LEFT)
-rightFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=RIDGE,
+rightFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=SUNKEN,
 				   width=350, height=700)
 rightFrame.pack(side=RIGHT)
 # def time_widget():
@@ -457,7 +458,7 @@ def saveData():
 	
 	except:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		query = 'Select * from dataEntry'
@@ -477,7 +478,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -539,7 +540,7 @@ def update():
 					 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -561,7 +562,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -661,7 +662,7 @@ def alertMssg(heading, msg):
 
 
 def display():
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry order by serialnumber DESC")
@@ -690,7 +691,7 @@ def delete():
 				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -708,7 +709,7 @@ def delete():
 		try:
 			#					#(type(SerialNumber.get()))
 			
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
@@ -745,7 +746,7 @@ def reset():
 def sync_on():
 	try:
 		totalData = db.child('mainData').get()
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		mycursor.execute('Delete From dataEntry')
@@ -764,7 +765,7 @@ def sync_on():
 # if (databaseChoice == 'f'):
 def sync_off():
 	try:
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		db.child('mainData').remove()
