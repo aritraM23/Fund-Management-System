@@ -26,21 +26,27 @@ p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(FALSE, p1)
 
 
-def signUp(name, passwd, confirm):
-    if (passwd == confirm):
-        firebase = pyrebase.initialize_app(fc)
-        auth = firebase.auth()
-        auth.create_user_with_email_and_password(name, passwd)
-        tkinter.messagebox.showinfo('Success', "Register Successful")
-    else:
-        tkinter.messagebox.showerror('Error','The two passwords must be same!!')
-        quit()
+def signUp():
+        user_name = user_entry.get()
+        password = pass_entry.get()
+        confirm = cpass_entry.get()
+        if (password == confirm):
+
+            myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
+                                                 database='ivs2')
+            mycursor= myDataBase.cursor()
+            dataentry ='Insert into loginManager (username,passward) values(%s,%s)'
+            datas= [(user_name,password)]
+            mycursor.executemany(dataentry,datas)
+            myDataBase.commit()
+            myDataBase.close()
+            tkinter.messagebox.showinfo('Done','Welcome')
+            root.destroy()
+        else:
+            tkinter.messagebox.showerror('Error','The two passwords must be same!!')
+            quit()
 
 
-def New():
-    signUp(user_entry.get(), pass_entry.get(), cpass_entry.get())
-    root.destroy()
-    import DataEntry
 def back():
     root.destroy()
     import LoginPage
@@ -80,7 +86,7 @@ cpassword_entry = Entry(main_frame, borderwidth=3, font="Helvetica 19 bold", wid
 cpassword_entry.place(x=255, y=170)
 #------Buttons------#
 reg_btn = Button(main_frame, borderwidth=3, width=7, text="Register", bg='navy',
-                 fg='DarkGoldenrod1', relief=RIDGE, font="Helvetica 16 bold", command=New)
+                 fg='DarkGoldenrod1', relief=RIDGE, font="Helvetica 16 bold", command=signUp)
 reg_btn.place(x=170, y=250)
 quit_btn = Button(main_frame, borderwidth=3, width=7, text="Quit", bg='navy',
                   fg='DarkGoldenrod1', relief=RIDGE, font="Helvetica 16 bold", command=root.destroy)

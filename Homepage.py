@@ -228,8 +228,11 @@ def treasure():
 def AccountsPage():
     import _thread
     _thread.start_new(accountsPage, (1,2))
+	# root.destroy()
+	# import Accounts
 def accountsPage(w,e):
     import Accounts
+	
 def loadtransfer():
     import _thread
     _thread.start_new(LoanWindow,(1,2))
@@ -320,9 +323,9 @@ loanIcon = PhotoImage(master= root,file = "loan.png")
 
 accFrame = Frame(mainFrame, bg='black', borderwidth=5, relief=SUNKEN)
 accFrame.place(x=120, y=250)
-accounts=Button(accFrame,image = accIcon,bg='DarkGoldenrod1',font="Helvetica 16 bold",
+accountss=Button(accFrame,image = accIcon,bg='DarkGoldenrod1',font="Helvetica 16 bold",
                 borderwidth=4,relief=RIDGE, command= AccountsPage)
-accounts.pack()
+accountss.pack()
 loanFrame = Frame(mainFrame, bg='black', borderwidth=5, relief=SUNKEN)
 loanFrame.place(x=600, y=250)
 loan=Button(loanFrame,image = loanIcon,bg='DarkGoldenrod1',font="Helvetica 16 bold",

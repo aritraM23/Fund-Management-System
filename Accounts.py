@@ -30,17 +30,19 @@ root.title(210 * titlespace + "Money Management System")
 root.state('zoomed')
 root.config(bg='navy')
 root.resizable(0, 0)
-p1 = PhotoImage(master = root, file='[DIGICURE MAIN LOGO].png')
+p1 = PhotoImage(master=root,file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(False, p1)
 
 # clock function for live clock
 QName = StringVar()
 sumDep = 0
 
-SerialNumber = StringVar()
-Name = StringVar()
-Amount = StringVar()
-Date = StringVar()
+
+# def times():
+# 	current_time = time.strftime("%I:%M:%S")
+# 	clock.config(text=current_time)
+# 	clock.after(200, times)
+
 
 btnState = False
 
@@ -88,7 +90,6 @@ def export():
 
 
 def ind_import():
-	
 	def s_byname():
 		name = QName.get()
 		sumDep = 0
@@ -104,37 +105,48 @@ def ind_import():
 	ind = Toplevel(root)
 	ind.geometry("578x340+330+0")
 	ind.title(50 * titlespace + "Money Management System")
+	# ind.maxsize("570x250")
+	# ind.resizable(False)
 	
-	mainFrame = Frame(ind, bd=10, width=500, height=370, relief=SUNKEN, bg='DarkGoldenrod1')
-	mainFrame.grid()
+	mainFrame = Frame(ind, bd=10, width=500, height=370, relief=RIDGE, bg='DarkGoldenrod1')
+	mainFrame.place(x=500, y=500)
 	
-	topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RAISED, bg='DarkGoldenrod1')
+	# labelMain = Label(ind, bd=7, width=500, height=400, bg='DarkGoldenrod1')
+	# labelMain.grid(row = 0, column = 0)
+	topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RIDGE, bg='DarkGoldenrod1')
 	topFrame.grid(row=1, column=0)
 	
-	indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='Navy')
+	indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='DarkGoldenrod1')
 	indtitleFrame.grid(row=0, column=0)
 	
-	indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), bg='Navy',
-						  text="Import Individual Data by Name:", bd=7, fg='DarkGoldenrod1')
+	indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), fg='Navy',
+					 text="Import Individual Data by Name:", bd=7, bg='DarkGoldenrod1')
 	indtitle.grid(row=0, column=1, padx=70)
 	
 	indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-						  textvariable=QName)
+					 )
 	indEntry.grid(row=0, column=0, padx=5)
 	
 	Label(topFrame, font=('Arial', 18, 'bold'), text=" ", bd=3, bg='DarkGoldenrod1').grid(row=1, column=0,
-																				 padx=70)
+																						  padx=70)
 	
-	Button(topFrame, font=('arial', 13, 'bold'), fg = 'DarkGoldenrod1',text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
+	Button(topFrame, font=('arial', 13, 'bold'), text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
 		   bg='Navy', command=s_byname).grid(row=2, column=0, padx=1)
 	
 	output = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-						bg='DarkGoldenrod1', fg='Navy', text="Total Output:")
+				   bg='DarkGoldenrod1', fg='Navy', text="Total Output:")
 	output.grid(row=3, column=0, padx=5)
 	
 	deposit = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-						 bg='DarkGoldenrod1', fg='Navy', text=str(sumDep))
+					bg='DarkGoldenrod1', fg='Navy', text=str(sumDep))
 	deposit.grid(row=4, column=0, padx=5)
+
+
+# root.maxsize(460,350)
+# root.destroy()
+# import indiv
+# root.destroy()
+# indiv.gui(tkinter.Tk())
 
 def about():
 	pass
@@ -173,12 +185,57 @@ time_widget()
 mainFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=8, relief=SUNKEN,
 				  width=1200, height=700)
 mainFrame.place(x=170, y=100)
-leftFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=SUNKEN,
+leftFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=RIDGE,
 				  width=850, height=700)
 leftFrame.pack(side=LEFT)
-rightFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=SUNKEN,
+rightFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=RIDGE,
 				   width=350, height=700)
 rightFrame.pack(side=RIGHT)
+# def time_widget():
+#     string = strftime('%I:%M:%S %p')
+#     Time_Label.config(text=string)
+#     Time_Label.after(1000, time_widget)
+#
+#
+# timeFrame = Frame(root, bg='navy', borderwidth=5, relief=SUNKEN)
+# timeFrame.place(x=1355, y=66)
+# Time_Label = Label(timeFrame, fg="black", bg="DarkGoldenrod1",
+#                    font="Constantia 25 bold")
+# Time_Label.pack()
+# time_widget()
+#
+#
+# dateFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=5, relief=SUNKEN)
+# dateFrame.place(x=2, y=66)
+# date = Label(dateFrame, text=f"{dt.datetime.now():%a, %b/%d/%Y}", fg="black", bg="DarkGoldenrod1", font=(
+#     "Constantia 25 bold"))
+# date.pack()
+# MainFrame = Frame(root, bd=10, width=770, height=700, relief=RIDGE, bg='DarkGoldenrod1')
+# MainFrame.grid()
+#
+# TitleFrame = Frame(MainFrame, bd=7, width=770, height=100, bg='DarkGoldenrod1')
+# TitleFrame.grid(row=0, column=0)
+# TopFrame3 = Frame(MainFrame, bd=5, width=770, height=500, bg='Navy')
+# TopFrame3.grid(row=1, column=0)
+#
+# LeftFrame = Frame(TopFrame3, bd=5, width=770, height=500, padx=2, pady=0, bg='DarkGoldenrod1')
+# LeftFrame.pack(side=LEFT, expand=True, fill='both')
+# LeftFrame1 = Frame(LeftFrame, bd=5, width=770, height=180, padx=2, pady=0, bg='Navy')
+# LeftFrame1.pack(side=TOP, expand=True, fill='both')
+#
+# RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE, padx=2, bg='DarkGoldenrod1')
+# RightFrame.pack(side=RIGHT, expand=True, fill='both')
+# rightFrame = Frame(RightFrame, bd=5, width=40, height=90, padx=12, pady=4, bg='DarkGoldenrod1')
+# rightFrame.pack(side=TOP, expand=True, fill='both')
+#
+# lbltitle = Label(TitleFrame, font=('Arial', 33, 'bold'), fg='Navy', text="Money Management System", bd=7,
+# 					  bg='DarkGoldenrod1')
+# lbltitle.grid(row=0, column=1, padx=70)
+
+SerialNumber = StringVar()
+Name = StringVar()
+Amount = StringVar()
+Date = StringVar()
 
 
 # ===============================================================================================================================================================================================
@@ -229,30 +286,43 @@ def check(event):
 
 # Input Fields:
 
+# lblserial = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Serial Number', bd=13, bg='Navy')
+# lblserial.grid(row=1, column=0, sticky=W, padx=2)
+#
+# entserial = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left',
+# 					   textvariable=SerialNumber)
+# entserial.grid(row=1, column=1, sticky=W, padx=2)
+#
+# lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='Navy')
+# lblname.grid(row=2, column=0, sticky=W, padx=2)
+#
+# entName = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
+# entName.grid(row=2, column=1, sticky=W, padx=2)
+#
 
 serialNumber = Label(leftFrame, text='Serial Number', fg='black', bg='DarkGoldenrod1',
 					 font="Constantia 24 bold")
 serialNumber.place(x=25, y=20)
 snEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				relief=SUNKEN, width=27, textvariable=SerialNumber)
+				relief=SUNKEN, width=27)
 snEntry.place(x=300, y=20)
 name = Label(leftFrame, text='Name', fg='black', bg='DarkGoldenrod1',
 			 font="Constantia 24 bold")
 name.place(x=25, y=90)
 nameEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				  relief=SUNKEN, width=27, textvariable=Name)
+				  relief=SUNKEN, width=27)
 nameEntry.place(x=300, y=90)
 amount = Label(leftFrame, text='Amount', fg='black', bg='DarkGoldenrod1',
 			   font="Constantia 24 bold")
 amount.place(x=25, y=160)
 amountEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-					relief=SUNKEN, width=27, textvariable=Amount)
+					relief=SUNKEN, width=27)
 amountEntry.place(x=300, y=160)
 date = Label(leftFrame, text='Date', fg='black', bg='DarkGoldenrod1',
 			 font="Constantia 24 bold")
 date.place(x=25, y=230)
 dateEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				  relief=SUNKEN, width=27, textvariable=Date)
+				  relief=SUNKEN, width=27)
 dateEntry.place(x=300, y=230)
 
 listboxFrame = Frame(rightFrame, bg='navy', width=340, height=200)
@@ -261,6 +331,7 @@ my_list = Listbox(listboxFrame, font=('Constantia', 20, 'bold'), height=6, width
 my_list.pack()
 
 listVal = []
+
 
 def getNameList():
 	try:
@@ -288,6 +359,27 @@ my_list.bind("<<ListboxSelect>>", fillout)
 # # Create a binding on the entry box
 nameEntry.bind("<KeyRelease>", check)
 
+
+# entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
+# entname.grid(row=2, column=1, sticky=W, padx=2)
+
+# lblamount = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Amount', bd=13, bg='Navy')
+# lblamount.grid(row=4, column=0, sticky=W, padx=2)
+#
+# entamount = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left',
+# 					   textvariable=Amount)
+# entamount.grid(row=4, column=1, sticky=W, padx=2)
+#
+# lblDate = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Date', bd=13, bg='Navy')
+# lblDate.grid(row=5, column=0, sticky=W, padx=2)
+#
+# entDate = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Date)
+# entDate.grid(row=5, column=1, sticky=W, padx=2)
+
+# label for clock display
+# clock = Label(TitleFrame, font=("times", 15, "bold"), bg="DarkGoldenrod1", fg='Navy')
+# clock.grid(row=0, column=2, padx=0, pady=0)
+# times()
 # ===============================================================================================================================================================================================
 
 # nav bar
@@ -365,7 +457,7 @@ def saveData():
 	
 	except:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		query = 'Select * from dataEntry'
@@ -385,7 +477,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -447,7 +539,7 @@ def update():
 					 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -469,7 +561,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -569,7 +661,7 @@ def alertMssg(heading, msg):
 
 
 def display():
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry order by serialnumber DESC")
@@ -598,7 +690,7 @@ def delete():
 				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -616,7 +708,7 @@ def delete():
 		try:
 			#					#(type(SerialNumber.get()))
 			
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
@@ -653,7 +745,7 @@ def reset():
 def sync_on():
 	try:
 		totalData = db.child('mainData').get()
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		mycursor.execute('Delete From dataEntry')
@@ -672,7 +764,7 @@ def sync_on():
 # if (databaseChoice == 'f'):
 def sync_off():
 	try:
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		db.child('mainData').remove()
@@ -778,8 +870,10 @@ syndownbtn = Button(btnFrame, text='Sync Down', borderwidth=5, width=8, bg='Dark
 					relief=RAISED, font="Constantia 21 bold", command=sync_off)
 syndownbtn.pack()
 
+
 # ================================================================================================================================================================================================
 
 # Main:
+
 # if __name__ == '__main__':
 root.mainloop()

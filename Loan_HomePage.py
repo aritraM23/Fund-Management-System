@@ -45,8 +45,8 @@ def new():
 def newLoanPage(l,a):
     import NewLoan
 def depo():
-    _thread.start_new_thread(newDepo, (1,2))
-def newDepo(j,k):
+    _thread.start_new_thread(newDepo, (11,2))
+def newDepo(a,b):
     import Loan_RepayPage
 
 def updateText(data):
