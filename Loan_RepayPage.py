@@ -54,12 +54,12 @@ def monthlycalc(currentDate):
 
 def delete():
 	try:
-		name = name_entry.get()
-		mob = mob_entry.get()
+		name = nameEnt.get()
+		mob = mobile.get()
 		deleteSum = 0
 		loanDB = db.child('loanData').get()
 		for datas in loanDB.each():
-			if datas.val()['name']==name and datas.val()['mobileNumber']==mob:
+			if datas.val()['name']==nameEnt.get() and datas.val()['mobileNumber']==mobile.get():
 				print(datas.val()['name'])
 				db.child('loanData').child(datas.key()).remove()
 				deleteSum = deleteSum + 1
@@ -67,8 +67,8 @@ def delete():
 		mycursor = myDataBase.cursor()
 
 		mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
-				name_entry.get(),
-				mob_entry.get()
+				nameEnt.get(),
+				mobile.get()
 			))
 		myDataBase.commit()
 		myDataBase.close()
@@ -84,24 +84,24 @@ def delete():
 			mycursor = myDataBase.cursor()
 
 			mycursor.execute("delete from loanEntry where name=%s and mobileNumber=%s", (
-					name_entry.get(),
-					mob_entry.get()
+					nameEnt.get(),
+					mobile.get()
 				))
 			myDataBase.commit()
 			myDataBase.close()
 			tkinter.messagebox.showinfo('Delete Info', 'Delete Success')
 		except Exception as err:
-			tkinter.messagebox.showerror(name_entry.get(),err)
+			tkinter.messagebox.showerror(nameEnt.get(),err)
 
 def repay():
 	
-	name = name_entry.get()
+	name = nameEnt.get()
 	print(name)
-	mobileNumber = mob_entry.get()
+	mobileNumber = mobile.get()
 	print(mobileNumber)
-	principlePaid = p_entry.get()
-	interestPaid = i_entry.get()
-	updateDate = date_L.get()
+	principlePaid = principal.get()
+	interestPaid = interest.get()
+	updateDate = dateEnt.get()
 	
 	if name == 'ALL':
 		monthlycalc(updateDate)
@@ -112,7 +112,7 @@ def repay():
 		loanInfo = db.child('loanData').get()
 		for info in loanInfo.each():
 			print('calcuation started')
-			if (name == info.val()['name'] or mobileNumber == info.val()['mobileNumber']):
+			if (nameEnt.get() == info.val()['name'] or mobile.get() == info.val()['mobileNumber']):
 				
 				previousPrinciple = info.val()['principalLeft']
 				interstLeft = info.val()['interestLeft']
@@ -159,20 +159,23 @@ def repay():
 		myDataBase.close()
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added In Local DataBase. Please sync later')
 def updateText(data):
-    #update the drop down list
-    # Clear the listbox
-    my_list.delete(0, END)
+	try:
+		#update the drop down list
+		# Clear the listbox
+		my_list.delete(0, END)
 
-    # Add toppings to listbox
-    for item in data:
-        my_list.insert(END, item)
+		# Add toppings to listbox
+		for item in data:
+			my_list.insert(END, item)
+	except:
+		pass
 
 def fillout(event):
     # Delete whatever is in the entry box
-    name.delete(0, END)
+    nameEnt.delete(0, END)
 
     # Add clicked list item to entry box
-    name.insert(0, my_list.get(ANCHOR))
+    nameEnt.insert(0, my_list.get(ANCHOR))
 
 def check(event):
     # print("hello")
@@ -218,23 +221,26 @@ date_label = Label(root, bg='midnight blue', fg='gold',
 				   font="Helvetica 11 bold", text="Date")
 date_label.place(x=172, y=309)
 
-name = Entry(root, width=27, textvariable=name_entry,
+nameEnt = Entry(root, width=27, textvariable=name_entry,
 			 borderwidth=8, relief=SUNKEN, font="Helvetica 11 bold")
-name.place(x=230, y=131)
+nameEnt.place(x=230, y=131)
 
 my_list = Listbox(root, font =('arial', 13, 'bold'),height = 2, width=25, justify='left')
 my_list.place(x = 232, y=170)
 
 listVal = []
 def getNameList():
-    listVal = []
-    listname = db.child('loanData').get()
-    for each in listname.each():
-        print(each.val()['name'])
-        listVal.append(each.val()['name'])
+	try:
+		listVal = []
+		listname = db.child('loanData').get()
+		for each in listname.each():
+			print(each.val()['name'])
+			listVal.append(each.val()['name'])
 
-    listVal = list(set(listVal))
-    return listVal
+		listVal = list(set(listVal))
+		return listVal
+	except:
+		pass
 
 listVal = getNameList()
 
@@ -244,7 +250,7 @@ updateText(listVal)
 my_list.bind("<<ListboxSelect>>", fillout)
 
 # Create a binding on the entry box
-name.bind("<KeyRelease>", check)
+nameEnt.bind("<KeyRelease>", check)
 
 
 mobile = Entry(root, width=27, textvariable=mob_entry,
@@ -260,6 +266,12 @@ interest.place(x=230, y=278)
 dateEnt = Entry(root, width=27, textvariable=date_L,
 				borderwidth=8, relief=SUNKEN, font="Helvetica 11 bold")
 dateEnt.place(x=230, y=308)
+
+name_entry = nameEnt.get()
+mob_entry = mobile.get()
+p_entry= principal.get()
+i_entry = interest.get()
+date_L = dateEnt.get()
 
 submit_button = Button(root, text="Add", bg='gold', fg='black',
 					   font="Helvetica 11 bold", relief=SUNKEN, command=repay)
