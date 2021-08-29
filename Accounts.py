@@ -17,6 +17,7 @@ from envVar import firebaseConfig as fc
 from envVar import mycursor, myDataBase
 from PIL.ImageTk import PhotoImage
 import sys
+
 if "Tkinter" not in sys.modules:
 	from tkinter import *
 firebase = pyrebase.initialize_app(fc)
@@ -24,27 +25,25 @@ db = firebase.database()
 
 root = tkinter.Tk()
 
-
-	
-
 titlespace = " "
 root.title(210 * titlespace + "Money Management System")
 root.state('zoomed')
 root.config(bg='navy')
-root.resizable(0,0)
-p1 = PhotoImage(file='[DIGICURE MAIN LOGO].png')
+root.resizable(0, 0)
+p1 = PhotoImage(master = root, file='[DIGICURE MAIN LOGO].png')
 root.iconphoto(False, p1)
 
 # clock function for live clock
 QName = StringVar()
 sumDep = 0
 
-def times():
-	current_time = time.strftime("%I:%M:%S")
-	clock.config(text=current_time)
-	clock.after(200, times)
+SerialNumber = StringVar()
+Name = StringVar()
+Amount = StringVar()
+Date = StringVar()
 
 btnState = False
+
 
 def switch():
 	global btnState
@@ -62,6 +61,7 @@ def switch():
 			top_frame.update()
 		
 		btnState = True
+
 
 def export():
 	with open('FullFile.csv', 'w') as file:
@@ -86,10 +86,11 @@ def export():
 	os.system('FullFile.csv')
 	return 0
 
+
 def ind_import():
 	
 	def s_byname():
-		name = QName.get()
+		name = indEntry.get()
 		sumDep = 0
 		totalData = db.child('registerUserExp').child(name).get()
 		
@@ -103,32 +104,27 @@ def ind_import():
 	ind = Toplevel(root)
 	ind.geometry("578x340+330+0")
 	ind.title(50 * titlespace + "Money Management System")
-	# ind.maxsize("570x250")
-	# ind.resizable(False)
 	
-	mainFrame = Frame(ind, bd=10, width=500, height=370, relief=RIDGE, bg='DarkGoldenrod1')
-	mainFrame.place(x=500, y=500)
+	mainFrame = Frame(ind, bd=10, width=500, height=370, relief=SUNKEN, bg='DarkGoldenrod1')
+	mainFrame.grid()
 	
-	# labelMain = Label(ind, bd=7, width=500, height=400, bg='DarkGoldenrod1')
-	# labelMain.grid(row = 0, column = 0)
-	topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RIDGE, bg='DarkGoldenrod1')
+	topFrame = Frame(mainFrame, bd=10, width=500, height=370, relief=RAISED, bg='DarkGoldenrod1')
 	topFrame.grid(row=1, column=0)
 	
-	indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='DarkGoldenrod1')
+	indtitleFrame = Frame(mainFrame, bd=10, width=500, height=70, bg='Navy')
 	indtitleFrame.grid(row=0, column=0)
 	
-	indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), fg='Navy',
-						  text="Import Individual Data by Name:", bd=7, bg='DarkGoldenrod1')
+	indtitle = Label(indtitleFrame, font=('Arial', 18, 'bold'), bg='Navy',
+						  text="Import Individual Data by Name:", bd=7, fg='DarkGoldenrod1')
 	indtitle.grid(row=0, column=1, padx=70)
 	
-	indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-						  textvariable=QName)
+	indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left')
 	indEntry.grid(row=0, column=0, padx=5)
 	
 	Label(topFrame, font=('Arial', 18, 'bold'), text=" ", bd=3, bg='DarkGoldenrod1').grid(row=1, column=0,
 																				 padx=70)
 	
-	Button(topFrame, font=('arial', 13, 'bold'), text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
+	Button(topFrame, font=('arial', 13, 'bold'), fg = 'DarkGoldenrod1',text="IMPORT", bd=5, padx=10, pady=1, width=5, height=2,
 		   bg='Navy', command=s_byname).grid(row=2, column=0, padx=1)
 	
 	output = Label(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
@@ -139,93 +135,50 @@ def ind_import():
 						 bg='DarkGoldenrod1', fg='Navy', text=str(sumDep))
 	deposit.grid(row=4, column=0, padx=5)
 
-# root.maxsize(460,350)
-# root.destroy()
-# import indiv
-# root.destroy()
-# indiv.gui(tkinter.Tk())
-
 def about():
 	pass
+
+def display_all():
+	_thread.start_new_thread(accountsInfo,(1,2))
+def accountsInfo(j,k):
+	import treeViewAccounts
+
 def back():
 	_thread.exit_thread()
 
+
 def time_widget():
-    string = strftime('%I:%M:%S %p')
-    Time_Label.config(text=string)
-    Time_Label.after(1000, time_widget)
+	string = strftime('%I:%M:%S %p')
+	Time_Label.config(text=string)
+	Time_Label.after(1000, time_widget)
 
 
 ###################################################################################################################################
 top_frame = Frame(root, bg='DarkGoldenrod1', borderwidth=10, relief=RAISED,
-                  width=500, height=55)
+				  width=500, height=55)
 top_frame.pack(side=TOP, fill=X)
 date = Label(top_frame, text=f"{dt.datetime.now():%a, %b/%d/%Y}", fg="black", bg="DarkGoldenrod1", font=(
-    "Constantia 25 bold"))
+	"Constantia 25 bold"))
 date.place(x=10, y=5)
 heading = Label(top_frame, bg='DarkGoldenrod1', fg='black',
-                font="Orbitron-Bold 30 underline", text="--Money Management System--")
+				font="Orbitron-Bold 30 underline", text="--Money Management System--")
 heading.pack()
 
 Time_Label = Label(top_frame, fg="black", bg="DarkGoldenrod1",
-                   font="Constantia 25 bold")
-Time_Label.place(x=1325,y=5)
+				   font="Constantia 25 bold")
+Time_Label.place(x=1325, y=5)
 time_widget()
-#---------------------------------------------#
+# ---------------------------------------------#
 mainFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=8, relief=SUNKEN,
 				  width=1200, height=700)
 mainFrame.place(x=170, y=100)
-leftFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=RIDGE,
+leftFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=SUNKEN,
 				  width=850, height=700)
 leftFrame.pack(side=LEFT)
-rightFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=RIDGE,
+rightFrame = Frame(mainFrame, bg='DarkGoldenrod1', borderwidth=4, relief=SUNKEN,
 				   width=350, height=700)
 rightFrame.pack(side=RIGHT)
-# def time_widget():
-#     string = strftime('%I:%M:%S %p')
-#     Time_Label.config(text=string)
-#     Time_Label.after(1000, time_widget)
-#
-#
-# timeFrame = Frame(root, bg='navy', borderwidth=5, relief=SUNKEN)
-# timeFrame.place(x=1355, y=66)
-# Time_Label = Label(timeFrame, fg="black", bg="DarkGoldenrod1",
-#                    font="Constantia 25 bold")
-# Time_Label.pack()
-# time_widget()
-#
-#
-# dateFrame = Frame(root, bg='DarkGoldenrod1', borderwidth=5, relief=SUNKEN)
-# dateFrame.place(x=2, y=66)
-# date = Label(dateFrame, text=f"{dt.datetime.now():%a, %b/%d/%Y}", fg="black", bg="DarkGoldenrod1", font=(
-#     "Constantia 25 bold"))
-# date.pack()
-# MainFrame = Frame(root, bd=10, width=770, height=700, relief=RIDGE, bg='DarkGoldenrod1')
-# MainFrame.grid()
-#
-# TitleFrame = Frame(MainFrame, bd=7, width=770, height=100, bg='DarkGoldenrod1')
-# TitleFrame.grid(row=0, column=0)
-# TopFrame3 = Frame(MainFrame, bd=5, width=770, height=500, bg='Navy')
-# TopFrame3.grid(row=1, column=0)
-#
-# LeftFrame = Frame(TopFrame3, bd=5, width=770, height=500, padx=2, pady=0, bg='DarkGoldenrod1')
-# LeftFrame.pack(side=LEFT, expand=True, fill='both')
-# LeftFrame1 = Frame(LeftFrame, bd=5, width=770, height=180, padx=2, pady=0, bg='Navy')
-# LeftFrame1.pack(side=TOP, expand=True, fill='both')
-#
-# RightFrame = Frame(TopFrame3, bd=5, width=50, height=100, relief=RIDGE, padx=2, bg='DarkGoldenrod1')
-# RightFrame.pack(side=RIGHT, expand=True, fill='both')
-# rightFrame = Frame(RightFrame, bd=5, width=40, height=90, padx=12, pady=4, bg='DarkGoldenrod1')
-# rightFrame.pack(side=TOP, expand=True, fill='both')
-#
-# lbltitle = Label(TitleFrame, font=('Arial', 33, 'bold'), fg='Navy', text="Money Management System", bd=7,
-# 					  bg='DarkGoldenrod1')
-# lbltitle.grid(row=0, column=1, padx=70)
 
-SerialNumber = StringVar()
-Name = StringVar()
-Amount = StringVar()
-Date = StringVar()
 
 # ===============================================================================================================================================================================================
 
@@ -240,6 +193,8 @@ def updateText(data):
 			my_list.insert(END, item)
 	except:
 		pass
+
+
 def fillout(event):
 	# Delete whatever is in the entry box
 	try:
@@ -249,12 +204,13 @@ def fillout(event):
 		nameEntry.insert(0, my_list.get(ANCHOR))
 	except:
 		pass
+
+
 def check(event):
-	# print("hello")
+	# #("hello")
 	# grab what was typed
 	try:
-		typed = Name.get()
-		
+		typed = nameEntry.get()
 		
 		if typed == '':
 			data = listVal
@@ -268,46 +224,40 @@ def check(event):
 		updateText(data)
 	except:
 		pass
+
+
 # Input Fields:
 
-# lblserial = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Serial Number', bd=13, bg='Navy')
-# lblserial.grid(row=1, column=0, sticky=W, padx=2)
-#
-# entserial = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left',
-# 					   textvariable=SerialNumber)
-# entserial.grid(row=1, column=1, sticky=W, padx=2)
-#
-# lblname = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Name', bd=13, bg='Navy')
-# lblname.grid(row=2, column=0, sticky=W, padx=2)
-#
-# entName = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
-# entName.grid(row=2, column=1, sticky=W, padx=2)
-#
 
 serialNumber = Label(leftFrame, text='Serial Number', fg='black', bg='DarkGoldenrod1',
 					 font="Constantia 24 bold")
 serialNumber.place(x=25, y=20)
 snEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				relief=SUNKEN, width=27, textvariable=SerialNumber)
+				relief=SUNKEN, width=27)
 snEntry.place(x=300, y=20)
 name = Label(leftFrame, text='Name', fg='black', bg='DarkGoldenrod1',
-					 font="Constantia 24 bold")
+			 font="Constantia 24 bold")
 name.place(x=25, y=90)
 nameEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				relief=SUNKEN, width=27, textvariable=Name)
+				  relief=SUNKEN, width=27)
 nameEntry.place(x=300, y=90)
 amount = Label(leftFrame, text='Amount', fg='black', bg='DarkGoldenrod1',
-					 font="Constantia 24 bold")
+			   font="Constantia 24 bold")
 amount.place(x=25, y=160)
 amountEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				relief=SUNKEN, width=27, textvariable=Amount)
+					relief=SUNKEN, width=27)
 amountEntry.place(x=300, y=160)
 date = Label(leftFrame, text='Date', fg='black', bg='DarkGoldenrod1',
-					 font="Constantia 24 bold")
+			 font="Constantia 24 bold")
 date.place(x=25, y=230)
 dateEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				relief=SUNKEN, width=27, textvariable=Date)
+				  relief=SUNKEN, width=27)
 dateEntry.place(x=300, y=230)
+
+Name = nameEntry.get()
+SerialNumber = snEntry.get()
+Amount = amountEntry.get()
+Date = dateEntry.get()
 
 listboxFrame = Frame(rightFrame, bg='navy', width=340, height=200)
 listboxFrame.place(x=0, y=0)
@@ -321,13 +271,14 @@ def getNameList():
 		listVal = []
 		listname = db.child('mainData').get()
 		for each in listname.each():
-			
 			listVal.append(each.val()['name'])
 		
 		listVal = list(set(listVal))
 		return listVal
 	except:
 		pass
+
+
 # entName['values'] = listVal
 # entName.current()
 listVal = getNameList()
@@ -341,62 +292,46 @@ my_list.bind("<<ListboxSelect>>", fillout)
 # # Create a binding on the entry box
 nameEntry.bind("<KeyRelease>", check)
 
-# entname = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Name)
-# entname.grid(row=2, column=1, sticky=W, padx=2)
-
-# lblamount = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Amount', bd=13, bg='Navy')
-# lblamount.grid(row=4, column=0, sticky=W, padx=2)
-#
-# entamount = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left',
-# 					   textvariable=Amount)
-# entamount.grid(row=4, column=1, sticky=W, padx=2)
-#
-# lblDate = Label(LeftFrame1, font=('arial', 13, 'bold'), text='Date', bd=13, bg='Navy')
-# lblDate.grid(row=5, column=0, sticky=W, padx=2)
-#
-# entDate = Entry(LeftFrame1, font=('arial', 13, 'bold'), bd=6, width=50, justify='left', textvariable=Date)
-# entDate.grid(row=5, column=1, sticky=W, padx=2)
-
-# label for clock display
-# clock = Label(TitleFrame, font=("times", 15, "bold"), bg="DarkGoldenrod1", fg='Navy')
-# clock.grid(row=0, column=2, padx=0, pady=0)
-# times()
 # ===============================================================================================================================================================================================
 
 # nav bar
-# navIcon = PhotoImage(master = root,file='navbar.png')
-# closeIcon = PhotoImage(master= root,file='exit.png')
+navIcon = PhotoImage(master = root,file='navbar.png')
+closeIcon = PhotoImage(master= root,file='exit.png')
 
-# nvbarbtn = Button(top_frame, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).grid(
-# 	row=0, column=0, padx=0, pady=0)
-# navRoot = Frame(root, bg='Navy', height=500, width=200)
-# navRoot.place(x=-300, y=0)
-# #
-# Label(navRoot, text="Menu", font='arial 10 bold', bg='DarkGoldenrod1', fg='Navy', height=3, width=200,
-# 	  padx=0).place(x=0, y=0)
+nvbarbtn = Button(root, image = navIcon ,width=24, height=24, bd=0, padx=1, command=switch).place(x=5, y = 75)
+navRoot = Frame(root, bg='DarkGoldenrod1', height=500, width=200)
+navRoot.place(x=-300, y=0)
+#
+Label(navRoot, text="Menu", font='arial 10 bold', bg='Navy', fg='Navy', height=3, width=200,
+	  padx=0).place(x=0, y=0)
 
-# y = 80
+y = 80
 
-# options = ["Export All", "Import Individual", "About"]
-# methods = [export, ind_import, about, back]
+options = ["Export All", "Import Individual", "Display All", "Back"]
+methods = [export, ind_import, display_all, back]
 
-# navExp = Button(navRoot, text="Export All", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
-# 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=export).place(x=25,
-# 																									y=y)
-# y += 40
+navExp = Button(navRoot, text="Export All", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=export).place(x=25,
+																									y=y)
+y += 40
 
-# navInd = Button(navRoot, text="Import Individual", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
-# 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=ind_import).place(x=25,
-# 																										y=y)
-# y += 40
+navInd = Button(navRoot, text="Import Individual", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=ind_import).place(x=25,
+																										y=y)
+y += 40
 
-# navAbt = Button(navRoot, text="Back", font="arial 13", bg="Navy", fg='DarkGoldenrod1',
-# 					 activebackground="Navy", activeforeground="DarkGoldenrod1", bd=0, command=back).place(x=25,
-# 																								  y=y)
+navInd = Button(navRoot, text="Display All", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=display_all).place(x=25,
+																										y=y)
+y += 40
 
-# closeBtn = Button(navRoot, image = closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
-# 					   command=switch)
-# closeBtn.place(x=150, y=20)
+navAbt = Button(navRoot, text="Back", font="arial 13", bg="DarkGoldenrod1", fg='black',
+					 activebackground="DarkGoldenrod1", activeforeground="black", bd=0, command=back).place(x=25,
+																								  y=y)
+
+closeBtn = Button(navRoot, image = closeIcon, width=22, height=22, relief=RIDGE, bd=0, padx=1,
+					   command=switch)
+closeBtn.place(x=150, y=20)
 
 # ===============================================================================================================================================================================================
 # The functions:
@@ -407,12 +342,13 @@ def exit():
 		root.destroy()
 		return
 
+
 def saveData():
 	global listVal
-	serialNumber = SerialNumber.get()
-	name = Name.get()
-	amount = Amount.get()
-	date = Date.get()
+	serialNumber = snEntry.get()
+	name = nameEntry.get()
+	amount = amountEntry.get()
+	date = dateEntry.get()
 	if (date.find("-") > -1):
 		tday, tm, ty = date.split("-")
 		mdate = tday + "/" + tm + "/" + ty
@@ -421,64 +357,69 @@ def saveData():
 		tday, tm, ty = date.split(".")
 		mdate = tday + "/" + tm + "/" + ty
 		date = mdate
+	
+	try:
+		accData = db.child('mainData').get()
 		
-	accData = db.child('mainData').get()
-	countSave = 0
-	for data in accData.each():
-		if (serialNumber == data.val()['serialNumber'] and name == data.val()['name']):
-			tkinter.messagebox.showinfo("Data Error!", "Name already exists!!")
-		else:
-			countSave = 1
-	if countSave ==1:
-		try:
-			if (Name.get() != '' and Date.get() != '' and Amount.get() != ''):
-			    datas = {'serialNumber': serialNumber, 'name': name, 'amount': amount, 'date': date}
-			    db.child('mainData').push(datas)
-			    db.child('registerUserExp').child(name).push(datas)
-			    listVal = getNameList()
-			    updateText(listVal)
-			    myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
-			    mycursor = myDataBase.cursor()
-			    dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
-			    datas = [(serialNumber, name, amount, date)]
-
-			    mycursor.executemany(dataCollection, datas)
-			    myDataBase.commit()
-			    myDataBase.close()
-			    tkinter.messagebox.showinfo('Success','Data Inserted')
-
-			else:
-			    tkinter.messagebox.showerror('Error', 'Insert Data In All Fields')
-		except:
-
+		for data in accData.each():
+			if (serialNumber == data.val()['serialNumber'] and name == data.val()['name']):
+				alertMssg("Data Error!", "Name already exists!!")
+				return 0
+	
+	
+	except:
+		
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+											 database='ivs2')
+		mycursor = myDataBase.cursor()
+		query = 'Select * from dataEntry'
+		mycursor.execute(query)
+		totalEntries = mycursor.fetchall()
+		for entries in totalEntries:
+			if serialNumber and name in entries:
+				alertMssg("Data Error!", "Name already exists!!")
+				return 0
+		myDataBase.commit()
+		myDataBase.close()
+	
+	try:
+		if (nameEntry.get() != '' and dateEntry.get() != '' and amountEntry.get() != ''):
+			datas = {'serialNumber': serialNumber, 'name': name, 'amount': amount, 'date': date}
+			db.child('mainData').push(datas)
+			db.child('registerUserExp').child(name).push(datas)
+			listVal = getNameList()
+			updateText(listVal)
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+												 database='ivs2')
+			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
 			datas = [(serialNumber, name, amount, date)]
-
+			
 			mycursor.executemany(dataCollection, datas)
 			myDataBase.commit()
 			myDataBase.close()
-			tkinter.messagebox.showinfo('Offline','Data Inserted')
+			succesMsg('Success', 'Data Inserted')
+		
+		else:
+			alertMssg('Error', 'Insert Data In All Fields')
+	except:
+		
+		dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
+		datas = [(serialNumber, name, amount, date)]
+		
+		mycursor.executemany(dataCollection, datas)
+		myDataBase.commit()
+		myDataBase.close()
+		succesMsg('Offline', 'Data Inserted')
+
 
 def update():
 	try:
 		tempData = 0
 		totalMainData = db.child('mainData').get()
-		totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
+		totalIndividualData = db.child('registerUserExp').child(nameEntry.get()).get()
 		for data in totalMainData.each():
-				date = Date.get()
-				if (date.find("-") > -1):
-					tday, tm, ty = date.split("-")
-					mdate = tday + "/" + tm + "/" + ty
-					date = mdate
-				elif date.find(".") > -1:
-					tday, tm, ty = date.split(".")
-					mdate = tday + "/" + tm + "/" + ty
-					date = mdate
-				if data.val()['name'] == Name.get() and data.val()['date'] == date:
-					db.child('mainData').child(data.key()).update({'serialNumber': SerialNumber.get(), 'name': Name.get(), 'amount': Amount.get(),'date': date})
-				tempData += 1
-		for indi in totalIndividualData.each():
-			date = Date.get()
+			date = dateEntry.get()
 			if (date.find("-") > -1):
 				tday, tm, ty = date.split("-")
 				mdate = tday + "/" + tm + "/" + ty
@@ -487,13 +428,27 @@ def update():
 				tday, tm, ty = date.split(".")
 				mdate = tday + "/" + tm + "/" + ty
 				date = mdate
-			if indi.val()['name'] == Name.get() and indi.val()['date'] == date:
-				db.child('registerUserExp').child(Name.get()).child(indi.key()).update(
-							{'serialNumber': SerialNumber.get(),
-							 'name': Name.get(),
-							 'amount': Amount.get(),
-							 'date': date
-							 }
+			if data.val()['name'] == nameEntry.get() and data.val()['date'] == date:
+				db.child('mainData').child(data.key()).update(
+					{'serialNumber': snEntry.get(), 'name': nameEntry.get(), 'amount': amountEntry.get(), 'date': date})
+			tempData += 1
+		for indi in totalIndividualData.each():
+			date = dateEntry.get()
+			if (date.find("-") > -1):
+				tday, tm, ty = date.split("-")
+				mdate = tday + "/" + tm + "/" + ty
+				date = mdate
+			elif date.find(".") > -1:
+				tday, tm, ty = date.split(".")
+				mdate = tday + "/" + tm + "/" + ty
+				date = mdate
+			if indi.val()['name'] == nameEntry.get() and indi.val()['date'] == date:
+				db.child('registerUserExp').child(nameEntry.get()).child(indi.key()).update(
+					{'serialNumber': snEntry.get(),
+					 'name': nameEntry.get(),
+					 'amount': amountEntry.get(),
+					 'date': date
+					 }
 				)
 			tempData += 1
 		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
@@ -502,19 +457,19 @@ def update():
 		
 		mycursor.execute(
 			'update dataEntry set amount=%s,name=%s,date=%s where serialNumber = %s', (
-				Amount.get(),
-				Name.get(),
+				amountEntry.get(),
+				nameEntry.get(),
 				date,
-				SerialNumber.get()
+				snEntry.get()
 			))
 		myDataBase.commit()
 		myDataBase.close()
 		tempData += 1
 		
 		if tempData > 0:
-			tkinter.messagebox.showinfo('Update Info', 'Data Updated' )
+			succesMsg('Update Info', 'Data Updated')
 		else:
-			tkinter.messagebox.showerror('Update Info', 'Problem Not Updated')
+			alertMssg('Update Info', 'Problem Not Updated')
 	
 	except Exception as e:
 		
@@ -525,18 +480,19 @@ def update():
 		tempData = 0
 		mycursor.execute(
 			'update dataEntry set amount=%s,name=%s,date=%s where serialNumber = %s', (
-				Amount.get(),
-				Name.get(),
-				Date.get(),
-				SerialNumber.get()
+				amountEntry.get(),
+				nameEntry.get(),
+				dateEntry.get(),
+				snEntry.get()
 			))
 		myDataBase.commit()
 		myDataBase.close()
 		tempData += 1
 		if tempData >= 3:
-			tkinter.messagebox.showinfo('Update Info', e)
+			succesMsg('Update Info', e)
 		else:
-			tkinter.messagebox.showerror('Update Info', 'Problem Not Updated')
+			alertMssg('Update Info', 'Problem Not Updated')
+
 
 def search():
 	search_Sum = 0
@@ -544,7 +500,7 @@ def search():
 	totalData = db.child('mainData').get()
 	loanDB = db.child('loanData').get()
 	
-	date = Date.get()
+	date = dateEntry.get()
 	if (date.find("-") > -1):
 		tday, tm, ty = date.split("-")
 		mdate = tday + "/" + tm + "/" + ty
@@ -556,41 +512,44 @@ def search():
 	
 	with open('data.csv', 'w') as file:
 		write = csv.writer(file)
-		write.writerow(["Serial Number","Name", "Amount", "Date", "Loan"])
+		write.writerow(["Serial Number", "Name", "Amount", "Date", "Loan"])
 		file.close()
 	for data in totalData.each():
 		for ld in loanDB.each():
-			if ('all' == Name.get().lower()):
+			if ('all' == nameEntry.get().lower()):
 				with open('FullFile.csv', 'w') as file:
 					write = csv.writer(file)
-					write.writerow(["Serial Number","Name", "Amount", "Date", "Loan"])
+					write.writerow(["Serial Number", "Name", "Amount", "Date", "Loan"])
 					file.close()
-				totalData = db.child('mainData').get()
-				loanDB = db.child('loanData').get()
+				
 				for data in totalData.each():
 					for ld in loanDB.each():
 						with open('FullFile.csv', 'a') as files:
 							write = csv.writer(files)
 							if ld.val()['name'] == data.val()['name']:
-								write.writerow([data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'],ld.val()['principalAmount']])
+								write.writerow([data.val()['serialNumber'], data.val()['name'], data.val()['amount'],
+												data.val()['date'], ld.val()['principalAmount']])
 								files.close()
 							else:
 								write.writerow(
-									[data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
+									[data.val()['serialNumber'], data.val()['name'], data.val()['amount'],
+									 data.val()['date'], 'N/A'])
 								files.close()
 				os.system('FullFile.csv')
 				return 0
-			elif (data.val()['date'] == date or data.val()['name'] == Name.get() or data.val()[
-				'amount'] == Amount.get()):
+			if (data.val()['date'] == date or data.val()['name'] == nameEntry.get() or data.val()[
+				'amount'] == amountEntry.get()):
 				with open('data.csv', 'a') as files:
 					write = csv.writer(files)
 					if ld.val()['name'] == data.val()['name']:
 						write.writerow(
-							[data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'],
+							[data.val()['serialNumber'], data.val()['name'], data.val()['amount'], data.val()['date'],
 							 ld.val()['principalAmount']])
 						files.close()
 					else:
-						write.writerow([data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A'])
+						write.writerow(
+							[data.val()['serialNumber'], data.val()['name'], data.val()['amount'], data.val()['date'],
+							 'N/A'])
 						files.close()
 					search_Sum += 1
 	
@@ -600,90 +559,93 @@ def search():
 	if search_Sum == 0:
 		alertMssg("Search error!", "No data found!!")
 
-def succesMsg(heading,msg):
+
+def succesMsg(heading, msg):
 	tkinter.messagebox.showinfo(heading, msg)
 	display()
 	reset()
 
-def alertMssg(heading,msg):
+
+def alertMssg(heading, msg):
 	tkinter.messagebox.showerror(heading, msg)
 	display()
 	reset()
 
+
 def display():
-	
 	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
-	mycursor.execute("select * from dataEntry")
+	mycursor.execute("select * from dataEntry order by serialnumber DESC")
 	result = mycursor.fetchall()
 	if len(result) != 0:
-		display_data.delete(*display_data.get_children())
+		tree_v.delete(*tree_v.get_children())
 		for row in result:
-			display_data.insert('', END, values=row)
+			tree_v.insert('', END, values=row)
 	myDataBase.commit()
 	myDataBase.close()
 
 
 def delete():
-	
 	try:
-		print(SerialNumber.get())
+		# (SerialNumber.get())
 		deleteData = 0
-		totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
-	
+		totalIndividualData = db.child('registerUserExp').child(nameEntry.get()).get()
 		
 		for data in totalIndividualData.each():
-			if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
-				db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
+			if data.val()['name'] == nameEntry.get() and data.val()['date'] == dateEntry.get():
+				db.child('registerUserExp').child(nameEntry.get()).child(data.key()).remove()
 				deleteData += 1
 		allUserDataBase = db.child('mainData').get()
 		for datas in allUserDataBase.each():
-			if datas.val()['name'] == Name.get() and datas.val()['date'] == Date.get():
-				print(datas.val()['name'])
+			if datas.val()['name'] == nameEntry.get() and datas.val()['date'] == dateEntry.get():
+				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
 		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
-			SerialNumber.get()
+			snEntry.get()
 		))
 		deleteData += 1
 		myDataBase.commit()
 		myDataBase.close()
 		deleteData += 1
 		if deleteData == 3:
-			succesMsg('Delete Info','Delete Success')
+			succesMsg('Delete Info', 'Delete Success')
 		if (deleteData <= 3):
-			alertMssg('Delete Info','Delete Failure')
+			alertMssg('Delete Info', 'Delete Failure')
 	except:
 		try:
-#					print(type(SerialNumber.get()))
-
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+			#					#(type(SerialNumber.get()))
+			
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
-				Name.get(),
-				Date.get()
+				nameEntry.get(),
+				dateEntry.get()
 			))
 			myDataBase.commit()
 			myDataBase.close()
 			deleteData += 1
-			succesMsg('Delete Info','Delete Success')
+			succesMsg('Delete Info', 'Delete Success')
 		except Exception as e:
-			print(e)
-			print(SerialNumber.get())
-			alertMssg('Delete Info',e)
+			# (e)
+			# (SerialNumber.get())
+			alertMssg('Delete Info', e)
+
 
 def TrainInfo(ev):
-	viewInfo = display_data.focus()
-	learnData = display_data.item(viewInfo)
+	viewInfo = tree_v.focus()
+	learnData = tree_v.item(viewInfo)
 	row = learnData['values']
 	SerialNumber.set(row[0])
 	Name.set(row[1])
 	Amount.set(row[2])
 	Date.set(row[3])
+
 
 def reset():
 	snEntry.delete(0, END)
@@ -691,26 +653,32 @@ def reset():
 	amountEntry.delete(0, END)
 	dateEntry.delete(0, END)
 
-def sync_on():
 
+def sync_on():
 	try:
 		totalData = db.child('mainData').get()
-		
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+											 database='ivs2')
+		mycursor = myDataBase.cursor()
 		mycursor.execute('Delete From dataEntry')
 		for data in totalData.each():
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
-			datas = [(data.val()['serialNumber'],data.val()['name'], data.val()['amount'], data.val()['date'])]
+			datas = [(data.val()['serialNumber'], data.val()['name'], data.val()['amount'], data.val()['date'])]
 			mycursor.executemany(dataCollection, datas)
 			myDataBase.commit()
 		myDataBase.close()
-		succesMsg('Sync Info','Data Synced')
+		succesMsg('Sync Info', 'Data Synced')
 	except Exception as e:
-		print(e)
-		alertMssg('Sync Info',e)
+		# (e)
+		alertMssg('Sync Info', e)
+
 
 # if (databaseChoice == 'f'):
 def sync_off():
 	try:
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+											 database='ivs2')
+		mycursor = myDataBase.cursor()
 		db.child('mainData').remove()
 		db.child('registerUserExp').remove()
 		query = 'Select * from dataEntry'
@@ -722,29 +690,32 @@ def sync_off():
 			db.child('mainData').push(datas)
 			db.child('registerUserExp').child(rows[1]).push(datas)
 		tkinter.messagebox.showinfo('Success', 'Done')
-		succesMsg('Sync Info','Data Synced')
+		succesMsg('Sync Info', 'Data Synced')
+		myDataBase.commit()
+		myDataBase.close()
 	except Exception as e:
-		tkinter.messagebox.showerror('Sync Info', e)
+		alertMssg('Sync Info', e)
+
 
 # ==============================================================================================================================================================================================
 treevFrame = Frame(leftFrame, borderwidth=4,
-				   relief=SUNKEN,width=840, height=391)
-treevFrame.place(x=1,y=293)
+				   relief=SUNKEN, width=840, height=391)
+treevFrame.place(x=1, y=293)
 
 y_scroll = Scrollbar(treevFrame, orient=VERTICAL)
 x_scroll = Scrollbar(treevFrame, orient=HORIZONTAL)
-tree_v = ttk.Treeview(treevFrame,height=16,selectmode="extended")
+tree_v = ttk.Treeview(treevFrame, height=16, selectmode="extended")
 y_scroll.pack(side=RIGHT, fill=Y)
 x_scroll.pack(side=BOTTOM, fill=X)
 tree_v['columns'] = ("Serial Number", "Name", "Amount", "Date")
 
-#name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate
+# name,mobileNumber,date,pricipalAmount,interestPercent,principleLeft,interestLeft,InterestPaidTillDate
 # ~TreeView Styling~
 style = ttk.Style()
 style.theme_use("clam")
-style.configure("Treeview.Heading", font="Orbitron-Bold 25 bold ",fieldbackground='DarkGoldenRod1')
-style.configure("Treeview",fieldbackground="white")
-style.map('Treeview',background=[('selected','DarkGoldenRod1')])
+style.configure("Treeview.Heading", font="Orbitron-Bold 25 bold ", fieldbackground='DarkGoldenRod1')
+style.configure("Treeview", fieldbackground="white")
+style.map('Treeview', background=[('selected', 'DarkGoldenRod1')])
 
 tree_v.column('#0', width=0, stretch=NO)
 tree_v.column('Serial Number', anchor=CENTER, width=291)
@@ -752,15 +723,16 @@ tree_v.column('Name', anchor=CENTER, width=160)
 tree_v.column('Amount', anchor=CENTER, width=180)
 tree_v.column('Date', anchor=CENTER, width=180)
 
-tree_v.heading('#0', anchor=CENTER,text='')
+tree_v.heading('#0', anchor=CENTER, text='')
 tree_v.heading('Serial Number', anchor=CENTER, text="Seriel Number")
 tree_v.heading('Name', anchor=CENTER, text="Name")
 tree_v.heading('Amount', anchor=CENTER, text="Amount")
 tree_v.heading('Date', anchor=CENTER, text="Date")
 
 tree_v.pack(fill=X)
-tree_v.bind('<ButtonRelease-1>')
-#=======================================================================================#
+tree_v.bind('<ButtonRelease-1>', TrainInfo)
+display()
+# =======================================================================================#
 
 # y_scroll = Scrollbar(treevFrame, orient=VERTICAL)
 # display_data = ttk.Treeview(leftFrame, height=18,
@@ -792,51 +764,26 @@ savebtn = Button(btnFrame, text='Save', borderwidth=5, width=8, bg='DarkGoldenro
 				 relief=RAISED, font="Constantia 21 bold", command=saveData)
 savebtn.pack()
 upbtn = Button(btnFrame, text='Update', borderwidth=5, width=8, bg='DarkGoldenrod1',
-				 relief=RAISED, font="Constantia 21 bold", command=update)
+			   relief=RAISED, font="Constantia 21 bold", command=update)
 upbtn.pack()
 disbtn = Button(btnFrame, text='Display', borderwidth=5, width=8, bg='DarkGoldenrod1',
-				 relief=RAISED, font="Constantia 21 bold", command=display)
+				relief=RAISED, font="Constantia 21 bold", command=display)
 disbtn.pack()
 searchbtn = Button(btnFrame, text='Search', borderwidth=5, width=8, bg='DarkGoldenrod1',
-				 relief=RAISED, font="Constantia 21 bold", command=search)
+				   relief=RAISED, font="Constantia 21 bold", command=search)
 searchbtn.pack()
 delbtn = Button(btnFrame, text='Delete', borderwidth=5, width=8, bg='DarkGoldenrod1',
-				 relief=RAISED, font="Constantia 21 bold", command=delete)
+				relief=RAISED, font="Constantia 21 bold", command=delete)
 delbtn.pack()
 synupbtn = Button(btnFrame, text='Sync Up', borderwidth=5, width=8, bg='DarkGoldenrod1',
-				 relief=RAISED, font="Constantia 21 bold", command=sync_on)
+				  relief=RAISED, font="Constantia 21 bold", command=sync_on)
 synupbtn.pack()
 syndownbtn = Button(btnFrame, text='Sync Down', borderwidth=5, width=8, bg='DarkGoldenrod1',
-				 relief=RAISED, font="Constantia 21 bold", command=sync_off)
+					relief=RAISED, font="Constantia 21 bold", command=sync_off)
 syndownbtn.pack()
-
-# btnAddNew = Button(rightFrame, font=('C', 13, 'bold'), text="SYNC DOWN",
-# 				   bd=7, padx=18, pady=1,
-# 						width=7, height=3, bg='Navy', command=sync_off).grid(row=7, column=0, padx=1)
-# btnAddNew = Button(rightFrame, font=('arial', 13, 'bold'), text="UPDATE",
-# 				   bd=7, padx=18, pady=1, width=7,
-# 						height=3, bg='Navy', command=update).grid(row=2, column=0, padx=1)
-# btnAddNew = Button(rightFrame, font=('arial', 13, 'bold'), text="SAVE",
-# 				   bd=7, padx=18, pady=1, width=7,
-# 						height=3, bg='Navy', command=saveData).grid(row=1, column=0, padx=1)
-# btnAddNew = Button(rightFrame, font=('arial', 13, 'bold'), text="DELETE",
-# 				   bd=7, padx=18, pady=1, width=7,
-# 						height=3, bg='Navy', command=delete).grid(row=5, column=0, padx=1)
-# btnAddNew = Button(rightFrame, font=('arial', 13, 'bold'), text="SEARCH",
-# 				   bd=7, padx=18, pady=1, width=7,
-# 						height=3, bg='Navy', command=search).grid(row=4, column=0, padx=1)
-# btnAddNew = Button(rightFrame, font=('arial', 13, 'bold'), text="DISPLAY",
-# 				   bd=7, padx=18, pady=1,
-# 						width=7, height=3, bg='Navy', command=display).grid(row=3, column=0, padx=1)
-# btnAddNew = Button(rightFrame, font=('arial', 13, 'bold'), text="SYNC UP",
-# 				   bd=7, padx=18, pady=1,
-# 						width=7, height=3, bg='Navy', command=sync_on).grid(row=6, column=0, padx=1)
-
-
 
 # ================================================================================================================================================================================================
 
 # Main:
-
 # if __name__ == '__main__':
 root.mainloop()
