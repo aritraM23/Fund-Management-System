@@ -90,7 +90,7 @@ def export():
 def ind_import():
 	
 	def s_byname():
-		name = QName.get()
+		name = indEntry.get()
 		sumDep = 0
 		totalData = db.child('registerUserExp').child(name).get()
 		
@@ -118,8 +118,7 @@ def ind_import():
 						  text="Import Individual Data by Name:", bd=7, fg='DarkGoldenrod1')
 	indtitle.grid(row=0, column=1, padx=70)
 	
-	indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left',
-						  textvariable=QName)
+	indEntry = Entry(topFrame, font=('arial', 13, 'bold'), bd=13, width=50, justify='left')
 	indEntry.grid(row=0, column=0, padx=5)
 	
 	Label(topFrame, font=('Arial', 18, 'bold'), text=" ", bd=3, bg='DarkGoldenrod1').grid(row=1, column=0,
@@ -211,7 +210,7 @@ def check(event):
 	# #("hello")
 	# grab what was typed
 	try:
-		typed = Name.get()
+		typed = nameEntry.get()
 		
 		if typed == '':
 			data = listVal
@@ -234,26 +233,31 @@ serialNumber = Label(leftFrame, text='Serial Number', fg='black', bg='DarkGolden
 					 font="Constantia 24 bold")
 serialNumber.place(x=25, y=20)
 snEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				relief=SUNKEN, width=27, textvariable=SerialNumber)
+				relief=SUNKEN, width=27)
 snEntry.place(x=300, y=20)
 name = Label(leftFrame, text='Name', fg='black', bg='DarkGoldenrod1',
 			 font="Constantia 24 bold")
 name.place(x=25, y=90)
 nameEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				  relief=SUNKEN, width=27, textvariable=Name)
+				  relief=SUNKEN, width=27)
 nameEntry.place(x=300, y=90)
 amount = Label(leftFrame, text='Amount', fg='black', bg='DarkGoldenrod1',
 			   font="Constantia 24 bold")
 amount.place(x=25, y=160)
 amountEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-					relief=SUNKEN, width=27, textvariable=Amount)
+					relief=SUNKEN, width=27)
 amountEntry.place(x=300, y=160)
 date = Label(leftFrame, text='Date', fg='black', bg='DarkGoldenrod1',
 			 font="Constantia 24 bold")
 date.place(x=25, y=230)
 dateEntry = Entry(leftFrame, font='Constantia 24 bold', justify=CENTER, borderwidth=6,
-				  relief=SUNKEN, width=27, textvariable=Date)
+				  relief=SUNKEN, width=27)
 dateEntry.place(x=300, y=230)
+
+Name = nameEntry.get()
+SerialNumber = snEntry.get()
+Amount = amountEntry.get()
+Date = dateEntry.get()
 
 listboxFrame = Frame(rightFrame, bg='navy', width=340, height=200)
 listboxFrame.place(x=0, y=0)
@@ -341,10 +345,10 @@ def exit():
 
 def saveData():
 	global listVal
-	serialNumber = SerialNumber.get()
-	name = Name.get()
-	amount = Amount.get()
-	date = Date.get()
+	serialNumber = snEntry.get()
+	name = nameEntry.get()
+	amount = amountEntry.get()
+	date = dateEntry.get()
 	if (date.find("-") > -1):
 		tday, tm, ty = date.split("-")
 		mdate = tday + "/" + tm + "/" + ty
@@ -379,7 +383,7 @@ def saveData():
 		myDataBase.close()
 	
 	try:
-		if (Name.get() != '' and Date.get() != '' and Amount.get() != ''):
+		if (nameEntry.get() != '' and dateEntry.get() != '' and amountEntry.get() != ''):
 			datas = {'serialNumber': serialNumber, 'name': name, 'amount': amount, 'date': date}
 			db.child('mainData').push(datas)
 			db.child('registerUserExp').child(name).push(datas)
@@ -413,9 +417,9 @@ def update():
 	try:
 		tempData = 0
 		totalMainData = db.child('mainData').get()
-		totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
+		totalIndividualData = db.child('registerUserExp').child(nameEntry.get()).get()
 		for data in totalMainData.each():
-			date = Date.get()
+			date = dateEntry.get()
 			if (date.find("-") > -1):
 				tday, tm, ty = date.split("-")
 				mdate = tday + "/" + tm + "/" + ty
@@ -424,12 +428,12 @@ def update():
 				tday, tm, ty = date.split(".")
 				mdate = tday + "/" + tm + "/" + ty
 				date = mdate
-			if data.val()['name'] == Name.get() and data.val()['date'] == date:
+			if data.val()['name'] == nameEntry.get() and data.val()['date'] == date:
 				db.child('mainData').child(data.key()).update(
-					{'serialNumber': SerialNumber.get(), 'name': Name.get(), 'amount': Amount.get(), 'date': date})
+					{'serialNumber': snEntry.get(), 'name': nameEntry.get(), 'amount': amountEntry.get(), 'date': date})
 			tempData += 1
 		for indi in totalIndividualData.each():
-			date = Date.get()
+			date = dateEntry.get()
 			if (date.find("-") > -1):
 				tday, tm, ty = date.split("-")
 				mdate = tday + "/" + tm + "/" + ty
@@ -438,11 +442,11 @@ def update():
 				tday, tm, ty = date.split(".")
 				mdate = tday + "/" + tm + "/" + ty
 				date = mdate
-			if indi.val()['name'] == Name.get() and indi.val()['date'] == date:
-				db.child('registerUserExp').child(Name.get()).child(indi.key()).update(
-					{'serialNumber': SerialNumber.get(),
-					 'name': Name.get(),
-					 'amount': Amount.get(),
+			if indi.val()['name'] == nameEntry.get() and indi.val()['date'] == date:
+				db.child('registerUserExp').child(nameEntry.get()).child(indi.key()).update(
+					{'serialNumber': snEntry.get(),
+					 'name': nameEntry.get(),
+					 'amount': amountEntry.get(),
 					 'date': date
 					 }
 				)
@@ -453,10 +457,10 @@ def update():
 		
 		mycursor.execute(
 			'update dataEntry set amount=%s,name=%s,date=%s where serialNumber = %s', (
-				Amount.get(),
-				Name.get(),
+				amountEntry.get(),
+				nameEntry.get(),
 				date,
-				SerialNumber.get()
+				snEntry.get()
 			))
 		myDataBase.commit()
 		myDataBase.close()
@@ -476,10 +480,10 @@ def update():
 		tempData = 0
 		mycursor.execute(
 			'update dataEntry set amount=%s,name=%s,date=%s where serialNumber = %s', (
-				Amount.get(),
-				Name.get(),
-				Date.get(),
-				SerialNumber.get()
+				amountEntry.get(),
+				nameEntry.get(),
+				dateEntry.get(),
+				snEntry.get()
 			))
 		myDataBase.commit()
 		myDataBase.close()
@@ -496,7 +500,7 @@ def search():
 	totalData = db.child('mainData').get()
 	loanDB = db.child('loanData').get()
 	
-	date = Date.get()
+	date = dateEntry.get()
 	if (date.find("-") > -1):
 		tday, tm, ty = date.split("-")
 		mdate = tday + "/" + tm + "/" + ty
@@ -512,7 +516,7 @@ def search():
 		file.close()
 	for data in totalData.each():
 		for ld in loanDB.each():
-			if ('all' == Name.get().lower()):
+			if ('all' == nameEntry.get().lower()):
 				with open('FullFile.csv', 'w') as file:
 					write = csv.writer(file)
 					write.writerow(["Serial Number", "Name", "Amount", "Date", "Loan"])
@@ -533,8 +537,8 @@ def search():
 								files.close()
 				os.system('FullFile.csv')
 				return 0
-			if (data.val()['date'] == date or data.val()['name'] == Name.get() or data.val()[
-				'amount'] == Amount.get()):
+			if (data.val()['date'] == date or data.val()['name'] == nameEntry.get() or data.val()[
+				'amount'] == amountEntry.get()):
 				with open('data.csv', 'a') as files:
 					write = csv.writer(files)
 					if ld.val()['name'] == data.val()['name']:
@@ -586,15 +590,15 @@ def delete():
 	try:
 		# (SerialNumber.get())
 		deleteData = 0
-		totalIndividualData = db.child('registerUserExp').child(Name.get()).get()
+		totalIndividualData = db.child('registerUserExp').child(nameEntry.get()).get()
 		
 		for data in totalIndividualData.each():
-			if data.val()['name'] == Name.get() and data.val()['date'] == Date.get():
-				db.child('registerUserExp').child(Name.get()).child(data.key()).remove()
+			if data.val()['name'] == nameEntry.get() and data.val()['date'] == dateEntry.get():
+				db.child('registerUserExp').child(nameEntry.get()).child(data.key()).remove()
 				deleteData += 1
 		allUserDataBase = db.child('mainData').get()
 		for datas in allUserDataBase.each():
-			if datas.val()['name'] == Name.get() and datas.val()['date'] == Date.get():
+			if datas.val()['name'] == nameEntry.get() and datas.val()['date'] == dateEntry.get():
 				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
@@ -602,7 +606,7 @@ def delete():
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
-			SerialNumber.get()
+			snEntry.get()
 		))
 		deleteData += 1
 		myDataBase.commit()
@@ -620,8 +624,8 @@ def delete():
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
-				Name.get(),
-				Date.get()
+				nameEntry.get(),
+				dateEntry.get()
 			))
 			myDataBase.commit()
 			myDataBase.close()
