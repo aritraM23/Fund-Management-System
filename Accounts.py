@@ -62,27 +62,44 @@ def switch():
 		
 		btnState = True
 
+def calculatedIndividual():
+	nameKey = {}
+	dataRef= 0
+	indData = db.child('registerUserExp').get()
+	for ind in indData.each():
+		nameKey[ind.key()]=0
 
+
+	totalData = db.child('mainData').get()
+	for data in totalData.each():
+			nameKey[data.val()['name']] += int(data.val()['amount'])
+	
+	return nameKey
+
+	#export(nameKey)
 def export():
+	nameKey = calculatedIndividual()
 	with open('FullFile.csv', 'w') as file:
 		write = csv.writer(file)
-		write.writerow(["Name", "Amount", "Date", "Loan Taken", "Principal To be Paid", "Interest To be Paid"])
+		write.writerow(["Name", "Amount", "Loan Taken", "Principal To be Paid", "Interest Paid Till Data"])
 		file.close()
 	totalData = db.child('mainData').get()
 	loanDB = db.child('loanData').get()
-	for data in totalData.each():
-		for ld in loanDB.each():
-			with open('FullFile.csv', 'a') as files:
-				write = csv.writer(files)
-				if ld.val()['name'] == data.val()['name']:
-					write.writerow([data.val()['name'], data.val()['amount'], data.val()['date'],
-									ld.val()['principalAmount'], ld.val()['principalLeft'],
-									ld.val()['interestLeft']])
-					files.close()
-				else:
-					write.writerow(
-						[data.val()['name'], data.val()['amount'], data.val()['date'], 'N/A', 'N/A', 'N/A'])
-					files.close()
+	for name in nameKey:
+		print(f'{name} && {nameKey.get(name)}')
+	for ld in loanDB.each():
+		for name in nameKey:
+				with open('FullFile.csv', 'a') as files:
+					write = csv.writer(files)
+					if (ld.val()['name']).upper() == name.upper():
+							write.writerow([name, nameKey.get(name),
+											ld.val()['principalAmount'], ld.val()['principalLeft'],
+											ld.val()['interestPaidTillDate']])
+							files.close()
+					else:
+							write.writerow(
+								[name, nameKey.get(name), 'N/A', 'N/A', 'N/A'])
+							files.close()
 	os.system('FullFile.csv')
 	return 0
 
@@ -369,7 +386,7 @@ def saveData():
 	
 	except:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		query = 'Select * from dataEntry'
@@ -389,7 +406,7 @@ def saveData():
 			db.child('registerUserExp').child(name).push(datas)
 			listVal = getNameList()
 			updateText(listVal)
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			dataCollection = 'Insert into dataEntry (serialNumber,name,amount,date) values (%s,%s,%s,%s)'
@@ -451,7 +468,7 @@ def update():
 					 }
 				)
 			tempData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -473,7 +490,7 @@ def update():
 	
 	except Exception as e:
 		
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		
@@ -526,11 +543,12 @@ def search():
 					for ld in loanDB.each():
 						with open('FullFile.csv', 'a') as files:
 							write = csv.writer(files)
-							if ld.val()['name'] == data.val()['name']:
+							if data.val()['name'] == ld.val()['name']:
 								write.writerow([data.val()['serialNumber'], data.val()['name'], data.val()['amount'],
 												data.val()['date'], ld.val()['principalAmount']])
 								files.close()
 							else:
+								print(ld.val()['principalAmount'])
 								write.writerow(
 									[data.val()['serialNumber'], data.val()['name'], data.val()['amount'],
 									 data.val()['date'], 'N/A'])
@@ -573,7 +591,7 @@ def alertMssg(heading, msg):
 
 
 def display():
-	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+	myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 										 database='ivs2')
 	mycursor = myDataBase.cursor()
 	mycursor.execute("select * from dataEntry order by serialnumber DESC")
@@ -602,7 +620,7 @@ def delete():
 				# (datas.val()['name'])
 				db.child('mainData').child(datas.key()).remove()
 				deleteData += 1
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002", database='ivs2')
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345", database='ivs2')
 		mycursor = myDataBase.cursor()
 		
 		mycursor.execute("delete from dataEntry where serialnumber=%s", (
@@ -620,7 +638,7 @@ def delete():
 		try:
 			#					#(type(SerialNumber.get()))
 			
-			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+			myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 												 database='ivs2')
 			mycursor = myDataBase.cursor()
 			mycursor.execute("delete from dataEntry where name= %s and date = %s", (
@@ -648,7 +666,7 @@ def TrainInfo(ev):
 
 
 def reset():
-	snEntry.delete(0, END)
+	
 	nameEntry.delete(0, END)
 	amountEntry.delete(0, END)
 	dateEntry.delete(0, END)
@@ -657,7 +675,7 @@ def reset():
 def sync_on():
 	try:
 		totalData = db.child('mainData').get()
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		mycursor.execute('Delete From dataEntry')
@@ -676,7 +694,7 @@ def sync_on():
 # if (databaseChoice == 'f'):
 def sync_off():
 	try:
-		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="mancunian@2002",
+		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivs2')
 		mycursor = myDataBase.cursor()
 		db.child('mainData').remove()
