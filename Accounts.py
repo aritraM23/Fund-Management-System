@@ -486,7 +486,7 @@ def update():
 		if tempData > 0:
 			succesMsg('Update Info', 'Data Updated')
 		else:
-			alertMssg('Update Info', 'Problem Not Updated')
+			alertMssg('Update Info', f'Problem Not Updated ')
 	
 	except Exception as e:
 		
@@ -508,7 +508,7 @@ def update():
 		if tempData >= 3:
 			succesMsg('Update Info', e)
 		else:
-			alertMssg('Update Info', 'Problem Not Updated')
+			alertMssg('Update Info', f'Problem Not Updated {e}')
 
 
 def search():
@@ -543,12 +543,12 @@ def search():
 					for ld in loanDB.each():
 						with open('FullFile.csv', 'a') as files:
 							write = csv.writer(files)
-							if data.val()['name'] == ld.val()['name']:
+							if (data.val()['name']).upper() == (ld.val()['name']).upper():
 								write.writerow([data.val()['serialNumber'], data.val()['name'], data.val()['amount'],
 												data.val()['date'], ld.val()['principalAmount']])
 								files.close()
 							else:
-								print(ld.val()['principalAmount'])
+								
 								write.writerow(
 									[data.val()['serialNumber'], data.val()['name'], data.val()['amount'],
 									 data.val()['date'], 'N/A'])
@@ -559,7 +559,7 @@ def search():
 				'amount'] == amountEntry.get()):
 				with open('data.csv', 'a') as files:
 					write = csv.writer(files)
-					if ld.val()['name'] == data.val()['name']:
+					if (ld.val()['name']).upper() == (data.val()['name']).upper():
 						write.writerow(
 							[data.val()['serialNumber'], data.val()['name'], data.val()['amount'], data.val()['date'],
 							 ld.val()['principalAmount']])

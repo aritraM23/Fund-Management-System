@@ -115,7 +115,7 @@ def bal():
             if loan.val()['name'] == name_entry.get() and loan.val()['mobileNumber'] == (mob_entry.get()):
                 balData = db.child('mainData').get()
                 for var in balData.each():
-                    if var.val()['name'] == name_entry.get():
+                    if (var.val()['name']).upper() == name_entry.get().upper():
                         balance += int(var.val()['amount'])
                     else:
                         balance += 0

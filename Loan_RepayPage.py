@@ -1,4 +1,5 @@
 import tkinter.messagebox
+from _tkinter import EXCEPTION
 from tkinter import *
 import pyrebase
 import mysql.connector
@@ -118,11 +119,10 @@ def repay():
 				interstLeft = info.val()['interestLeft']
 				interestPaidTill = info.val()['interestPaidTillDate']
 				newPriciple = int(previousPrinciple) - int(principlePaid)
-				print(newPriciple)
 				newInterst = int(interstLeft) - int(interestPaid) + math.ceil(
 					(newPriciple * int(info.val()['interestPercent'])) / 100)
 				interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
-				date = date_L.get()
+				date = date_L
 				if (date.find("-") > -1):
 					tday, tm, ty = date.split("-")
 					mdate = tday + "/" + tm + "/" + ty
@@ -144,14 +144,38 @@ def repay():
 		myDataBase.commit()
 		myDataBase.close()
 		tkinter.messagebox.showinfo('Success', 'Priciple and Interest Added')
-	except:
+	except Exception as e:
+		print (e)
 		tkinter.messagebox.showinfo('No Internet',
 									'You are offline. Saving your data offline. Please sync your databases later')
 		myDataBase = mysql.connector.connect(host="localhost", user="root", passwd="12345",
 											 database='ivsLoan')
 		mycursor = myDataBase.cursor()
-		
-		mycursor.execute(
+		query = 'SELECT * FROM loanEntry'
+		mycursor.execute(query)
+		totalEntries =  mycursor.fetchall()
+		for datas in totalEntries:
+			
+			previousPrinciple = datas[9]
+			print(previousPrinciple)
+			interstLeft = datas[10]
+			print	(interstLeft)
+			interestPaidTill = datas[11]
+			newPriciple = (previousPrinciple) - float(principlePaid)
+			newInterst = (interstLeft) - float(interestPaid) +math.ceil(
+				(newPriciple * (datas[6])) / 100)
+			print (interestPaidTill, interestPaid)
+			interestPaidTillDates = float(interestPaidTill) + float(interestPaid)
+			date = date_L
+			if (date.find("-") > -1):
+				tday, tm, ty = date.split("-")
+				mdate = tday + "/" + tm + "/" + ty
+				date = mdate
+			elif date.find(".") > -1:
+				tday, tm, ty = date.split(".")
+				mdate = tday + "/" + tm + "/" + ty
+				date = mdate
+			mycursor.execute(
 				'UPDATE loanEntry set principleLeft= %s , interestLeft =%s , InterestPaidTillDate =%s, dateGiven = %s where name=%s and mobileNumber = %s ',
 				(newPriciple, newInterst, interestPaidTillDates, updateDate, name, mobileNumber))
 		
@@ -180,7 +204,7 @@ def fillout(event):
 def check(event):
     # print("hello")
     # grab what was typed
-    typed = name_entry.get()
+    typed = name_entry
     print(typed)
 
     if typed == '':

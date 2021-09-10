@@ -192,7 +192,7 @@ def loaninfor():
     try:
         loanDatas = db.child('loanData').get()
         for ld in loanDatas.each():
-            if ld.val()['name'] == name.get():
+            if ld.val()['name'].upper() == (name.get()).upper():
                 loanAmt += int(ld.val()['principalLeft'])
 
     except:
